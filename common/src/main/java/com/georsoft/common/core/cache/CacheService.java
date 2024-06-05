@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public interface CacheService {
-    Integer DEFAULT_CAPACITY = 500000;
+    Integer DEFAULT_CAPACITY = 50000;
 
     <T> void setCacheObject(final String key, final T value);
 
@@ -19,4 +19,6 @@ public interface CacheService {
     boolean deleteObject(final Collection collection);
 
     Collection<String> keys(final String pattern);
+
+    void cleanCache();
 }

@@ -177,4 +177,17 @@ public class JDKCacheServiceImpl implements CacheService {
         }
         return matchesCollection;
     }
+
+    @Override
+    public void cleanCache() {
+        for (String key : cacheMap.keySet()) {
+            if (expireMap.containsKey(key)) {
+                Long expireTime = expireMap.get(key);
+                if (expireTime == null || expireTime <= System.currentTimeMillis()) {
+                    cacheMap.remove(key);
+                    expireMap.remove(key);
+                }
+            }
+        }
+    }
 }

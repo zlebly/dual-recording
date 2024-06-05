@@ -275,4 +275,9 @@ public class RedisCache implements CacheService {
     {
         return redisTemplate.keys(pattern);
     }
+
+    @Override
+    public void cleanCache() {
+
+    }
 }
