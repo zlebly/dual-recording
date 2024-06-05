@@ -1,5 +1,6 @@
 package com.georsoft.common.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
@@ -7,6 +8,7 @@ import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.core.cache.CacheService;
 import com.georsoft.common.core.domain.entity.SysDictData;
 import com.georsoft.common.utils.spring.SpringUtils;
+import org.springframework.context.ApplicationContext;
 
 /**
  * 字典工具类
@@ -39,10 +41,20 @@ public class DictUtils
      */
     public static List<SysDictData> getDictCache(String key)
     {
-        JSONArray arrayCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(arrayCache))
+        String cacheType = SpringUtils.getRequiredProperty("cache.type");
+        if ("redis".equals(cacheType))
         {
-            return arrayCache.toList(SysDictData.class);
+            JSONArray arrayCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
+            if (StringUtils.isNotNull(arrayCache))
+            {
+                return arrayCache.toList(SysDictData.class);
+            }
+        } else {
+            List<SysDictData> listCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
+            if (StringUtils.isNotNull(listCache))
+            {
+                return listCache;
+            }
         }
         return null;
     }
