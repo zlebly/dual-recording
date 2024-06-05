@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.georsoft.common.core.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +19,6 @@ import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.core.page.TableDataInfo;
-import com.georsoft.common.core.redis.RedisCache;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.system.domain.SysUserOnline;
@@ -36,17 +37,17 @@ public class SysUserOnlineController extends BaseController
     private ISysUserOnlineService userOnlineService;
 
     @Autowired
-    private RedisCache redisCache;
+    private CacheService cacheService;
 
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName)
     {
-        Collection<String> keys = redisCache.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
+        Collection<String> keys = cacheService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
         {
-            LoginUser user = redisCache.getCacheObject(key);
+            LoginUser user = cacheService.getCacheObject(key);
             if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
             {
                 userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
@@ -77,7 +78,7 @@ public class SysUserOnlineController extends BaseController
     @DeleteMapping("/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId)
     {
-        redisCache.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);
+        cacheService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);
         return success();
     }
 }

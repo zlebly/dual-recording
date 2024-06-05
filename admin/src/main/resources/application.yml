@@ -127,3 +127,7 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 缓存配置 支持jdk或者redis
+cache:
+  type: jdk

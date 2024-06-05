@@ -1,4 +1,4 @@
-package com.georsoft.common.core.redis;
+package com.georsoft.common.core.cache.Impl;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -6,22 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import com.georsoft.common.core.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * spring redis 工具类
  *
  * @author douwenjie
  **/
+@ConditionalOnExpression("'${cache.type:jdk}'.equals('redis')")
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
-@Component
-public class RedisCache
-{
+@Service
+public class RedisCache implements CacheService {
     @Autowired
     public RedisTemplate redisTemplate;
 
@@ -31,6 +34,7 @@ public class RedisCache
      * @param key 缓存的键值
      * @param value 缓存的值
      */
+    @Override
     public <T> void setCacheObject(final String key, final T value)
     {
         redisTemplate.opsForValue().set(key, value);
@@ -44,6 +48,7 @@ public class RedisCache
      * @param timeout 时间
      * @param timeUnit 时间颗粒度
      */
+    @Override
     public <T> void setCacheObject(final String key, final T value, final Integer timeout, final TimeUnit timeUnit)
     {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
@@ -91,6 +96,7 @@ public class RedisCache
      * @param key 键
      * @return true 存在 false不存在
      */
+    @Override
     public Boolean hasKey(String key)
     {
         return redisTemplate.hasKey(key);
@@ -102,6 +108,7 @@ public class RedisCache
      * @param key 缓存键值
      * @return 缓存键值对应的数据
      */
+    @Override
     public <T> T getCacheObject(final String key)
     {
         ValueOperations<String, T> operation = redisTemplate.opsForValue();
@@ -113,6 +120,7 @@ public class RedisCache
      *
      * @param key
      */
+    @Override
     public boolean deleteObject(final String key)
     {
         return redisTemplate.delete(key);
@@ -124,6 +132,7 @@ public class RedisCache
      * @param collection 多个对象
      * @return
      */
+    @Override
     public boolean deleteObject(final Collection collection)
     {
         return redisTemplate.delete(collection) > 0;
@@ -261,6 +270,7 @@ public class RedisCache
      * @param pattern 字符串前缀
      * @return 对象列表
      */
+    @Override
     public Collection<String> keys(final String pattern)
     {
         return redisTemplate.keys(pattern);

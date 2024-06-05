@@ -1,13 +1,14 @@
 package com.georsoft.framework.web.service;
 
 import java.util.concurrent.TimeUnit;
+
+import com.georsoft.common.core.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.core.domain.entity.SysUser;
-import com.georsoft.common.core.redis.RedisCache;
 import com.georsoft.common.exception.user.UserPasswordNotMatchException;
 import com.georsoft.common.exception.user.UserPasswordRetryLimitExceedException;
 import com.georsoft.common.utils.SecurityUtils;
@@ -22,7 +23,7 @@ import com.georsoft.framework.security.context.AuthenticationContextHolder;
 public class SysPasswordService
 {
     @Autowired
-    private RedisCache redisCache;
+    private CacheService cacheService;
 
     @Value(value = "${user.password.maxRetryCount}")
     private int maxRetryCount;
@@ -47,7 +48,7 @@ public class SysPasswordService
         String username = usernamePasswordAuthenticationToken.getName();
         String password = usernamePasswordAuthenticationToken.getCredentials().toString();
 
-        Integer retryCount = redisCache.getCacheObject(getCacheKey(username));
+        Integer retryCount = cacheService.getCacheObject(getCacheKey(username));
 
         if (retryCount == null)
         {
@@ -62,7 +63,7 @@ public class SysPasswordService
         if (!matches(user, password))
         {
             retryCount = retryCount + 1;
-            redisCache.setCacheObject(getCacheKey(username), retryCount, lockTime, TimeUnit.MINUTES);
+            cacheService.setCacheObject(getCacheKey(username), retryCount, lockTime, TimeUnit.MINUTES);
             throw new UserPasswordNotMatchException();
         }
         else
@@ -78,9 +79,9 @@ public class SysPasswordService
 
     public void clearLoginRecordCache(String loginName)
     {
-        if (redisCache.hasKey(getCacheKey(loginName)))
+        if (cacheService.hasKey(getCacheKey(loginName)))
         {
-            redisCache.deleteObject(getCacheKey(loginName));
+            cacheService.deleteObject(getCacheKey(loginName));
         }
     }
 }

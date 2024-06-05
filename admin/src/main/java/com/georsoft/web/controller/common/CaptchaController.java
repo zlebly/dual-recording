@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
+import com.georsoft.common.core.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,6 @@ import com.georsoft.common.config.GeorSoftConfig;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.redis.RedisCache;
 import com.georsoft.common.utils.sign.Base64;
 import com.georsoft.common.utils.uuid.IdUtils;
 import com.georsoft.system.service.ISysConfigService;
@@ -34,8 +35,8 @@ public class CaptchaController
     @Resource(name = "captchaProducerMath")
     private Producer captchaProducerMath;
 
-//    @Autowired
-//    private RedisCache redisCache;
+    @Autowired
+    private CacheService cacheService;
     
     @Autowired
     private ISysConfigService configService;
@@ -75,7 +76,7 @@ public class CaptchaController
             image = captchaProducer.createImage(capStr);
         }
 
-//        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        cacheService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try

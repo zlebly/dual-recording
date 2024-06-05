@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import com.georsoft.common.core.cache.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.core.domain.model.LoginUser;
-import com.georsoft.common.core.redis.RedisCache;
 import com.georsoft.common.utils.ServletUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.ip.AddressUtils;
@@ -52,7 +53,7 @@ public class TokenService
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
     @Autowired
-    private RedisCache redisCache;
+    private CacheService cacheService;
 
     /**
      * 获取用户身份信息
@@ -71,7 +72,7 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
+                LoginUser user = cacheService.getCacheObject(userKey);
                 return user;
             }
             catch (Exception e)
@@ -101,7 +102,7 @@ public class TokenService
         if (StringUtils.isNotEmpty(token))
         {
             String userKey = getTokenKey(token);
-            redisCache.deleteObject(userKey);
+            cacheService.deleteObject(userKey);
         }
     }
 
@@ -150,7 +151,7 @@ public class TokenService
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        cacheService.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
     /**

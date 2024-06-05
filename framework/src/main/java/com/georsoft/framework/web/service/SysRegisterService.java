@@ -1,5 +1,6 @@
 package com.georsoft.framework.web.service;
 
+import com.georsoft.common.core.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
@@ -7,7 +8,6 @@ import com.georsoft.common.constant.Constants;
 import com.georsoft.common.constant.UserConstants;
 import com.georsoft.common.core.domain.entity.SysUser;
 import com.georsoft.common.core.domain.model.RegisterBody;
-import com.georsoft.common.core.redis.RedisCache;
 import com.georsoft.common.exception.user.CaptchaException;
 import com.georsoft.common.exception.user.CaptchaExpireException;
 import com.georsoft.common.utils.MessageUtils;
@@ -33,7 +33,7 @@ public class SysRegisterService
     private ISysConfigService configService;
 
     @Autowired
-    private RedisCache redisCache;
+    private CacheService cacheService;
 
     /**
      * 注册
@@ -101,8 +101,8 @@ public class SysRegisterService
     public void validateCaptcha(String username, String code, String uuid)
     {
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String captcha = cacheService.getCacheObject(verifyKey);
+        cacheService.deleteObject(verifyKey);
         if (captcha == null)
         {
             throw new CaptchaExpireException();
