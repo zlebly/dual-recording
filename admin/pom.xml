@@ -61,6 +61,10 @@
             <artifactId>generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.georsoft</groupId>
+            <artifactId>business</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

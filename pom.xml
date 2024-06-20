@@ -172,6 +172,13 @@
                 <version>${georsoft.version}</version>
             </dependency>
 
+            <!-- 通用工具-->
+            <dependency>
+                <groupId>com.georsoft</groupId>
+                <artifactId>business</artifactId>
+                <version>${georsoft.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
                 <artifactId>concurrentlinkedhashmap-lru</artifactId>

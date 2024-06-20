@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.business.mapper.ProductInfoMapper">
+
+    <resultMap type="com.georsoft.business.entity.PO.ProductInfoPO" id="ProductInfoResult">
+        <id     property="id"      column="id"      />
+        <result property="productName"    column="product_name"    />
+        <result property="productType"     column="product_type"     />
+        <result property="des"   column="des"   />
+        <result property="createDate"    column="create_date"    />
+        <result property="productId"      column="product_id"      />
+        <result property="riskTips"    column="risk_tips"    />
+        <result property="createUserId"     column="create_user_id"      />
+    </resultMap>
+
+    <sql id="selectProductInfo">
+        select id, product_name, product_type, des, create_date, product_id, risk_tips, create_user_id
+        from fcm_product_info
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="sqlwhereSearch">
+        <where>
+            <if test="configId !=null and configId != ''">
+                and config_id = #{configId}
+            </if>
+            <if test="configKey !=null and configKey != ''">
+                and config_key = #{configKey}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询产品列表 -->
+    <select id="selectProductInfoList" parameterType="com.georsoft.business.entity.DTO.QryProductInfoDTO" resultMap="ProductInfoResult">
+        <include refid="selectProductInfo"/>
+        <where>
+            <if test="createTimeStart !=null and createTimeStart != ''" >
+                and create_date >= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd !=null and createTimeEnd != ''">
+                and create_date &lt;= #{createTimeEnd}
+            </if>
+            <if test="productId !=null and productId != ''">
+                and product_id = #{productId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addProductInfo" parameterType="com.georsoft.business.entity.PO.ProductInfoPO">
+        insert into fcm_product_info(id, product_name, product_type, des, create_date, product_id,
+                                     risk_tips, create_user_id)
+        values(#{id}, #{productName}, #{productType}, #{des}, #{createDate}, #{productId},
+               #{riskTips}, #{createUserId})
+    </insert>
+
+    <update id="updateProductInfo" parameterType="com.georsoft.business.entity.PO.ProductInfoPO">
+        update fcm_product_info
+        <set>
+            <if test="productName !=null and productName != ''">
+                product_name = #{productName},
+            </if>
+            <if test="productType !=null and productType != ''">
+                product_type = #{productType},
+            </if>
+            <if test="productId !=null and productId != ''">
+                product_id = #{productId},
+            </if>
+            <if test="riskTips != null and riskTips != ''">
+                risk_tips = #{riskTips},
+            </if>
+        </set>
+        <where>
+            <if test="id !=null and id != ''">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteProductInfo" parameterType="java.lang.String">
+        delete from fcm_product_info where id = #{id}
+    </delete>
+</mapper>

@@ -18,4 +18,22 @@ public interface ProductInfoMapper {
      * @return 字典数据集合信息
      */
     List<ProductInfoPO> selectProductInfoList(QryProductInfoDTO date);
+
+    /**
+     * 更新产品信息
+     * @param data 产品信息
+     */
+    void updateProductInfo(ProductInfoPO data);
+
+    /**
+     * 添加产品信息
+     * @param data 产品信息
+     */
+    void addProductInfo(ProductInfoPO data);
+
+    /**
+     * 删除产品信息
+     * @param id 产品id
+     */
+    void deleteProductInfo(Long id);
 }
