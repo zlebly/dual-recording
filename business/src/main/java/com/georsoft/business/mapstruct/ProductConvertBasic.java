@@ -2,6 +2,7 @@ package com.georsoft.business.mapstruct;
 
 import com.georsoft.business.entity.DTO.QryProductInfoDTO;
 import com.georsoft.business.entity.PO.ProductInfoPO;
+import com.georsoft.business.entity.VO.ProductInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -12,4 +13,7 @@ public interface ProductConvertBasic {
     ProductInfoPO toProductInfoPO(QryProductInfoDTO data);
 
     QryProductInfoDTO toQryProductInfoDTO(ProductInfoPO data);
+
+    ProductInfoPO VOToProductInfoPO(ProductInfoVO data);
+
 }

@@ -1,10 +1,9 @@
-package com.georsoft.business.entity.PO;
+package com.georsoft.business.entity;
 
-import com.georsoft.business.entity.ProductInfo;
 import lombok.Data;
 
 @Data
-public class ProductInfoPO extends ProductInfo {
+public class ProductInfo {
     /**
      * 主键ID
      */
@@ -44,9 +43,4 @@ public class ProductInfoPO extends ProductInfo {
      * 创建用户ID
      */
     private String createUserId;
-
-    /**
-     * 创建用户名称
-     */
-    private String createUserName;
 }

@@ -39,7 +39,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.toProductInfoPO(data);
         productInfoPO.setId(GenerateUtils.IdGenerate());
         productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        // TODO: 暂未添加创建人ID
+        // TODO: 暂未添加创建人ID, 默认使用admin的id
+        productInfoPO.setCreateUserId("1");
         productInfoMapper.addProductInfo(productInfoPO);
     }
 
@@ -60,7 +61,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      * @param id 产品信息id
      */
     @Override
-    public void deleteProductInfo(Long id) {
+    public void deleteProductInfo(String id) {
         productInfoMapper.deleteProductInfo(id);
     }
 }

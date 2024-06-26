@@ -42,8 +42,8 @@ public class ProductController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('productInfo:delete')")
-    @PostMapping("/delete/{id}")
-    public AjaxResult deleteProductInfoList(@PathVariable("id") Long id) {
+    @DeleteMapping("/delete/{id}")
+    public AjaxResult deleteProductInfoList(@PathVariable("id") String id) {
         productInfoService.deleteProductInfo(id);
         return success();
     }

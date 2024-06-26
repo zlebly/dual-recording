@@ -32,8 +32,14 @@ public interface ProductInfoMapper {
     void addProductInfo(ProductInfoPO data);
 
     /**
+     * 添加多条产品信息
+     * @param data 产品信息
+     */
+    void batchAddProductInfos(List<ProductInfoPO> data);
+
+    /**
      * 删除产品信息
      * @param id 产品id
      */
-    void deleteProductInfo(Long id);
+    void deleteProductInfo(String id);
 }

@@ -13,6 +13,7 @@
         <result property="productId"      column="product_id"      />
         <result property="riskTips"    column="risk_tips"    />
         <result property="createUserId"     column="create_user_id"      />
+        <result property="createUserName"     column="user_name"      />
     </resultMap>
 
     <sql id="selectProductInfo">
@@ -34,16 +35,30 @@
 
     <!-- 查询产品列表 -->
     <select id="selectProductInfoList" parameterType="com.georsoft.business.entity.DTO.QryProductInfoDTO" resultMap="ProductInfoResult">
-        <include refid="selectProductInfo"/>
+        select
+            f.id,
+            f.product_name,
+            f.product_type,
+            f.des,
+            f.create_date,
+            f.product_id,
+            f.risk_tips,
+            f.create_user_id,
+            s.user_name
+        from
+            fcm_product_info f
+        left join
+            sys_user s
+                on f.create_user_id = s.user_id
         <where>
             <if test="createTimeStart !=null and createTimeStart != ''" >
-                and create_date >= #{createTimeStart}
+                and f.create_date >= #{createTimeStart}
             </if>
             <if test="createTimeEnd !=null and createTimeEnd != ''">
-                and create_date &lt;= #{createTimeEnd}
+                and f.create_date &lt;= #{createTimeEnd}
             </if>
             <if test="productId !=null and productId != ''">
-                and product_id = #{productId}
+                and f.product_id = #{productId}
             </if>
         </where>
     </select>
@@ -53,6 +68,16 @@
                                      risk_tips, create_user_id)
         values(#{id}, #{productName}, #{productType}, #{des}, #{createDate}, #{productId},
                #{riskTips}, #{createUserId})
+    </insert>
+
+    <insert id="batchAddProductInfos" parameterType="java.util.List">
+        insert into fcm_product_info(id, product_name, product_type, des, create_date, product_id,
+                                     risk_tips, create_user_id)
+        values
+            <foreach collection="list" item="item" separator="," index="index">
+                (#{item.id}, #{item.productName}, #{item.productType}, #{item.des}, #{item.createDate}, #{item.productId},
+                #{item.riskTips}, #{item.createUserId})
+            </foreach>
     </insert>
 
     <update id="updateProductInfo" parameterType="com.georsoft.business.entity.PO.ProductInfoPO">

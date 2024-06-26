@@ -1,7 +1,8 @@
 package com.georsoft.business.entity.DTO;
 
-import java.time.LocalDateTime;
+import lombok.Data;
 
+@Data
 public class QryProductInfoDTO {
 
     /**
@@ -32,75 +33,10 @@ public class QryProductInfoDTO {
     /**
      * 创建时间起
      */
-    private LocalDateTime createTimeStart;
+    private String createTimeStart;
 
     /**
      * 创建时间止
      */
-    private LocalDateTime createTimeEnd;
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public LocalDateTime getCreateTimeEnd() {
-        return createTimeEnd;
-    }
-
-    public void setCreateTimeEnd(LocalDateTime createTimeEnd) {
-        this.createTimeEnd = createTimeEnd;
-    }
-
-    public LocalDateTime getCreateTimeStart() {
-        return createTimeStart;
-    }
-
-    public void setCreateTimeStart(LocalDateTime createTimeStart) {
-        this.createTimeStart = createTimeStart;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getRiskTips() {
-        return riskTips;
-    }
-
-    public void setRiskTips(String riskTips) {
-        this.riskTips = riskTips;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "QryProductInfoDTO{" +
-                " productId='" + productId + '\'' +
-                ", createTimeStart=" + createTimeStart +
-                ", createTimeEnd=" + createTimeEnd +
-                '}';
-    }
+    private String createTimeEnd;
 }

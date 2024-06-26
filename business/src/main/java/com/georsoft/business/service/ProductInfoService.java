@@ -35,5 +35,5 @@ public interface ProductInfoService {
      * 删除产品信息
      * @param id 产品信息id
      */
-    void deleteProductInfo(Long id);
+    void deleteProductInfo(String id);
 }
