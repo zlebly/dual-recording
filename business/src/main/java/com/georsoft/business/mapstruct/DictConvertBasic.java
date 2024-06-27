@@ -5,9 +5,19 @@ import com.georsoft.business.entity.VO.DataDictOptionsVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
-public interface DictConvertBasic {
-    DictConvertBasic INSTANCE = Mappers.getMapper(DictConvertBasic.class);
+//@Mapper(componentModel = "spring")
+public class DictConvertBasic {
+//    DictConvertBasic INSTANCE = Mappers.getMapper(DictConvertBasic.class);
 
-    DataDictOptionsVO toDataDictOptionsVO(DataDictPO data);
+    public static DataDictOptionsVO toDataDictOptionsVO(DataDictPO data){
+        if ( data == null ) {
+            return null;
+        }
+
+        DataDictOptionsVO dataDictOptionsVO = new DataDictOptionsVO();
+        dataDictOptionsVO.setDictCode(data.getDictCode());
+        dataDictOptionsVO.setDictName(data.getDictName());
+
+        return dataDictOptionsVO;
+    }
 }

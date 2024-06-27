@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.business.mapper.CustomerInfoMapper">
+
+    <resultMap type="com.georsoft.business.entity.PO.CustomerInfoPO" id="CustomerInfoResult">
+        <id     property="id"      column="ID"      />
+        <result property="cusName"    column="cus_name"    />
+        <result property="idType"     column="id_type"     />
+        <result property="idCard"   column="id_card"   />
+        <result property="cusAccNo"    column="cus_acc_no"    />
+        <result property="productId"    column="product_id"    />
+        <result property="userName"      column="user_name"      />
+        <result property="createDate"      column="create_date"      />
+        <result property="imageNo"     column="image_no"      />
+        <result property="orgCode"     column="org_code"      />
+    </resultMap>
+
+    <!-- 查询用户信息 -->
+    <select id="qryCustomerInfo" parameterType="com.georsoft.business.entity.DTO.QryCustomerInfoDTO" resultMap="CustomerInfoResult">
+        SELECT
+            a.id,
+            a.cus_name,
+            b.dict_name id_type,
+            a.id_card,
+            a.cus_acc_no,
+            a.product_id,
+            c.user_name,
+            a.create_date,
+            a.image_no,
+            a.org_code
+        FROM
+            fcm_customer_info a
+                LEFT JOIN sys_data_dict b ON a.id_type = b.dict_code
+                LEFT JOIN sys_user c ON a.user_id = c.user_id
+        <where>
+            <if test="createDateStart !=null and createDateStart != ''" >
+                and a.create_date >= #{createDateStart}
+            </if>
+            <if test="createDateEnd !=null and createDateEnd != ''">
+                and a.create_date &lt;= #{createDateEnd}
+            </if>
+            <if test="idType !=null and idType != ''">
+                and a.id_type = #{idType}
+            </if>
+            <if test="userId !=null and userId != ''">
+                and a.user_id = #{userId}
+            </if>
+            <if test="orgCode !=null and orgCode != ''">
+                and a.org_code = #{orgCode}
+            </if>
+            <if test="cusName !=null and cusName != ''">
+                and a.cus_name = #{cusName}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addCustomerInfo" parameterType="com.georsoft.business.entity.PO.CustomerPO">
+        INSERT INTO fcm_customer_info (
+            `ID`,
+            `CUS_NAME`,
+            `ID_CARD`,
+            `CREATE_DATE`,
+            `PRODUCT_ID`,
+            `MARK`,
+            `ID_TYPE`,
+            `CUS_ACC_NO`,
+            `USER_ID`,
+            `ORG_CODE`,
+            `DEP_NO`,
+            `MARKET_NO`,
+            `IMAGE_NO`,
+            `ASSOCIATION`,
+            `ASSOCTATION_TIME`
+        )
+        values(#{id}, #{cusName}, #{idCard}, #{createDate}, #{productId}, #{mark},
+               #{idType}, #{cusAccNo}, #{userId}, #{orgCode}, #{depNo}, #{marketNo},
+               #{imageNo}, #{association}, #{assoctationTime})
+    </insert>
+
+    <update id="updateCustomerInfo" parameterType="com.georsoft.business.entity.PO.CustomerPO">
+        update fcm_customer_info
+        <set>
+            <if test="idCard !=null and idCard != ''">
+                id_card = #{idCard},
+            </if>
+            <if test="idType !=null and idType != ''">
+                id_type = #{idType},
+            </if>
+            <if test="cusName !=null and cusName != ''">
+                cus_name = #{cusName},
+            </if>
+            <if test="cusAccNo != null and cusAccNo != ''">
+                cus_acc_no = #{cusAccNo},
+            </if>
+        </set>
+        <where>
+            <if test="id !=null and id != ''">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteCustomerInfo" parameterType="java.lang.String">
+        delete from fcm_customer_info where id = #{id}
+    </delete>
+</mapper>

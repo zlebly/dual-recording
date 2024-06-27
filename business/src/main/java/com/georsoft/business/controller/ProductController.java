@@ -2,15 +2,18 @@ package com.georsoft.business.controller;
 
 import com.georsoft.business.entity.DTO.QryProductInfoDTO;
 import com.georsoft.business.entity.PO.ProductInfoPO;
+import com.georsoft.business.entity.VO.ProductInfoVO;
 import com.georsoft.business.service.ProductInfoService;
 import com.georsoft.common.annotation.Anonymous;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.page.TableDataInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,5 +49,17 @@ public class ProductController extends BaseController {
     public AjaxResult deleteProductInfoList(@PathVariable("id") String id) {
         productInfoService.deleteProductInfo(id);
         return success();
+    }
+
+    @GetMapping("/getProductInfo")
+    public AjaxResult getProductInfo() {
+        List<ProductInfoPO> list = productInfoService.qryProductInfoList(new QryProductInfoDTO());
+        List<ProductInfoVO> voList = new ArrayList<>();
+        for (ProductInfoPO productInfoPO : list) {
+            ProductInfoVO vo = new ProductInfoVO();
+            BeanUtils.copyProperties(productInfoPO, vo);
+            voList.add(vo);
+        }
+        return AjaxResult.success(voList);
     }
 }
