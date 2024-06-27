@@ -714,3 +714,100 @@ CREATE TABLE `fcm_product_info` (
     `RISK_TIPS` varchar(600) COLLATE utf8mb4_bin DEFAULT NULL,
     `CREATE_USER_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- 21、系统数据字典表
+-- ----------------------------
+-- fcmuat.sys_data_dict definition
+CREATE TABLE `sys_data_dict` (
+     `ID` int DEFAULT NULL,
+     `DICT_TYPE` int DEFAULT NULL,
+     `DICT_CODE` varchar(80) COLLATE utf8mb4_bin DEFAULT NULL,
+     `DICT_NAME` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL,
+     `VIEW_INDEX` int DEFAULT NULL,
+     `REMARK` varchar(300) COLLATE utf8mb4_bin DEFAULT NULL,
+     `ENABLE_DATE` date DEFAULT NULL,
+     `EXPIRE_DATE` date DEFAULT NULL,
+     `STOP_FLAG` int DEFAULT NULL,
+     `REL_DICT_CODE` varchar(80) COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- 22、系统数据字典类型表
+-- ----------------------------
+-- fcmuat.sys_data_dict_type definition
+CREATE TABLE `sys_data_dict_type` (
+      `ID` int DEFAULT NULL,
+      `DICT_TYPE` int DEFAULT NULL,
+      `DICT_CODE` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+      `DICT_NAME` varchar(80) COLLATE utf8mb4_bin DEFAULT NULL,
+      `VIEW_INDEX` int DEFAULT NULL,
+      `REMARK` varchar(300) COLLATE utf8mb4_bin DEFAULT NULL,
+      `STOP_FLAG` int DEFAULT NULL,
+      `SUB_DICT_CODE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+      `SUB_DICT_TABLE` varchar(40) COLLATE utf8mb4_bin DEFAULT NULL,
+      `SUB_DICT_COL` varchar(40) COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- 23、客户信息表
+-- ----------------------------
+-- fcmuat.fcm_customer_info definition
+CREATE TABLE `fcm_customer_info` (
+     `ID` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+     `CUS_NAME` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL,
+     `ID_CARD` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `CREATE_DATE` char(8) COLLATE utf8mb4_bin DEFAULT NULL,
+     `PRODUCT_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `MARK` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
+     `ID_TYPE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `CUS_ACC_NO` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL,
+     `USER_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `ORG_CODE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `DEP_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+     `MARKET_NO` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '渠道号',
+     `IMAGE_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '影像流水号',
+     `ASSOCIATION` varchar(2) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '系统关联状态 1：已关联 0：未关联',
+     `ASSOCTATION_TIME` datetime(6) DEFAULT NULL COMMENT '关联时间',
+     PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- 24、客户信息表备份
+-- ----------------------------
+-- fcmuat.fcm_customer_info_bak definition
+CREATE TABLE `fcm_customer_info_bak` (
+     `ID` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '主键ID',
+     `CUS_NAME` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '姓名',
+     `ID_CARD` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '证件号码',
+     `CREATE_DATE` char(8) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '客户档案创建日期',
+     `PRODUCT_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '关联产品ID',
+     `MARK` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+     `ID_TYPE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '证件类型 4012',
+     `CUS_ACC_NO` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '客户账号',
+     `USER_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '录入人ID',
+     `ORG_CODE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '机构号',
+     `DEP_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '法人号',
+     `MARKET_NO` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '渠道号',
+     `IMAGE_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '影像流水号',
+     `ASSOCIATION` varchar(2) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '系统关联状态 1：已关联 0：未关联',
+     `ASSOCTATION_TIME` datetime(6) DEFAULT NULL COMMENT '关联时间',
+     PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- 25、客户信息任务表
+-- ----------------------------
+-- fcmuat.fcm_customer_info_task definition
+CREATE TABLE `fcm_customer_info_task` (
+  `ID` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '主键ID',
+  `REVIEWERS` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '审核人',
+  `CUS_NAME` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '姓名',
+  `ID_CARD` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '证件号码',
+  `CREATE_DATE` char(8) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '客户档案创建日期',
+  `PRODUCT_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '关联产品ID',
+  `MARK` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `ID_TYPE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '证件类型 4012',
+  `CUS_ACC_NO` varchar(60) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '客户账号',
+  `USER_ID` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '录入人ID',
+  `ORG_CODE` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '机构号',
+  `DEP_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '法人号',
+  `DELETE_FLAG` varchar(2) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '0: 待删除  1:已删除',
+  `IMAGE_NO` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '影像流水号',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

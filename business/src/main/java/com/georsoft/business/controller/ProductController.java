@@ -20,8 +20,8 @@ public class ProductController extends BaseController {
     private ProductInfoService productInfoService;
 
     @PreAuthorize("@ss.hasPermi('productInfo:list')")
-    @PostMapping("/list")
-    public TableDataInfo getProductInfoList(@RequestBody QryProductInfoDTO data) {
+    @GetMapping("/list")
+    public TableDataInfo getProductInfoList(QryProductInfoDTO data) {
         startPage();
         List<ProductInfoPO> list = productInfoService.qryProductInfoList(data);
         return getDataTable(list);

@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,16 +19,21 @@ public class FileController {
     ProductFileService productFileService;
 
     @PostMapping("/importProductExcel")
-    public AjaxResult addImportExcel(@RequestParam(name = "file", required = true) MultipartFile file) {
-        List<ProductInfoVO> list;
+    public AjaxResult addImportExcel(@RequestParam(name = "files", required = true) MultipartFile[] file) {
+        List<ProductInfoVO> list = new ArrayList<>();
         try {
-            list = ExcelUtils.read(file, ProductInfoVO.class);
+            for (MultipartFile multipartFile : file) {
+                if (multipartFile.isEmpty()) {
+                    return AjaxResult.error("文件不能为空");
+                }
+                list.addAll(ExcelUtils.read(multipartFile, ProductInfoVO.class));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return AjaxResult.error("发生错误,请检查文件是否正常");
         }
         if (CollectionUtils.isEmpty(list)) {
-            return AjaxResult.error("上传文件不能为空");
+            return AjaxResult.error("上传文件数据不能为空");
         }
         return productFileService.addImportExcel(list);
     }
