@@ -44,6 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     CustomerInfoMapper customerInfoMapper;
 
+    /**
+     * 获取证件类型列表
+     */
     @Override
     public AjaxResult getDictDataList() {
         List<DataDictPO> list = dictMapper.selectDictDataList(Constant.ID_TYPE);
@@ -57,6 +60,9 @@ public class CustomerServiceImpl implements CustomerService {
         return AjaxResult.success(result);
     }
 
+    /**
+     * 获取当前机构及子机构信息
+     */
     @Override
     public AjaxResult getCurrentAndSubOrg() {
         // TODO 暂传江苏省农村信用社联合社（全省汇总）
@@ -71,6 +77,9 @@ public class CustomerServiceImpl implements CustomerService {
         return AjaxResult.success(result);
     }
 
+    /**
+     * 获取当前机构下的用户信息
+     */
     @Override
     public AjaxResult getUserInfoByOrg() {
         // TODO 暂传江苏省农村信用社联合社（全省汇总）
@@ -85,11 +94,20 @@ public class CustomerServiceImpl implements CustomerService {
         return AjaxResult.success(result);
     }
 
+    /**
+     * 查询客户展示信息
+     * @param qryCustomerInfoDTO
+     * @return
+     */
     @Override
     public List<CustomerInfoPO> getCustomerInfo(QryCustomerInfoDTO qryCustomerInfoDTO) {
         return customerInfoMapper.qryCustomerInfo(qryCustomerInfoDTO);
     }
 
+    /**
+     * 添加产品信息
+     * @param data 产品信息
+     */
     @Override
     public void addProductInfo(QryCustomerInfoDTO data) {
         CustomerPO customerPO = CustomerConvert.convertToCustomerPO(data);
@@ -107,12 +125,20 @@ public class CustomerServiceImpl implements CustomerService {
         customerInfoMapper.addCustomerInfo(customerPO);
     }
 
+    /**
+     * 修改产品信息
+     * @param data 产品信息
+     */
     @Override
     public void updateProductInfo(QryCustomerInfoDTO data) {
         CustomerPO customerPO = CustomerConvert.convertToCustomerPO(data);
         customerInfoMapper.updateCustomerInfo(customerPO);
     }
 
+    /**
+     * 删除产品信息
+     * @param id 产品信息id
+     */
     @Override
     public void deleteProductInfo(String id) {
         customerInfoMapper.deleteCustomerInfo(id);

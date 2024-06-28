@@ -94,6 +94,9 @@
             <if test="cusAccNo != null and cusAccNo != ''">
                 cus_acc_no = #{cusAccNo},
             </if>
+            <if test="productId != null and productId != ''">
+                product_id = #{productId},
+            </if>
         </set>
         <where>
             <if test="id !=null and id != ''">

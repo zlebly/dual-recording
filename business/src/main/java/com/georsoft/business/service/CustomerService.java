@@ -16,21 +16,9 @@ public interface CustomerService {
 
     List<CustomerInfoPO> getCustomerInfo(QryCustomerInfoDTO qryCustomerInfoDTO);
 
-    /**
-     * 添加产品信息
-     * @param data 产品信息
-     */
     void addProductInfo(QryCustomerInfoDTO data);
 
-    /**
-     * 修改产品信息
-     * @param data 产品信息
-     */
     void updateProductInfo(QryCustomerInfoDTO data);
 
-    /**
-     * 删除产品信息
-     * @param id 产品信息id
-     */
     void deleteProductInfo(String id);
 }

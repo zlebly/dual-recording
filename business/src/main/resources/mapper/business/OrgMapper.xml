@@ -18,6 +18,17 @@
         <result property="delFlag"     column="del_flag"      />
     </resultMap>
 
+    <resultMap type="com.georsoft.business.entity.PO.CustomerReportPO" id="CustomerReportResult">
+        <id     property="orgCode"      column="org_code"      />
+        <result property="userId"    column="user_id"    />
+        <result property="imageCount"     column="image_count"     />
+    </resultMap>
+
+    <resultMap type="com.georsoft.business.entity.PO.OrgReportPO" id="OrgReportResult">
+        <id     property="orgCode"      column="org_code"      />
+        <result property="imageCount"     column="image_count"     />
+    </resultMap>
+
     <!-- 查询产品列表 -->
     <select id="qryCurrentAndSubOrg" parameterType="String" resultMap="OrdInfoResult">
         SELECT
@@ -36,5 +47,54 @@
         WHERE
             dept_id = #{currentOrgCode}
            OR parent_id = #{currentOrgCode}
+    </select>
+
+    <!-- 查询用户双录报表 -->
+    <select id="qryCustomerReport" resultMap="CustomerReportResult">
+        SELECT
+        b.org_code,
+        b.user_id,
+        b.image_count
+        FROM (
+            SELECT
+            a.org_code,
+            a.user_id,
+            count(a.image_no) as image_count
+            FROM
+            fcm_customer_info a
+            <where>
+                <if test="orgCode != null and orgCode != ''">
+                    AND a.org_code = #{orgCode}
+                </if>
+                <if test="userId != null and userId != ''">
+                    AND a.user_id = #{userId}
+                </if>
+            </where>
+            GROUP BY
+            a.org_code,
+            a.user_id
+        ) b
+    </select>
+
+    <!-- 查询机构双录报表 -->
+    <select id="qryOrgReport" resultMap="OrgReportResult">
+        SELECT
+        b.org_code,
+        b.image_count
+        FROM
+        (
+            SELECT
+            a.org_code,
+            count( a.image_no ) image_count
+            FROM
+            fcm_customer_info a
+            <where>
+                <if test="orgCode != null and orgCode != ''">
+                    AND a.org_code = #{orgCode}
+                </if>
+            </where>
+            GROUP BY
+            a.org_code
+        ) b
     </select>
 </mapper>

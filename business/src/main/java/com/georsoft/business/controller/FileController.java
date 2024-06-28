@@ -4,6 +4,7 @@ import com.georsoft.business.entity.VO.ProductInfoVO;
 import com.georsoft.business.service.ProductFileService;
 import com.georsoft.business.util.ExcelUtils;
 import com.georsoft.common.core.domain.AjaxResult;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class FileController {
     @Autowired
     ProductFileService productFileService;
 
+    @ApiOperation("通过Excel导入产品信息")
     @PostMapping("/importProductExcel")
     public AjaxResult addImportExcel(@RequestParam(name = "files", required = true) MultipartFile[] file) {
         List<ProductInfoVO> list = new ArrayList<>();
@@ -38,9 +40,10 @@ public class FileController {
         return productFileService.addImportExcel(list);
     }
 
-    @GetMapping("/downloadProductTemplateExcel")
-    public AjaxResult downloadProductTemplateExcel() {
-        return productFileService.downloadProductTemplateExcel();
-    }
+//    @ApiOperation("下载产品信息模板(未使用)")
+//    @GetMapping("/downloadProductTemplateExcel")
+//    public AjaxResult downloadProductTemplateExcel() {
+//        return productFileService.downloadProductTemplateExcel();
+//    }
 
 }
