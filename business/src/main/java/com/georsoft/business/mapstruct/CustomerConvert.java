@@ -2,6 +2,8 @@ package com.georsoft.business.mapstruct;
 
 import com.georsoft.business.entity.DTO.QryCustomerInfoDTO;
 import com.georsoft.business.entity.PO.CustomerPO;
+import com.georsoft.business.entity.PO.CustomerReportPO;
+import com.georsoft.business.entity.VO.CustomerReportVO;
 
 public class CustomerConvert {
 
@@ -15,5 +17,13 @@ public class CustomerConvert {
         customerPO.setIdCard(customer.getIdCard());
         customerPO.setProductId(customer.getProductId());
         return customerPO;
+    }
+
+    public static CustomerReportVO convertToCustomerReportVO (CustomerReportPO customer) {
+        CustomerReportVO customerVO = new CustomerReportVO();
+        customerVO.setImageCount(customer.getImageCount());
+        customerVO.setOrgCode(customer.getOrgCode());
+        customerVO.setUserId(customer.getUserId());
+        return customerVO;
     }
 }

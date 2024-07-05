@@ -1,6 +1,8 @@
 package com.georsoft.business.mapstruct;
 
+import com.georsoft.business.entity.PO.OrgReportPO;
 import com.georsoft.business.entity.VO.OrgOptionsVO;
+import com.georsoft.business.entity.VO.OrgReportVO;
 import com.georsoft.common.core.domain.entity.SysDept;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -18,5 +20,15 @@ public class OrgConvertBasic {
         orgOptionsVO.setDeptId(data.getDeptId());
         orgOptionsVO.setDeptName(data.getDeptName());
         return orgOptionsVO;
+    }
+
+    public static OrgReportVO toOrgReportVO(OrgReportPO data){
+        if ( data == null ) {
+            return null;
+        }
+        OrgReportVO orgReportVO = new OrgReportVO();
+        orgReportVO.setOrgCode(data.getOrgCode());
+        orgReportVO.setImageCount(data.getImageCount());
+        return orgReportVO;
     }
 }

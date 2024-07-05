@@ -12,11 +12,11 @@
         <module name="common" />
         <module name="business" />
         <module name="admin" />
-        <module name="generator" />
         <module name="quartz" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="generator" target="1.8" />
       <module name="ruoyi-admin" target="1.8" />
       <module name="ruoyi-common" target="1.8" />
       <module name="ruoyi-framework" target="1.8" />

@@ -5,6 +5,8 @@ import com.georsoft.business.entity.PO.OrgReportPO;
 import com.georsoft.business.entity.VO.CustomerReportVO;
 import com.georsoft.business.entity.VO.OrgReportVO;
 import com.georsoft.business.mapper.OrgMapper;
+import com.georsoft.business.mapstruct.CustomerConvert;
+import com.georsoft.business.mapstruct.OrgConvertBasic;
 import com.georsoft.business.service.ReportService;
 import com.georsoft.common.core.domain.AjaxResult;
 import org.apache.ibatis.annotations.Param;
@@ -32,7 +34,9 @@ public class ReportServiceImpl implements ReportService {
     public AjaxResult getCustomerReport(String orgCode, String userId) {
         List<CustomerReportPO> list = orgMapper.qryCustomerReport(orgCode, userId);
         List<CustomerReportVO> voList = new ArrayList<>();
-        BeanUtils.copyProperties(list, voList);
+        for (CustomerReportPO po : list) {
+            voList.add(CustomerConvert.convertToCustomerReportVO(po));
+        }
         return AjaxResult.success(voList);
     }
 
@@ -45,7 +49,9 @@ public class ReportServiceImpl implements ReportService {
     public AjaxResult getOrgReport(String orgCode) {
         List<OrgReportPO> list = orgMapper.qryOrgReport(orgCode);
         List<OrgReportVO> voList = new ArrayList<>();
-        BeanUtils.copyProperties(list, voList);
+        for (OrgReportPO po : list){
+            voList.add(OrgConvertBasic.toOrgReportVO(po));
+        }
         return AjaxResult.success(voList);
     }
 }
