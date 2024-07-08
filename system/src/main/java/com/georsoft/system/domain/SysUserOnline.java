@@ -20,7 +20,7 @@ public class SysUserOnline
     private String ipaddr;
 
     /** 登录地址 */
-    private String loginLocation;F
+    private String loginLocation;
 
     /** 浏览器类型 */
     private String browser;
