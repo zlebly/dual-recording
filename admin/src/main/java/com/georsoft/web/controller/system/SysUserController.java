@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.georsoft.common.annotation.Log;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysDept;
+import com.georsoft.common.core.domain.entity.UsrOrg;
 import com.georsoft.common.core.domain.entity.SysRole;
 import com.georsoft.common.core.domain.entity.SysUser;
 import com.georsoft.common.core.page.TableDataInfo;
@@ -27,7 +27,7 @@ import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.poi.ExcelUtil;
-import com.georsoft.system.service.ISysDeptService;
+import com.georsoft.system.service.IUsrOrgService;
 import com.georsoft.system.service.ISysPostService;
 import com.georsoft.system.service.ISysRoleService;
 import com.georsoft.system.service.ISysUserService;
@@ -48,7 +48,7 @@ public class SysUserController extends BaseController
     private ISysRoleService roleService;
 
     @Autowired
-    private ISysDeptService deptService;
+    private IUsrOrgService orgService;
 
     @Autowired
     private ISysPostService postService;
@@ -124,7 +124,7 @@ public class SysUserController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user)
     {
-        deptService.checkDeptDataScope(user.getDeptId());
+        orgService.checkOrgDataScope(user.getOrgCode());
         roleService.checkRoleDataScope(user.getRoleIds());
         if (!userService.checkUserNameUnique(user))
         {
@@ -153,7 +153,7 @@ public class SysUserController extends BaseController
     {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
-        deptService.checkDeptDataScope(user.getDeptId());
+        orgService.checkOrgDataScope(user.getOrgCode());
         roleService.checkRoleDataScope(user.getRoleIds());
         if (!userService.checkUserNameUnique(user))
         {
@@ -248,9 +248,9 @@ public class SysUserController extends BaseController
      * 获取部门树列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
-    @GetMapping("/deptTree")
-    public AjaxResult deptTree(SysDept dept)
+    @GetMapping("/orgTree")
+    public AjaxResult orgTree(UsrOrg org)
     {
-        return success(deptService.selectDeptTreeList(dept));
+        return success(orgService.selectOrgTreeList(org));
     }
 }

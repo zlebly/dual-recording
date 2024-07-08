@@ -6,7 +6,7 @@
 
     <resultMap type="com.georsoft.common.core.domain.entity.SysUser" id="UserInfoResult">
         <id     property="userId"      column="user_id"      />
-        <result property="deptId"    column="dept_id"    />
+        <result property="orgCode"    column="org_code"    />
         <result property="userName"     column="user_name"     />
         <result property="nickName"   column="nick_name"   />
         <result property="email"   column="email"   />
@@ -24,7 +24,7 @@
     <select id="qryUserInfoByOrg" parameterType="String" resultMap="UserInfoResult">
         SELECT
             user_id,
-            dept_id,
+            org_code,
             user_name,
             nick_name,
             email,
@@ -39,6 +39,6 @@
         FROM
             sys_user
         WHERE
-            dept_id = #{currentOrgCode}
+            org_code = #{currentOrgCode}
     </select>
 </mapper>

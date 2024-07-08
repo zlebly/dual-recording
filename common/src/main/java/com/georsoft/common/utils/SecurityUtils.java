@@ -39,11 +39,11 @@ public class SecurityUtils
     /**
      * 获取部门ID
      **/
-    public static Long getDeptId()
+    public static Long getOrgId()
     {
         try
         {
-            return getLoginUser().getDeptId();
+            return getLoginUser().getOrgCode();
         }
         catch (Exception e)
         {

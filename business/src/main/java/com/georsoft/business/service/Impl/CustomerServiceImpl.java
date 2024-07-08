@@ -5,7 +5,6 @@ import com.georsoft.business.entity.DTO.QryCustomerInfoDTO;
 import com.georsoft.business.entity.PO.CustomerInfoPO;
 import com.georsoft.business.entity.PO.CustomerPO;
 import com.georsoft.business.entity.PO.DataDictPO;
-import com.georsoft.business.entity.PO.ProductInfoPO;
 import com.georsoft.business.entity.VO.DataDictOptionsVO;
 import com.georsoft.business.entity.VO.OrgOptionsVO;
 import com.georsoft.business.entity.VO.UserOptionsVO;
@@ -17,7 +16,7 @@ import com.georsoft.business.mapstruct.*;
 import com.georsoft.business.service.CustomerService;
 import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysDept;
+import com.georsoft.common.core.domain.entity.UsrOrg;
 import com.georsoft.common.core.domain.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,10 +65,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public AjaxResult getCurrentAndSubOrg() {
         // TODO 暂传江苏省农村信用社联合社（全省汇总）
-        List<SysDept> deptList = orgMapper.qryCurrentAndSubOrg("320000000");
+        List<UsrOrg> orgList = orgMapper.qryCurrentAndSubOrg("320000000");
         List<OrgOptionsVO> result = new ArrayList<>();
-        for (SysDept dept : deptList) {
-            result.add(OrgConvertBasic.toOrgOptionsVO(dept));
+        for (UsrOrg org : orgList) {
+            result.add(OrgConvertBasic.toOrgOptionsVO(org));
         }
         if (CollectionUtils.isEmpty(result)) {
             return AjaxResult.error("数据为空");

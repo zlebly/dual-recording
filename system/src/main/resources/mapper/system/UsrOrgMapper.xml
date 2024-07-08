@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.UsrOrgMapper">
+
+	<resultMap type="UsrOrg" id="UsrOrgResult">
+		<id     property="orgCode"     column="org_code"     />
+		<result property="parentOrgCode"   column="parent_org_code"   />
+		<result property="ancestors"  column="ancestors"   />
+		<result property="orgName"   column="org_name"   />
+		<result property="abbName"   column="abb_name"   />
+		<result property="orgType"   column="org_type"   />
+		<result property="orgClass"   column="org_class"   />
+		<result property="scanFlag"   column="scan_flag"   />
+		<result property="isLeaf"   column="is_leaf"   />
+		<result property="fullOrgCode"   column="full_org_code"   />
+		<result property="bankCodeAccount"   column="bank_code_account"   />
+		<result property="modelCode"   column="model_code"   />
+		<result property="viewIndex"    column="view_index"    />
+		<result property="orgPhone"      column="org_phone"      />
+		<result property="orgAddress"      column="org_address"       />
+		<result property="orgStatus"     column="org_status"      />
+		<result property="parentName" column="parent_name" />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="selectOrgVo">
+        select d.org_code, d.parent_org_code, d.ancestors, d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status, d.scan_flag, d.create_by, d.create_time 
+        from usr_org d
+    </sql>
+    
+	<select id="selectOrgList" parameterType="UsrOrg" resultMap="UsrOrgResult">
+        <include refid="selectOrgVo"/>
+        where d.scan_flag = '0'
+		<if test="orgCode != null and orgCode != 0">
+			AND org_code = #{orgCode}
+		</if>
+        <if test="parentOrgCode != null and parentOrgCode != 0">
+			AND parent_org_code = #{parentOrgCode}
+		</if>
+		<if test="orgName != null and orgName != ''">
+			AND org_name like concat('%', #{orgName}, '%')
+		</if>
+		<if test="orgStatus != null and orgStatus != ''">
+			AND orgStatus = #{orgStatus}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by d.parent_org_code, d.view_index
+    </select>
+    
+    <select id="selectOrgListByRoleId" resultType="Long">
+		select d.org_code
+		from usr_org d
+            left join sys_role_Org rd on d.org_code = rd.org_code
+        where rd.role_id = #{roleId}
+            <if test="OrgCheckStrictly">
+              and d.org_code not in (select d.parent_org_code from usr_org d inner join sys_role_Org rd on d.org_code = rd.org_code and rd.role_id = #{roleId})
+            </if>
+		order by d.parent_org_code, d.view_index
+	</select>
+    
+    <select id="selectOrgById" parameterType="Long" resultMap="UsrOrgResult">
+		select d.org_code, d.parent_org_code, d.ancestors, d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status,
+			(select org_name from usr_org where org_code = d.parent_org_code) parent_name
+		from usr_org d
+		where d.org_code = #{orgCode}
+	</select>
+    
+    <select id="checkOrgExistUser" parameterType="Long" resultType="int">
+		select count(1) from sys_user where org_code = #{orgCode} and scan_flag = '0'
+	</select>
+	
+	<select id="hasChildByOrgCode" parameterType="Long" resultType="int">
+		select count(1) from usr_org
+		where scan_flag = '0' and parent_org_code = #{orgCode} limit 1
+	</select>
+	
+	<select id="selectChildrenOrgById" parameterType="Long" resultMap="UsrOrgResult">
+		select * from usr_org where find_in_set(#{orgCode}, ancestors)
+	</select>
+	
+	<select id="selectNormalChildrenOrgById" parameterType="Long" resultType="int">
+		select count(*) from usr_org where org_status = 0 and scan_flag = '0' and find_in_set(#{orgCode}, ancestors)
+	</select>
+	
+	<select id="checkOrgNameUnique" resultMap="UsrOrgResult">
+	    <include refid="selectOrgVo"/>
+		where org_name=#{orgName} and parent_org_code = #{parentOrgCode} and scan_flag = '0' limit 1
+	</select>
+    
+    <insert id="insertOrg" parameterType="UsrOrg">
+ 		insert into usr_org(
+ 			<if test="orgCode != null and orgCode != 0">org_code,</if>
+ 			<if test="parentOrgCode != null and parentOrgCode != 0">parent_org_code,</if>
+ 			<if test="orgName != null and orgName != ''">org_name,</if>
+ 			<if test="ancestors != null and ancestors != ''">ancestors,</if>
+ 			<if test="viewIndex != null">view_index,</if>
+ 			<if test="orgPhone != null and orgPhone != ''">org_phone,</if>
+ 			<if test="orgAddress != null and orgAddress != ''">org_address,</if>
+ 			<if test="orgStatus != null">org_status,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			create_time
+ 		)values(
+ 			<if test="orgCode != null and orgCode != 0">#{orgCode},</if>
+ 			<if test="parentOrgCode != null and parentOrgCode != 0">#{parentOrgCode},</if>
+ 			<if test="orgName != null and orgName != ''">#{orgName},</if>
+ 			<if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+ 			<if test="viewIndex != null">#{viewIndex},</if>
+ 			<if test="orgPhone != null and orgPhone != ''">#{orgPhone},</if>
+			<if test="orgAddress != null and orgAddress != ''">#{orgAddress},</if>
+ 			<if test="orgStatus != null">#{orgStatus},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			sysdate()
+ 		)
+	</insert>
+	
+	<update id="updateOrg" parameterType="UsrOrg">
+ 		update usr_org
+ 		<set>
+ 			<if test="parentOrgCode != null and parentOrgCode != 0">parent_org_code = #{parentOrgCode},</if>
+ 			<if test="orgName != null and orgName != ''">org_name = #{orgName},</if>
+ 			<if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+ 			<if test="viewIndex != null">view_index = #{viewIndex},</if>
+ 			<if test="orgPhone != null">org_phone = #{orgPhone},</if>
+			<if test="orgAddress != null and orgAddress != ''">#{orgAddress},</if>
+ 			<if test="orgStatus != null and orgStatus != ''">orgStatus = #{orgStatus},</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 			update_time = sysdate()
+ 		</set>
+ 		where org_code = #{orgCode}
+	</update>
+	
+	<update id="updateOrgChildren" parameterType="java.util.List">
+	    update usr_org set ancestors =
+	    <foreach collection="Orgs" item="item" index="index"
+	        separator=" " open="case org_code" close="end">
+	        when #{item.orgCode} then #{item.ancestors}
+	    </foreach>
+	    where org_code in
+	    <foreach collection="Orgs" item="item" index="index"
+	        separator="," open="(" close=")">
+	        #{item.orgCode}
+	    </foreach>
+	</update>
+	 
+	<update id="updateOrgStatusNormal" parameterType="Long">
+ 	    update usr_org set orgStatus = '0' where org_code in 
+ 	    <foreach collection="array" item="orgCode" open="(" separator="," close=")">
+        	#{orgCode}
+        </foreach>
+	</update>
+	
+	<delete id="deleteOrgById" parameterType="Long">
+		update usr_org set scan_flag = '2' where org_code = #{orgCode}
+	</delete>
+
+</mapper> 

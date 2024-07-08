@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class OrgOptionsVO {
-    /** 部门ID */
-    private Long deptId;
+    /** 机构码 */
+    private Long orgCode;
 
-    /** 部门名称 */
-    private String deptName;
+    /** 机构名称 */
+    private String orgName;
 }

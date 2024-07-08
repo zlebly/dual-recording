@@ -4,18 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.georsoft.business.mapper.OrgMapper">
 
-    <!-- TODO 暂时使用SysDept-->
-    <resultMap type="com.georsoft.common.core.domain.entity.SysDept" id="OrdInfoResult">
-        <id     property="deptId"      column="dept_id"      />
-        <result property="parentId"    column="parent_id"    />
+    <resultMap type="com.georsoft.common.core.domain.entity.UsrOrg" id="OrgInfoResult">
+        <id     property="orgCode"      column="org_code"      />
+        <result property="parentOrgCode"    column="parent_org_code"    />
         <result property="ancestors"     column="ancestors"     />
-        <result property="deptName"   column="dept_name"   />
-        <result property="orderNum"    column="order_num"    />
-        <result property="leader"      column="leader"      />
-        <result property="phone"      column="phone"      />
-        <result property="email"     column="email"      />
-        <result property="status"     column="status"      />
-        <result property="delFlag"     column="del_flag"      />
+        <result property="orgName"   column="org_name"   />
+        <result property="viewIndex"    column="view_index"    />
+        <result property="abbName"      column="abb_name"      />
+        <result property="orgPhone"      column="org_phone"      />
+        <result property="orgAddress"     column="org_address"      />
+        <result property="orgStatus"     column="org_status"      />
     </resultMap>
 
     <resultMap type="com.georsoft.business.entity.PO.CustomerReportPO" id="CustomerReportResult">
@@ -30,23 +28,22 @@
     </resultMap>
 
     <!-- 查询产品列表 -->
-    <select id="qryCurrentAndSubOrg" parameterType="String" resultMap="OrdInfoResult">
+    <select id="qryCurrentAndSubOrg" parameterType="String" resultMap="OrgInfoResult">
         SELECT
-            dept_id,
-            parent_id,
+            org_code,
+            parent_org_code,
             ancestors,
-            dept_name,
-            order_num,
-            leader,
-            phone,
-            email,
-            status,
-            del_flag
+            org_name,
+            view_index,
+            abb_name,
+            org_phone,
+            org_address,
+            org_status
         FROM
-            sys_dept
+            usr_org
         WHERE
-            dept_id = #{currentOrgCode}
-           OR parent_id = #{currentOrgCode}
+            org_code = #{currentOrgCode}
+           OR parent_org_code = #{currentOrgCode}
     </select>
 
     <!-- 查询用户双录报表 -->

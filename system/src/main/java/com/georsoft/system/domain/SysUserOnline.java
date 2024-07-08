@@ -10,8 +10,8 @@ public class SysUserOnline
     /** 会话编号 */
     private String tokenId;
 
-    /** 部门名称 */
-    private String deptName;
+    /** 机构名称 */
+    private String orgName;
 
     /** 用户名称 */
     private String userName;
@@ -20,7 +20,7 @@ public class SysUserOnline
     private String ipaddr;
 
     /** 登录地址 */
-    private String loginLocation;
+    private String loginLocation;F
 
     /** 浏览器类型 */
     private String browser;
@@ -41,14 +41,14 @@ public class SysUserOnline
         this.tokenId = tokenId;
     }
 
-    public String getDeptName()
+    public String getOrgName()
     {
-        return deptName;
+        return orgName;
     }
 
-    public void setDeptName(String deptName)
+    public void setOrgName(String orgName)
     {
-        this.deptName = deptName;
+        this.orgName = orgName;
     }
 
     public String getUserName()

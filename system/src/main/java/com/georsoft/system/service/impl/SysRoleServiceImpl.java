@@ -16,10 +16,10 @@ import com.georsoft.common.exception.ServiceException;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.spring.SpringUtils;
-import com.georsoft.system.domain.SysRoleDept;
+import com.georsoft.system.domain.orgCode;
 import com.georsoft.system.domain.SysRoleMenu;
 import com.georsoft.system.domain.SysUserRole;
-import com.georsoft.system.mapper.SysRoleDeptMapper;
+import com.georsoft.system.mapper.SysRoleOrgMapper;
 import com.georsoft.system.mapper.SysRoleMapper;
 import com.georsoft.system.mapper.SysRoleMenuMapper;
 import com.georsoft.system.mapper.SysUserRoleMapper;
@@ -43,7 +43,7 @@ public class SysRoleServiceImpl implements ISysRoleService
     private SysUserRoleMapper userRoleMapper;
 
     @Autowired
-    private SysRoleDeptMapper roleDeptMapper;
+    private SysRoleOrgMapper roleOrgMapper;
 
     /**
      * 根据条件分页查询角色数据
@@ -52,7 +52,7 @@ public class SysRoleServiceImpl implements ISysRoleService
      * @return 角色数据集合信息
      */
     @Override
-    @DataScope(deptAlias = "d")
+    @DataScope(orgAlias = "d")
     public List<SysRole> selectRoleList(SysRole role)
     {
         return roleMapper.selectRoleList(role);
@@ -281,9 +281,9 @@ public class SysRoleServiceImpl implements ISysRoleService
         // 修改角色信息
         roleMapper.updateRole(role);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
+        roleOrgMapper.deleteRoleOrgByRoleId(role.getRoleId());
         // 新增角色和部门信息（数据权限）
-        return insertRoleDept(role);
+        return insertRoleOrg(role);
     }
 
     /**
@@ -315,21 +315,21 @@ public class SysRoleServiceImpl implements ISysRoleService
      *
      * @param role 角色对象
      */
-    public int insertRoleDept(SysRole role)
+    public int insertRoleOrg(SysRole role)
     {
         int rows = 1;
         // 新增角色与部门（数据权限）管理
-        List<SysRoleDept> list = new ArrayList<SysRoleDept>();
-        for (Long deptId : role.getDeptIds())
+        List<orgCode> list = new ArrayList<orgCode>();
+        for (Long orgId : role.getOrgCodes())
         {
-            SysRoleDept rd = new SysRoleDept();
+            orgCode rd = new orgCode();
             rd.setRoleId(role.getRoleId());
-            rd.setDeptId(deptId);
+            rd.setOrgCode(orgId);
             list.add(rd);
         }
         if (list.size() > 0)
         {
-            rows = roleDeptMapper.batchRoleDept(list);
+            rows = roleOrgMapper.batchRoleOrg(list);
         }
         return rows;
     }
@@ -347,7 +347,7 @@ public class SysRoleServiceImpl implements ISysRoleService
         // 删除角色与菜单关联
         roleMenuMapper.deleteRoleMenuByRoleId(roleId);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDeptByRoleId(roleId);
+        roleOrgMapper.deleteRoleOrgByRoleId(roleId);
         return roleMapper.deleteRoleById(roleId);
     }
 
@@ -374,7 +374,7 @@ public class SysRoleServiceImpl implements ISysRoleService
         // 删除角色与菜单关联
         roleMenuMapper.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDept(roleIds);
+        roleOrgMapper.deleteRoleOrg(roleIds);
         return roleMapper.deleteRoleByIds(roleIds);
     }
 

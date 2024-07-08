@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.georsoft.common.annotation.Log;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysDept;
+import com.georsoft.common.core.domain.entity.UsrOrg;
 import com.georsoft.common.core.domain.entity.SysRole;
 import com.georsoft.common.core.domain.entity.SysUser;
 import com.georsoft.common.core.domain.model.LoginUser;
@@ -27,7 +27,7 @@ import com.georsoft.common.utils.poi.ExcelUtil;
 import com.georsoft.framework.web.service.SysPermissionService;
 import com.georsoft.framework.web.service.TokenService;
 import com.georsoft.system.domain.SysUserRole;
-import com.georsoft.system.service.ISysDeptService;
+import com.georsoft.system.service.IUsrOrgService;
 import com.georsoft.system.service.ISysRoleService;
 import com.georsoft.system.service.ISysUserService;
 
@@ -53,7 +53,7 @@ public class SysRoleController extends BaseController
     private ISysUserService userService;
 
     @Autowired
-    private ISysDeptService deptService;
+    private IUsrOrgService orgService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
@@ -251,12 +251,12 @@ public class SysRoleController extends BaseController
      * 获取对应角色部门树列表
      */
     @PreAuthorize("@ss.hasPermi('system:role:query')")
-    @GetMapping(value = "/deptTree/{roleId}")
-    public AjaxResult deptTree(@PathVariable("roleId") Long roleId)
+    @GetMapping(value = "/orgTree/{roleId}")
+    public AjaxResult orgTree(@PathVariable("roleId") Long roleId)
     {
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("checkedKeys", deptService.selectDeptListByRoleId(roleId));
-        ajax.put("depts", deptService.selectDeptTreeList(new SysDept()));
+        ajax.put("checkedKeys", orgService.selectOrgListByRoleId(roleId));
+        ajax.put("orgs", orgService.selectOrgTreeList(new UsrOrg()));
         return ajax;
     }
 }

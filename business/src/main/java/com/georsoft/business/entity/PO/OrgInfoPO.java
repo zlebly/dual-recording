@@ -4,25 +4,23 @@ import lombok.Data;
 
 @Data
 public class OrgInfoPO {
-    private String deptId;
+    private String orgCode;
 
-    private String parentId;
+    private String parentOrgCode;
 
     private String ancestors;
 
-    private String deptName;
+    private String abbName;
 
-    private String orderNum;
+    private String viewIndex;
 
-    private String leader;
+    private String orgPhone;
 
-    private String phone;
+    private String orgAddress;
 
-    private String email;
+    private String orgStatus;
 
-    private String status;
-
-    private String del_flag;
+    private String scanFlag;
 
     private String create_by;
 
