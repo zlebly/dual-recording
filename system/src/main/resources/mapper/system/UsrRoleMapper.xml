@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.UsrRoleMapper">
+
+	<resultMap type="UsrRole" id="SysRoleResult">
+		<id     property="roleCode"             column="role_code"               />
+		<result property="roleName"           column="role_name"             />
+		<result property="viewIndex"           column="view_index"             />
+		<result property="remark"             column="remark"                />
+		<result property="orgClass"             column="org_class"                />
+		<result property="signInFlag"             column="signin_flag"                />
+	</resultMap>
+	
+	<sql id="selectRoleVo">
+	    select distinct r.role_code, r.role_name, r.view_index, r.orgClass, r.signin_flag, r.remark
+        from usr_role r
+	        left join usr_user_role ur on ur.role_code = r.role_code
+	        left join usr_users u on u.login_name = ur.login_name
+	        left join usr_org d on u.org_code = d.org_code
+    </sql>
+    
+    <select id="selectRoleList" parameterType="UsrRole" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		where
+		<if test="roleCode != null and roleCode != 0">
+			AND r.role_code = #{roleCode}
+		</if>
+		<if test="roleName != null and roleName != ''">
+			AND r.role_name like concat('%', #{roleName}, '%')
+		</if>
+		order by r.view_index
+	</select>
+    
+	<select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		WHERE u.id = #{userId}
+	</select>
+	
+	<select id="selectRoleAll" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+	</select>
+	
+	<select id="selectRoleListByUserId" parameterType="Long" resultType="Long">
+		select r.role_code
+        from usr_role r
+	        left join usr_user_role ur on ur.role_code = r.role_code
+	        left join usr_users u on u.login_name = ur.login_name
+	    where u.id = #{userId}
+	</select>
+	
+	<select id="selectRoleById" parameterType="Long" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		where r.role_code = #{roleCode}
+	</select>
+	
+	<select id="selectRolesByUserName" parameterType="String" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		WHERE u.user_name = #{userName}
+	</select>
+	
+	<select id="checkRoleNameUnique" parameterType="String" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		 where r.role_name=#{roleName} limit 1
+	</select>
+	
+ 	<insert id="insertRole" parameterType="UsrRole" useGeneratedKeys="true" keyProperty="roleCode">
+ 		insert into usr_role(
+ 			<if test="roleCode != null and roleCode != 0">role_code,</if>
+ 			<if test="roleName != null and roleName != ''">role_name,</if>
+ 			<if test="viewIndex != null">view_index,</if>
+ 			<if test="remark != null and remark != ''">remark,</if>
+ 			create_time
+ 		)values(
+ 			<if test="roleCode != null and roleCode != 0">#{roleCode},</if>
+ 			<if test="roleName != null and roleName != ''">#{roleName},</if>
+ 			<if test="viewIndex != null">#{viewIndex},</if>
+ 			<if test="remark != null and remark != ''">#{remark},</if>
+ 			sysdate()
+ 		)
+	</insert>
+	
+	<update id="updateRole" parameterType="UsrRole">
+ 		update usr_role
+ 		<set>
+ 			<if test="roleName != null and roleName != ''">role_name = #{roleName},</if>
+ 			<if test="viewIndex != null">view_index = #{viewIndex},</if>
+ 			<if test="remark != null">remark = #{remark},</if>
+ 		</set>
+ 		where role_code = #{roleCode}
+	</update>
+	
+	<delete id="deleteRoleById" parameterType="Long">
+ 		delete from usr_role where role_code = #{roleCode}
+ 	</delete>
+ 	
+ 	<delete id="deleteRoleByIds" parameterType="Long">
+		delete from usr_role where role_code in
+ 		<foreach collection="array" item="roleCode" open="(" separator="," close=")">
+ 			#{roleCode}
+        </foreach> 
+ 	</delete>
+</mapper> 

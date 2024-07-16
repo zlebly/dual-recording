@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.exception.user.UserPasswordNotMatchException;
 import com.georsoft.common.exception.user.UserPasswordRetryLimitExceedException;
 import com.georsoft.common.utils.SecurityUtils;
@@ -42,7 +42,7 @@ public class SysPasswordService
         return CacheConstants.PWD_ERR_CNT_KEY + username;
     }
 
-    public void validate(SysUser user)
+    public void validate(UsrUsers user)
     {
         Authentication usernamePasswordAuthenticationToken = AuthenticationContextHolder.getContext();
         String username = usernamePasswordAuthenticationToken.getName();
@@ -72,7 +72,7 @@ public class SysPasswordService
         }
     }
 
-    public boolean matches(SysUser user, String rawPassword)
+    public boolean matches(UsrUsers user, String rawPassword)
     {
         return SecurityUtils.matchesPassword(rawPassword, user.getPassword());
     }

@@ -13,10 +13,10 @@ public interface SysNoticeMapper
     /**
      * 查询公告信息
      * 
-     * @param noticeId 公告ID
+     * @param id 公告ID
      * @return 公告信息
      */
-    public SysNotice selectNoticeById(Long noticeId);
+    public SysNotice selectNoticeById(Long id);
 
     /**
      * 查询公告列表
@@ -45,16 +45,16 @@ public interface SysNoticeMapper
     /**
      * 批量删除公告
      * 
-     * @param noticeId 公告ID
+     * @param id 公告ID
      * @return 结果
      */
-    public int deleteNoticeById(Long noticeId);
+    public int deleteNoticeById(Long id);
 
     /**
      * 批量删除公告信息
      * 
-     * @param noticeIds 需要删除的公告ID
+     * @param ids 需要删除的公告ID
      * @return 结果
      */
-    public int deleteNoticeByIds(Long[] noticeIds);
+    public int deleteNoticeByIds(Long[] ids);
 }

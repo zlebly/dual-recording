@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 用户和岗位关联 sys_user_post
+ * 用户和岗位关联 usr_users_post
  * 
  * @author douwenjie
  */

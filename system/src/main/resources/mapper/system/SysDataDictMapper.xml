@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.SysDataDictMapper">
+	
+	<resultMap type="SysDataDict" id="SysDictDataResult">
+		<id     property="id"   column="id"   />
+		<result property="viewIndex"   column="view_index"   />
+		<result property="dictName"  column="dict_name"  />
+		<result property="dictCode"  column="dict_code"  />
+		<result property="dictType"   column="dict_type"   />
+		<result property="remark"   column="remark"   />
+		<result property="enableDate"   column="enable_date"   />
+		<result property="expireDate"  column="expire_date"  />
+		<result property="stopFlag"  column="stop_flag"  />
+		<result property="relDictCode"     column="rel_dict_code"      />
+	</resultMap>
+	
+	<sql id="selectDictDataVo">
+        select id, view_index, dict_name, dict_code, dict_type, remark, enable_date, expire_date, stop_flag, rel_dict_code
+		from sys_data_dict
+    </sql>
+
+	<select id="selectDictDataList" parameterType="SysDataDict" resultMap="SysDictDataResult">
+	    <include refid="selectDictDataVo"/>
+		<where>
+		    <if test="dictType != null and dictType != ''">
+				AND dict_type = #{dictType}
+			</if>
+			<if test="dictName != null and dictName != ''">
+				AND dict_name like concat('%', #{dictName}, '%')
+			</if>
+			<if test="stopFlag != null and stopFlag != ''">
+				AND stop_flag = #{stopFlag}
+			</if>
+		</where>
+		order by view_index asc
+	</select>
+	
+	<select id="selectDictDataByType" parameterType="SysDataDict" resultMap="SysDictDataResult">
+		<include refid="selectDictDataVo"/>
+		where status = '0' and dict_type = #{dictType} order by view_index asc
+	</select>
+	
+	<select id="selectDictName" resultType="String">
+		select dict_name from sys_data_dict
+		where dict_type = #{dictType} and dict_code = #{dictCode}
+	</select>
+	
+	<select id="selectDictDataById" parameterType="Long" resultMap="SysDictDataResult">
+		<include refid="selectDictDataVo"/>
+		where id = #{id}
+	</select>
+	
+	<select id="countDictDataByType" resultType="Integer">
+	    select count(1) from sys_data_dict where dict_type=#{dictType}
+	</select>
+	
+	<delete id="deleteDictDataById" parameterType="Long">
+ 		delete from sys_data_dict where id = #{id}
+ 	</delete>
+ 	
+ 	<delete id="deleteDictDataByIds" parameterType="Long">
+ 		delete from sys_data_dict where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
+ 			#{id}
+        </foreach> 
+ 	</delete>
+	
+	<update id="updateDictData" parameterType="SysDataDict">
+ 		update sys_data_dict
+ 		<set>
+ 			<if test="viewIndex != null">view_index = #{viewIndex},</if>
+ 			<if test="dictName != null and dictName != ''">dict_name = #{dictName},</if>
+ 			<if test="dictCode != null and dictCode != ''">dict_code = #{dictCode},</if>
+ 			<if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+ 			<if test="stopFlag != null">stop_flag = #{stopFlag},</if>
+ 			<if test="remark != null">remark = #{remark},</if>
+			<if test="enableDate != null">enable_date = #{enableDate},</if>
+			<if test="expireDate != null">expire_date = #{expireDate},</if>
+			<if test="relDictCode != null">rel_dict_code = #{relDictCode}</if>
+ 		</set>
+ 		where id = #{id}
+	</update>
+	
+	<update id="updateDictDataType" parameterType="String">
+ 		update sys_data_dict set dict_type = #{newDictType} where dict_type = #{oldDictType}
+	</update>
+ 	
+ 	<insert id="insertDictData" parameterType="SysDataDict">
+ 		insert into sys_data_dict(
+ 			<if test="viewIndex != null">view_index,</if>
+ 			<if test="dictName != null and dictName != ''">dict_name,</if>
+ 			<if test="dictCode != null and dictCode != ''">dict_code,</if>
+ 			<if test="dictType != null and dictType != ''">dict_type,</if>
+ 			<if test="stopFlag != null">stop_flag,</if>
+ 			<if test="remark != null and remark != ''">remark</if>
+ 			create_time
+ 		)values(
+ 		    <if test="viewIndex != null">#{viewIndex},</if>
+ 		    <if test="dictName != null and dictName != ''">#{dictName},</if>
+ 			<if test="dictCode != null and dictCode != ''">#{dictCode},</if>
+ 			<if test="dictType != null and dictType != ''">#{dictType},</if>
+			<if test="stopFlag != null">#{stop_flag},</if>
+ 			<if test="remark != null and remark != ''">#{remark}</if>
+ 		)
+	</insert>
+	
+</mapper> 

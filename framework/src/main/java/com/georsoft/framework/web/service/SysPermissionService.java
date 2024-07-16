@@ -6,10 +6,10 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import com.georsoft.common.core.domain.entity.SysRole;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrRole;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.system.service.ISysMenuService;
-import com.georsoft.system.service.ISysRoleService;
+import com.georsoft.system.service.IUsrRoleService;
 
 /**
  * 用户权限处理
@@ -20,7 +20,7 @@ import com.georsoft.system.service.ISysRoleService;
 public class SysPermissionService
 {
     @Autowired
-    private ISysRoleService roleService;
+    private IUsrRoleService roleService;
 
     @Autowired
     private ISysMenuService menuService;
@@ -31,7 +31,7 @@ public class SysPermissionService
      * @param user 用户信息
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(SysUser user)
+    public Set<String> getRolePermission(UsrUsers user)
     {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
@@ -41,7 +41,8 @@ public class SysPermissionService
         }
         else
         {
-            roles.addAll(roleService.selectRolePermissionByUserId(user.getUserId()));
+            // TODO 获取角色权限
+            roles.addAll(roleService.selectRolePermissionByUserId(user.getId()));
         }
         return roles;
     }
@@ -52,7 +53,7 @@ public class SysPermissionService
      * @param user 用户信息
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(SysUser user)
+    public Set<String> getMenuPermission(UsrUsers user)
     {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
@@ -62,20 +63,20 @@ public class SysPermissionService
         }
         else
         {
-            List<SysRole> roles = user.getRoles();
+            List<UsrRole> roles = user.getRoles();
             if (!CollectionUtils.isEmpty(roles))
             {
                 // 多角色设置permissions属性，以便数据权限匹配权限
-                for (SysRole role : roles)
+                for (UsrRole role : roles)
                 {
-                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
+                    Set<String> rolePerms = menuService.selectMenuPermsByRoleCode(role.getRoleCode());
                     role.setPermissions(rolePerms);
                     perms.addAll(rolePerms);
                 }
             }
             else
             {
-                perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));
+                perms.addAll(menuService.selectMenuPermsByUserId(user.getId()));
             }
         }
         return perms;

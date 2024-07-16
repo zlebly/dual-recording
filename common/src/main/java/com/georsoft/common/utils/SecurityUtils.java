@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.PatternMatchUtils;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.constant.HttpStatus;
-import com.georsoft.common.core.domain.entity.SysRole;
+import com.georsoft.common.core.domain.entity.UsrRole;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.exception.ServiceException;
 
@@ -148,31 +148,4 @@ public class SecurityUtils
         return authorities.stream().filter(StringUtils::hasText)
                 .anyMatch(x -> Constants.ALL_PERMISSION.equals(x) || PatternMatchUtils.simpleMatch(x, permission));
     }
-
-    /**
-     * 验证用户是否拥有某个角色
-     * 
-     * @param role 角色标识
-     * @return 用户是否具备某角色
-     */
-    public static boolean hasRole(String role)
-    {
-        List<SysRole> roleList = getLoginUser().getUser().getRoles();
-        Collection<String> roles = roleList.stream().map(SysRole::getRoleKey).collect(Collectors.toSet());
-        return hasRole(roles, role);
-    }
-
-    /**
-     * 判断是否包含角色
-     * 
-     * @param roles 角色列表
-     * @param role 角色
-     * @return 用户是否具备某角色权限
-     */
-    public static boolean hasRole(Collection<String> roles, String role)
-    {
-        return roles.stream().filter(StringUtils::hasText)
-                .anyMatch(x -> Constants.SUPER_ADMIN.equals(x) || PatternMatchUtils.simpleMatch(x, role));
-    }
-
 }

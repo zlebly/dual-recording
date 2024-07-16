@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.UsrUserMapper">
+
+    <resultMap type="UsrUsers" id="SysUserResult">
+		<id property="id" column="id"/>
+		<result property="userName" column="user_name"/>
+		<result property="loginName" column="login_name"/>
+		<result property="password" column="password"/>
+		<result property="createDate" column="create_date"/>
+		<result property="enableDate" column="enable_date"/>
+		<result property="expireDate" column="expire_date"/>
+		<result property="mobileNo" column="mobile_no"/>
+		<result property="sex" column="sex"/>
+		<result property="orgCode" column="org_code"/>
+		<result property="loginStatus" column="login_status"/>
+		<result property="stopFlag" column="stop_flag"/>
+		<result property="email" column="e_mail"/>
+		<result property="loginTime" column="last_login_time"/>
+		<result property="changePwd" column="change_pwd"/>
+		<result property="retryTime" column="retry_time"/>
+		<result property="lockStatus" column="lock_status"/>
+		<result property="orgClass" column="org_class"/>
+		<result property="centerFlag" column="center_flag"/>
+		<result property="loginNum" column="login_num"/>
+		<result property="logoutTime" column="logout_time"/>
+		<result property="viewIndex" column="view_index"/>
+		<result property="typeCode" column="type_code"/>
+		<result property="optId" column="opt_id"/>
+		<result property="idCardNo" column="idcard_no"/>
+		<result property="remark" column="remark"/>
+		<result property="acceptEmail" column="accept_email"/>
+		<result property="acceptSms" column="accept_sms"/>
+		<result property="levelNo" column="level_no"/>
+		<result property="importFlag" column="import_flag"/>
+		<result property="fingerFlag" column="finger_flag"/>
+		<result property="fullOrgCode" column="full_org_code"/>
+		<result property="mobileNo1" column="mobile_no1"/>
+		<result property="raLoginStatus" column="ra_login_status"/>
+		<result property="raComputerIp" column="ra_computer_ip"/>
+		<result property="partOrgCode" column="part_org_code"/>
+        <association property="org"    javaType="UsrOrg"         resultMap="orgResult" />
+        <collection  property="roles"   javaType="java.util.List"  resultMap="RoleResult" />
+    </resultMap>
+	
+    <resultMap id="orgResult" type="UsrOrg">
+        <id     property="orgCode"    column="org_code"     />
+        <result property="parentOrgCode"  column="parent_org_code"   />
+        <result property="orgName"  column="org_name"   />
+        <result property="ancestors" column="ancestors"   />
+		<result property="viewIndex"    column="view_index"    />
+		<result property="orgStatus"     column="org_status"      />
+    </resultMap>
+	
+    <resultMap id="RoleResult" type="UsrRole">
+        <id     property="roleCode"       column="role_code"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="viewIndex"     column="view_index"      />
+        <result property="dataScope"    column="data_scope"     />
+    </resultMap>
+	
+	<sql id="selectUserVo">
+        select u.id, u.org_code, u.user_name, u.login_name, u.e_mail, u.mobile_no, u.password, u.sex, u.login_status, u.stop_flag, u.ra_computer_ip, u.login_time,
+        d.org_code, d.parent_org_code, d.org_name, d.view_index, d.org_status as org_status,
+        r.role_code, r.role_name, r.view_index
+        from usr_users u
+		    left join usr_org d on u.org_code = d.org_code
+		    left join usr_user_role ur on u.login_name = ur.login_name
+		    left join usr_role r on r.role_code = ur.role_code
+    </sql>
+    
+    <select id="selectUserList" parameterType="UsrUsers" resultMap="SysUserResult">
+		select u.id, u.org_code, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex,
+		       u.login_status, u.stop_flag, u.ra_computer_ip, u.login_time, u.create_by, u.create_time, u.remark,
+		       d.org_name from usr_users u
+		left join usr_org d on u.org_code = d.org_code
+		where u.del_flag = '0'
+		<if test="userId != null and userId != 0">
+			AND u.id = #{id}
+		</if>
+		<if test="userName != null and userName != ''">
+			AND u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND u.login_status = #{loginStatus}
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			AND u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+			AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+		</if>
+		<if test="orgCode != null and orgCode != 0">
+			AND (u.org_code = #{orgCode} OR u.org_code IN ( SELECT t.org_code FROM usr_org t WHERE find_in_set(#{orgCode}, ancestors) ))
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+	
+	<select id="selectAllocatedList" parameterType="UsrUsers" resultMap="SysUserResult">
+	    select distinct u.user_id, u.org_code, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+	    from usr_users u
+			 left join usr_org d on u.org_code = d.org_code
+			 left join usr_user_role ur on u.user_id = ur.user_id
+			 left join usr_role r on r.role_code = ur.role_code
+	    where u.del_flag = '0' and r.role_code = #{roleCode}
+	    <if test="userName != null and userName != ''">
+			AND u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			AND u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+	
+	<select id="selectUnallocatedList" parameterType="UsrUsers" resultMap="SysUserResult">
+	    select distinct u.user_id, u.org_code, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+	    from usr_users u
+			 left join usr_org d on u.org_code = d.org_code
+			 left join usr_user_role ur on u.user_id = ur.user_id
+			 left join usr_role r on r.role_code = ur.role_code
+	    where u.del_flag = '0' and (r.role_code != #{roleCode} or r.role_code IS NULL)
+	    and u.user_id not in (select u.user_id from usr_users u inner join usr_user_role ur on u.user_id = ur.user_id and ur.role_code = #{roleCode})
+	    <if test="userName != null and userName != ''">
+			AND u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			AND u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+	
+	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
+	    <include refid="selectUserVo"/>
+		where u.user_name = #{userName} and u.del_flag = '0'
+	</select>
+	
+	<select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.user_id = #{userId}
+	</select>
+	
+	<select id="checkUserNameUnique" parameterType="String" resultMap="SysUserResult">
+		select id, user_name from usr_users where user_name = #{userName} and stop_flag = '0' limit 1
+	</select>
+	
+	<select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
+		select id, mobile_no from usr_users where mobile_no = #{mobileNo} and stop_flag = '0' limit 1
+	</select>
+	
+	<select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
+		select id, e_mail from usr_users where e_mail = #{email} and stop_flag = '0' limit 1
+	</select>
+	<select id="selectLoginNameByUserId" resultType="java.lang.String">
+		select login_name from usr_users where id = #{userId}
+	</select>
+
+	<insert id="insertUser" parameterType="UsrUsers" useGeneratedKeys="true" keyProperty="userId">
+ 		insert into usr_users(
+		<if test="id != null and id != ''">id,</if>
+		<if test="userName != null and userName != ''">user_name,</if>
+		<if test="loginName != null and loginName != ''">login_name,</if>
+		<if test="password != null and password != ''">password,</if>
+		<if test="createDate != null">create_date,</if>
+		<if test="enableDate != null">enable_date,</if>
+		<if test="expireDate != null">expire_date,</if>
+		<if test="mobileNo != null and mobileNo != ''">mobile_no,</if>
+		<if test="sex != null and sex != ''">sex,</if>
+		<if test="orgCode != null and orgCode != ''">org_code,</if>
+		<if test="loginStatus != null and loginStatus != ''">login_status,</if>
+		<if test="stopFlag != null and stopFlag != ''">stop_flag,</if>
+		<if test="email != null and email != ''">e_mail,</if>
+		<if test="loginTime != null">login_time,</if>
+		<if test="changePwd != null and changePwd != ''">change_pwd,</if>
+		<if test="retryTime != null and retryTime != ''">retry_time,</if>
+		<if test="lockStatus != null and lockStatus != ''">lock_status,</if>
+		<if test="orgClass != null and orgClass != ''">org_class,</if>
+		<if test="centerFlag != null">center_flag,</if>
+		<if test="loginNum != null and loginNum != ''">login_num,</if>
+		<if test="logoutTime != null">logout_time,</if>
+		<if test="viewIndex != null and viewIndex != ''">view_index,</if>
+		<if test="typeCode != null and typeCode != ''">type_code,</if>
+		<if test="optId != null and optId != ''">opt_id,</if>
+		<if test="idCardNo != null and idCardNo != ''">idcard_no,</if>
+		<if test="remark != null and remark != ''">remark,</if>
+		<if test="acceptEmail != null and acceptEmail != ''">accept_email,</if>
+		<if test="acceptSms != null and acceptSms != ''">accept_sms,</if>
+		<if test="levelNo != null and levelNo != ''">level_no,</if>
+		<if test="importFlag != null and importFlag != ''">import_flag,</if>
+		<if test="fingerFlag != null and fingerFlag != ''">finger_flag,</if>
+		<if test="fullOrgCode != null and fullOrgCode != ''">full_org_code,</if>
+		<if test="mobileNo1 != null and mobileNo1 != ''">mobile_no1,</if>
+		<if test="raLoginStatus != null and raLoginStatus != ''">ra_login_status,</if>
+		<if test="raComputerIp != null and raComputerIp != ''">ra_computer_ip,</if>
+		<if test="partOrgCode != null and partOrgCode != ''">part_org_code,</if>
+		) VALUES (
+		<if test="id != null and id != ''">#{id},</if>
+		<if test="userName != null and userName != ''">#{userName},</if>
+		<if test="loginName != null and loginName != ''">#{loginName},</if>
+		<if test="password != null and password != ''">#{password},</if>
+		<if test="createDate != null">#{createDate},</if>
+		<if test="enableDate != null">#{enableDate},</if>
+		<if test="expireDate != null">#{expireDate},</if>
+		<if test="mobileNo != null and mobileNo != ''">#{mobileNo},</if>
+		<if test="sex != null and sex != ''">#{sex},</if>
+		<if test="orgCode != null and orgCode != ''">#{orgCode},</if>
+		<if test="loginStatus != null and loginStatus != ''">#{loginStatus},</if>
+		<if test="stopFlag != null and stopFlag != ''">#{stopFlag},</if>
+		<if test="email != null and email != ''">#{email},</if>
+		<if test="loginTime != null">#{loginTime},</if>
+		<if test="changePwd != null and changePwd != ''">#{changePwd},</if>
+		<if test="retryTime != null and retryTime != ''">#{retryTime},</if>
+		<if test="lockStatus != null and lockStatus != ''">#{lockStatus},</if>
+		<if test="orgClass != null and orgClass != ''">#{orgClass},</if>
+		<if test="centerFlag != null">#{centerFlag},</if>
+		<if test="loginNum != null and loginNum != ''">#{loginNum},</if>
+		<if test="logoutTime != null">#{logoutTime},</if>
+		<if test="viewIndex != null and viewIndex != ''">#{viewIndex},</if>
+		<if test="typeCode != null and typeCode != ''">#{typeCode},</if>
+		<if test="optId != null and optId != ''">#{optId},</if>
+		<if test="idCardNo != null and idCardNo != ''">#{idCardNo},</if>
+		<if test="remark != null and remark != ''">#{remark},</if>
+		<if test="acceptEmail != null and acceptEmail != ''">#{acceptEmail},</if>
+		<if test="acceptSms != null and acceptSms != ''">#{acceptSms},</if>
+		<if test="levelNo != null and levelNo != ''">#{levelNo},</if>
+		<if test="importFlag != null and importFlag != ''">#{importFlag},</if>
+		<if test="fingerFlag != null and fingerFlag != ''">#{fingerFlag},</if>
+		<if test="fullOrgCode != null and fullOrgCode != ''">#{fullOrgCode},</if>
+		<if test="mobileNo1 != null and mobileNo1 != ''">#{mobileNo1},</if>
+		<if test="raLoginStatus != null and raLoginStatus != ''">#{raLoginStatus},</if>
+		<if test="raComputerIp != null and raComputerIp != ''">#{raComputerIp},</if>
+		<if test="partOrgCode != null and partOrgCode != ''">#{partOrgCode},</if>
+ 		)
+	</insert>
+	
+	<update id="updateUser" parameterType="UsrUsers">
+ 		update usr_users
+ 		<set>
+			<if test="userName != null and userName != ''">user_name = #{userName},</if>
+			<if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
+			<if test="password != null and password != ''">password = #{password},</if>
+			<if test="mobileNo != null and mobileNo != ''">mobile_no = #{mobileNo},</if>
+			<if test="sex != null and sex != ''">sex = #{sex},</if>
+			<if test="orgCode != null and orgCode != ''">org_code = #{orgCode},</if>
+			<if test="loginStatus != null and loginStatus != ''">login_status = #{loginStatus},</if>
+			<if test="email != null and email != ''">e_mail = #{email},</if>
+			<if test="loginTime != null">login_time = #{loginTime},</if>
+			<if test="changePwd != null and changePwd != ''">change_pwd = #{changePwd},</if>
+			<if test="retryTime != null and retryTime != ''">retry_time = #{retryTime},</if>
+			<if test="lockStatus != null and lockStatus != ''">lock_status = #{lockStatus},</if>
+			<if test="orgClass != null and orgClass != ''">org_class = #{orgClass},</if>
+			<if test="centerFlag != null">center_flag = #{centerFlag},</if>
+			<if test="loginNum != null and loginNum != ''">login_num = #{loginNum},</if>
+			<if test="logoutTime != null">logout_time = #{logoutTime},</if>
+			<if test="viewIndex != null and viewIndex != ''">view_index = #{viewIndex},</if>
+			<if test="typeCode != null and typeCode != ''">type_code = #{typeCode},</if>
+			<if test="optId != null and optId != ''">opt_id = #{optId},</if>
+			<if test="idCardNo != null and idCardNo != ''">idcard_no = #{idCardNo},</if>
+			<if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="acceptEmail != null and acceptEmail != ''">accept_email = #{acceptEmail},</if>
+			<if test="acceptSms != null and acceptSms != ''">accept_sms = #{acceptSms},</if>
+			<if test="levelNo != null and levelNo != ''">level_no = #{levelNo},</if>
+			<if test="importFlag != null and importFlag != ''">import_flag = #{importFlag},</if>
+			<if test="fingerFlag != null and fingerFlag != ''">finger_flag = #{fingerFlag},</if>
+			<if test="fullOrgCode != null and fullOrgCode != ''">full_org_code = #{fullOrgCode},</if>
+			<if test="mobileNo1 != null and mobileNo1 != ''">mobile_no1 = #{mobileNo1},</if>
+			<if test="raLoginStatus != null and raLoginStatus != ''">ra_login_status = #{raLoginStatus},</if>
+			<if test="raComputerIp != null and raComputerIp != ''">ra_computer_ip = #{raComputerIp},</if>
+			<if test="partOrgCode != null and partOrgCode != ''">part_org_code = #{partOrgCode},</if>
+		</set>
+ 		where id = #{id}
+	</update>
+	
+	<update id="updateUserStatus" parameterType="UsrUsers">
+ 		update usr_users set login_status = #{loginStatus} where id = #{id}
+	</update>
+	
+	<update id="updateUserAvatar" parameterType="UsrUsers">
+#  		update usr_users set avatar = #{avatar} where user_name = #{userName}
+	</update>
+	
+	<update id="resetUserPwd" parameterType="UsrUsers">
+ 		update usr_users set password = #{password} where user_name = #{userName}
+	</update>
+	
+	<delete id="deleteUserById" parameterType="Long">
+ 		update usr_users set stop_flag = '2' where id = #{id}
+ 	</delete>
+ 	
+ 	<delete id="deleteUserByIds" parameterType="Long">
+ 		update usr_users set stop_flag = '2' where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
+ 			#{id}
+        </foreach> 
+ 	</delete>
+	
+</mapper> 

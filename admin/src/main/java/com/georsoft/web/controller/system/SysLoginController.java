@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysMenu;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrFunctionTree;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.LoginBody;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.framework.web.service.SysLoginService;
@@ -59,7 +59,7 @@ public class SysLoginController
     @GetMapping("getInfo")
     public AjaxResult getInfo()
     {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
+        UsrUsers user = SecurityUtils.getLoginUser().getUser();
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
@@ -80,7 +80,7 @@ public class SysLoginController
     public AjaxResult getRouters()
     {
         Long userId = SecurityUtils.getUserId();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
+        List<UsrFunctionTree> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

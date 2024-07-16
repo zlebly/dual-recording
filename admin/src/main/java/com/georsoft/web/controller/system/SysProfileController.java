@@ -13,7 +13,7 @@ import com.georsoft.common.annotation.Log;
 import com.georsoft.common.config.GeorSoftConfig;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.SecurityUtils;
@@ -21,7 +21,7 @@ import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.file.FileUploadUtils;
 import com.georsoft.common.utils.file.MimeTypeUtils;
 import com.georsoft.framework.web.service.TokenService;
-import com.georsoft.system.service.ISysUserService;
+import com.georsoft.system.service.IUsrUserService;
 
 /**
  * 个人信息 业务处理
@@ -33,7 +33,7 @@ import com.georsoft.system.service.ISysUserService;
 public class SysProfileController extends BaseController
 {
     @Autowired
-    private ISysUserService userService;
+    private IUsrUserService userService;
 
     @Autowired
     private TokenService tokenService;
@@ -45,7 +45,7 @@ public class SysProfileController extends BaseController
     public AjaxResult profile()
     {
         LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
+        UsrUsers user = loginUser.getUser();
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
@@ -57,15 +57,15 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult updateProfile(@RequestBody SysUser user)
+    public AjaxResult updateProfile(@RequestBody UsrUsers user)
     {
         LoginUser loginUser = getLoginUser();
-        SysUser currentUser = loginUser.getUser();
-        currentUser.setNickName(user.getNickName());
+        UsrUsers currentUser = loginUser.getUser();
+        currentUser.setLoginName(user.getLoginName());
         currentUser.setEmail(user.getEmail());
-        currentUser.setPhonenumber(user.getPhonenumber());
+        currentUser.setMobileNo(user.getMobileNo());
         currentUser.setSex(user.getSex());
-        if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(currentUser))
+        if (StringUtils.isNotEmpty(user.getMobileNo()) && !userService.checkPhoneUnique(currentUser))
         {
             return error("修改用户'" + loginUser.getUsername() + "'失败，手机号码已存在");
         }
@@ -122,15 +122,16 @@ public class SysProfileController extends BaseController
         {
             LoginUser loginUser = getLoginUser();
             String avatar = FileUploadUtils.upload(GeorSoftConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
-            if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
-            {
-                AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", avatar);
-                // 更新缓存用户头像
-                loginUser.getUser().setAvatar(avatar);
-                tokenService.setLoginUser(loginUser);
-                return ajax;
-            }
+            // TODO
+//            if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
+//            {
+//                AjaxResult ajax = AjaxResult.success();
+//                ajax.put("imgUrl", avatar);
+//                // TODO 更新缓存用户头像
+////                loginUser.getUser().setAvatar(avatar);
+//                tokenService.setLoginUser(loginUser);
+//                return ajax;
+//            }
         }
         return error("上传图片异常，请联系管理员");
     }

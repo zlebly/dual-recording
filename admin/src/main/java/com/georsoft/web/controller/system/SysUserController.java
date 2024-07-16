@@ -20,17 +20,17 @@ import com.georsoft.common.annotation.Log;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.domain.entity.UsrOrg;
-import com.georsoft.common.core.domain.entity.SysRole;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrRole;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.page.TableDataInfo;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.poi.ExcelUtil;
 import com.georsoft.system.service.IUsrOrgService;
-import com.georsoft.system.service.ISysPostService;
-import com.georsoft.system.service.ISysRoleService;
-import com.georsoft.system.service.ISysUserService;
+import com.georsoft.system.service.IUsrPostService;
+import com.georsoft.system.service.IUsrRoleService;
+import com.georsoft.system.service.IUsrUserService;
 
 /**
  * 用户信息
@@ -42,36 +42,36 @@ import com.georsoft.system.service.ISysUserService;
 public class SysUserController extends BaseController
 {
     @Autowired
-    private ISysUserService userService;
+    private IUsrUserService userService;
 
     @Autowired
-    private ISysRoleService roleService;
+    private IUsrRoleService roleService;
 
     @Autowired
     private IUsrOrgService orgService;
 
     @Autowired
-    private ISysPostService postService;
+    private IUsrPostService postService;
 
     /**
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysUser user)
+    public TableDataInfo list(UsrUsers user)
     {
         startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        List<UsrUsers> list = userService.selectUserList(user);
         return getDataTable(list);
     }
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysUser user)
+    public void export(HttpServletResponse response, UsrUsers user)
     {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        List<UsrUsers> list = userService.selectUserList(user);
+        ExcelUtil<UsrUsers> util = new ExcelUtil<UsrUsers>(UsrUsers.class);
         util.exportExcel(response, list, "用户数据");
     }
 
@@ -80,8 +80,8 @@ public class SysUserController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
+        ExcelUtil<UsrUsers> util = new ExcelUtil<UsrUsers>(UsrUsers.class);
+        List<UsrUsers> userList = util.importExcel(file.getInputStream());
         String operName = getUsername();
         String message = userService.importUser(userList, updateSupport, operName);
         return success(message);
@@ -90,7 +90,7 @@ public class SysUserController extends BaseController
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        ExcelUtil<UsrUsers> util = new ExcelUtil<UsrUsers>(UsrUsers.class);
         util.importTemplateExcel(response, "用户数据");
     }
 
@@ -103,15 +103,15 @@ public class SysUserController extends BaseController
     {
         userService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
-        List<SysRole> roles = roleService.selectRoleAll();
-        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        List<UsrRole> roles = roleService.selectRoleAll();
+        ajax.put("roles", UsrUsers.isAdmin(SecurityUtils.getUsername()) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         ajax.put("posts", postService.selectPostAll());
         if (StringUtils.isNotNull(userId))
         {
-            SysUser sysUser = userService.selectUserById(userId);
-            ajax.put(AjaxResult.DATA_TAG, sysUser);
+            UsrUsers usrUsers = userService.selectUserById(userId);
+            ajax.put(AjaxResult.DATA_TAG, usrUsers);
             ajax.put("postIds", postService.selectPostListByUserId(userId));
-            ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
+            ajax.put("roleIds", usrUsers.getRoles().stream().map(UsrRole::getRoleCode).collect(Collectors.toList()));
         }
         return ajax;
     }
@@ -122,15 +122,15 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUser user)
+    public AjaxResult add(@Validated @RequestBody UsrUsers user)
     {
         orgService.checkOrgDataScope(user.getOrgCode());
-        roleService.checkRoleDataScope(user.getRoleIds());
+        roleService.checkRoleDataScope(user.getRoleCodes());
         if (!userService.checkUserNameUnique(user))
         {
             return error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
         }
-        else if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user))
+        else if (StringUtils.isNotEmpty(user.getMobileNo()) && !userService.checkPhoneUnique(user))
         {
             return error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
@@ -149,17 +149,17 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysUser user)
+    public AjaxResult edit(@Validated @RequestBody UsrUsers user)
     {
         userService.checkUserAllowed(user);
-        userService.checkUserDataScope(user.getUserId());
+        userService.checkUserDataScope(user.getId());
         orgService.checkOrgDataScope(user.getOrgCode());
-        roleService.checkRoleDataScope(user.getRoleIds());
+        roleService.checkRoleDataScope(user.getRoleCodes());
         if (!userService.checkUserNameUnique(user))
         {
             return error("修改用户'" + user.getUserName() + "'失败，登录账号已存在");
         }
-        else if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user))
+        else if (StringUtils.isNotEmpty(user.getMobileNo()) && !userService.checkPhoneUnique(user))
         {
             return error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
@@ -192,10 +192,10 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:resetPwd')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
-    public AjaxResult resetPwd(@RequestBody SysUser user)
+    public AjaxResult resetPwd(@RequestBody UsrUsers user)
     {
         userService.checkUserAllowed(user);
-        userService.checkUserDataScope(user.getUserId());
+        userService.checkUserDataScope(user.getId());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         user.setUpdateBy(getUsername());
         return toAjax(userService.resetPwd(user));
@@ -207,10 +207,10 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysUser user)
+    public AjaxResult changeStatus(@RequestBody UsrUsers user)
     {
         userService.checkUserAllowed(user);
-        userService.checkUserDataScope(user.getUserId());
+        userService.checkUserDataScope(user.getId());
         user.setUpdateBy(getUsername());
         return toAjax(userService.updateUserStatus(user));
     }
@@ -223,10 +223,10 @@ public class SysUserController extends BaseController
     public AjaxResult authRole(@PathVariable("userId") Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
-        SysUser user = userService.selectUserById(userId);
-        List<SysRole> roles = roleService.selectRolesByUserId(userId);
+        UsrUsers user = userService.selectUserById(userId);
+        List<UsrRole> roles = roleService.selectRolesByUserId(userId);
         ajax.put("user", user);
-        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        ajax.put("roles", UsrUsers.isAdmin(SecurityUtils.getUsername()) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         return ajax;
     }
 

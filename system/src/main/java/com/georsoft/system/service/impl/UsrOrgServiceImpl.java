@@ -10,15 +10,15 @@ import com.georsoft.common.annotation.DataScope;
 import com.georsoft.common.constant.UserConstants;
 import com.georsoft.common.core.domain.TreeSelect;
 import com.georsoft.common.core.domain.entity.UsrOrg;
-import com.georsoft.common.core.domain.entity.SysRole;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrRole;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.text.Convert;
 import com.georsoft.common.exception.ServiceException;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.common.utils.spring.SpringUtils;
 import com.georsoft.system.mapper.UsrOrgMapper;
-import com.georsoft.system.mapper.SysRoleMapper;
+import com.georsoft.system.mapper.UsrRoleMapper;
 import com.georsoft.system.service.IUsrOrgService;
 
 /**
@@ -33,7 +33,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     private UsrOrgMapper orgMapper;
 
     @Autowired
-    private SysRoleMapper roleMapper;
+    private UsrRoleMapper roleMapper;
 
     /**
      * 查询机构管理数据
@@ -110,8 +110,8 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     @Override
     public List<Long> selectOrgListByRoleId(Long roleId)
     {
-        SysRole role = roleMapper.selectRoleById(roleId);
-        return orgMapper.selectOrgListByRoleId(roleId, role.isOrgCheckStrictly());
+//        UsrRole role = roleMapper.selectRoleById(roleId);
+        return orgMapper.selectOrgListByRoleId(roleId);
     }
 
     /**
@@ -190,7 +190,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     @Override
     public void checkOrgDataScope(Long orgCode)
     {
-        if (!SysUser.isAdmin(SecurityUtils.getUserId()) && StringUtils.isNotNull(orgCode))
+        if (!UsrUsers.isAdmin(SecurityUtils.getUsername()) && StringUtils.isNotNull(orgCode))
         {
             UsrOrg org = new UsrOrg();
             org.setOrgCode(orgCode);

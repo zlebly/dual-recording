@@ -3,7 +3,7 @@ package com.georsoft.system.service;
 import java.util.List;
 import java.util.Set;
 import com.georsoft.common.core.domain.TreeSelect;
-import com.georsoft.common.core.domain.entity.SysMenu;
+import com.georsoft.common.core.domain.entity.UsrFunctionTree;
 import com.georsoft.system.domain.vo.RouterVo;
 
 /**
@@ -19,7 +19,7 @@ public interface ISysMenuService
      * @param userId 用户ID
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuList(Long userId);
+    public List<UsrFunctionTree> selectMenuList(Long userId);
 
     /**
      * 根据用户查询系统菜单列表
@@ -28,7 +28,7 @@ public interface ISysMenuService
      * @param userId 用户ID
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuList(SysMenu menu, Long userId);
+    public List<UsrFunctionTree> selectMenuList(UsrFunctionTree menu, Long userId);
 
     /**
      * 根据用户ID查询权限
@@ -41,10 +41,10 @@ public interface ISysMenuService
     /**
      * 根据角色ID查询权限
      * 
-     * @param roleId 角色ID
+     * @param roleCode 角色ID
      * @return 权限列表
      */
-    public Set<String> selectMenuPermsByRoleId(Long roleId);
+    public Set<String> selectMenuPermsByRoleCode(Long roleCode);
 
     /**
      * 根据用户ID查询菜单树信息
@@ -52,15 +52,15 @@ public interface ISysMenuService
      * @param userId 用户ID
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuTreeByUserId(Long userId);
+    public List<UsrFunctionTree> selectMenuTreeByUserId(Long userId);
 
     /**
      * 根据角色ID查询菜单树信息
      * 
-     * @param roleId 角色ID
+     * @param roleCode 角色ID
      * @return 选中菜单列表
      */
-    public List<Long> selectMenuListByRoleId(Long roleId);
+    public List<Long> selectMenuListByRoleCode(Long roleCode);
 
     /**
      * 构建前端路由所需要的菜单
@@ -68,7 +68,7 @@ public interface ISysMenuService
      * @param menus 菜单列表
      * @return 路由列表
      */
-    public List<RouterVo> buildMenus(List<SysMenu> menus);
+    public List<RouterVo> buildMenus(List<UsrFunctionTree> menus);
 
     /**
      * 构建前端所需要树结构
@@ -76,7 +76,7 @@ public interface ISysMenuService
      * @param menus 菜单列表
      * @return 树结构列表
      */
-    public List<SysMenu> buildMenuTree(List<SysMenu> menus);
+    public List<UsrFunctionTree> buildMenuTree(List<UsrFunctionTree> menus);
 
     /**
      * 构建前端所需要下拉树结构
@@ -84,7 +84,7 @@ public interface ISysMenuService
      * @param menus 菜单列表
      * @return 下拉树结构列表
      */
-    public List<TreeSelect> buildMenuTreeSelect(List<SysMenu> menus);
+    public List<TreeSelect> buildMenuTreeSelect(List<UsrFunctionTree> menus);
 
     /**
      * 根据菜单ID查询信息
@@ -92,7 +92,7 @@ public interface ISysMenuService
      * @param menuId 菜单ID
      * @return 菜单信息
      */
-    public SysMenu selectMenuById(Long menuId);
+    public UsrFunctionTree selectMenuById(Long menuId);
 
     /**
      * 是否存在菜单子节点
@@ -116,7 +116,7 @@ public interface ISysMenuService
      * @param menu 菜单信息
      * @return 结果
      */
-    public int insertMenu(SysMenu menu);
+    public int insertMenu(UsrFunctionTree menu);
 
     /**
      * 修改保存菜单信息
@@ -124,7 +124,7 @@ public interface ISysMenuService
      * @param menu 菜单信息
      * @return 结果
      */
-    public int updateMenu(SysMenu menu);
+    public int updateMenu(UsrFunctionTree menu);
 
     /**
      * 删除菜单管理信息
@@ -140,5 +140,5 @@ public interface ISysMenuService
      * @param menu 菜单信息
      * @return 结果
      */
-    public boolean checkMenuNameUnique(SysMenu menu);
+    public boolean checkMenuNameUnique(UsrFunctionTree menu);
 }

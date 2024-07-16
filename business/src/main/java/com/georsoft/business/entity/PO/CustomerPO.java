@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * 用户表 sys_user
+ * 用户表 usr_users
  */
 
 @Data

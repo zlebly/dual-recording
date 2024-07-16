@@ -18,7 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson2.JSON;
 import com.georsoft.common.annotation.Log;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.enums.BusinessStatus;
 import com.georsoft.common.enums.HttpMethod;
@@ -97,7 +97,7 @@ public class LogAspect
             if (loginUser != null)
             {
                 operLog.setOperName(loginUser.getUsername());
-                SysUser currentUser = loginUser.getUser();
+                UsrUsers currentUser = loginUser.getUser();
                 if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getOrg()))
                 {
                     operLog.setOrgName(currentUser.getOrg().getOrgName());

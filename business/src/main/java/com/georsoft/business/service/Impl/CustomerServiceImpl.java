@@ -17,7 +17,7 @@ import com.georsoft.business.service.CustomerService;
 import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.domain.entity.UsrOrg;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -82,9 +82,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public AjaxResult getUserInfoByOrg() {
         // TODO 暂传江苏省农村信用社联合社（全省汇总）
-        List<SysUser> userList = userMapper.qryUserInfoByOrg("320000000");
+        List<UsrUsers> userList = userMapper.qryUserInfoByOrg("320000000");
         List<UserOptionsVO> result = new ArrayList<>();
-        for (SysUser user : userList) {
+        for (UsrUsers user : userList) {
             result.add(UserConvertBasic.toUserOptionsVO(user));
         }
         if (CollectionUtils.isEmpty(result)) {

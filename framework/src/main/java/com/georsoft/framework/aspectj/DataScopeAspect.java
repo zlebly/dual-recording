@@ -8,8 +8,8 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import com.georsoft.common.annotation.DataScope;
 import com.georsoft.common.core.domain.BaseEntity;
-import com.georsoft.common.core.domain.entity.SysRole;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrRole;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.core.text.Convert;
 import com.georsoft.common.utils.SecurityUtils;
@@ -68,7 +68,7 @@ public class DataScopeAspect
         LoginUser loginUser = SecurityUtils.getLoginUser();
         if (StringUtils.isNotNull(loginUser))
         {
-            SysUser currentUser = loginUser.getUser();
+            UsrUsers currentUser = loginUser.getUser();
             // 如果是超级管理员，则不过滤数据
             if (StringUtils.isNotNull(currentUser) && !currentUser.isAdmin())
             {
@@ -88,7 +88,7 @@ public class DataScopeAspect
      * @param userAlias 用户别名
      * @param permission 权限字符
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String orgAlias, String userAlias, String permission)
+    public static void dataScopeFilter(JoinPoint joinPoint, UsrUsers user, String orgAlias, String userAlias, String permission)
     {
         StringBuilder sqlString = new StringBuilder();
         List<String> conditions = new ArrayList<String>();
@@ -96,11 +96,11 @@ public class DataScopeAspect
         user.getRoles().forEach(role -> {
             if (DATA_SCOPE_CUSTOM.equals(role.getDataScope()) && StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
             {
-                scopeCustomIds.add(Convert.toStr(role.getRoleId()));
+                scopeCustomIds.add(Convert.toStr(role.getRoleCode()));
             }
         });
 
-        for (SysRole role : user.getRoles())
+        for (UsrRole role : user.getRoles())
         {
             String dataScope = role.getDataScope();
             if (conditions.contains(dataScope))
@@ -126,7 +126,7 @@ public class DataScopeAspect
                 }
                 else
                 {
-                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code = {} ) ", orgAlias, role.getRoleId()));
+                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code = {} ) ", orgAlias, role.getRoleCode()));
                 }
             }
             else if (DATA_SCOPE_ORG.equals(dataScope))
@@ -141,7 +141,7 @@ public class DataScopeAspect
             {
                 if (StringUtils.isNotBlank(userAlias))
                 {
-                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
+                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getId()));
                 }
                 else
                 {

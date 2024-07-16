@@ -22,7 +22,7 @@ import com.georsoft.common.core.page.TableDataInfo;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.system.domain.SysUserOnline;
-import com.georsoft.system.service.ISysUserOnlineService;
+import com.georsoft.system.service.IUsrUserOnlineService;
 
 /**
  * 在线用户监控
@@ -34,7 +34,7 @@ import com.georsoft.system.service.ISysUserOnlineService;
 public class SysUserOnlineController extends BaseController
 {
     @Autowired
-    private ISysUserOnlineService userOnlineService;
+    private IUsrUserOnlineService userOnlineService;
 
     @Autowired
     private CacheService cacheService;

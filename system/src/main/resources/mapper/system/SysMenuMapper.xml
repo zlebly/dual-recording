@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.georsoft.system.mapper.SysMenuMapper">
 
-	<resultMap type="SysMenu" id="SysMenuResult">
+	<resultMap type="UsrFunctionTree" id="SysMenuResult">
 		<id     property="menuId"         column="menu_id"        />
 		<result property="menuName"       column="menu_name"      />
 		<result property="parentName"     column="parent_name"    />
@@ -32,7 +32,7 @@
 		from sys_menu
     </sql>
     
-    <select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">
+    <select id="selectMenuList" parameterType="UsrFunctionTree" resultMap="SysMenuResult">
 		<include refid="selectMenuVo"/>
 		<where>
 			<if test="menuName != null and menuName != ''">
@@ -54,12 +54,12 @@
 		order by m.parent_id, m.order_num
 	</select>
 	
-	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
+	<select id="selectMenuListByUserId" parameterType="UsrFunctionTree" resultMap="SysMenuResult">
 		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
 		from sys_menu m
-		left join sys_role_menu rm on m.menu_id = rm.menu_id
-		left join sys_user_role ur on rm.role_id = ur.role_id
-		left join sys_role ro on ur.role_id = ro.role_id
+		left join usr_role_menu rm on m.menu_id = rm.menu_id
+		left join usr_user_role ur on rm.role_code = ur.role_code
+		left join usr_role ro on ur.role_code = ro.role_code
 		where ur.user_id = #{params.userId}
 		<if test="menuName != null and menuName != ''">
             AND m.menu_name like concat('%', #{menuName}, '%')
@@ -76,46 +76,44 @@
     <select id="selectMenuTreeByUserId" parameterType="Long" resultMap="SysMenuResult">
 		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
 		from sys_menu m
-			 left join sys_role_menu rm on m.menu_id = rm.menu_id
-			 left join sys_user_role ur on rm.role_id = ur.role_id
-			 left join sys_role ro on ur.role_id = ro.role_id
-			 left join sys_user u on ur.user_id = u.user_id
+			 left join usr_role_menu rm on m.menu_id = rm.menu_id
+			 left join usr_user_role ur on rm.role_code = ur.role_code
+			 left join usr_role ro on ur.role_code = ro.role_code
+			 left join usr_users u on ur.user_id = u.user_id
 		where u.user_id = #{userId} and m.menu_type in ('M', 'C') and m.status = 0  AND ro.status = 0
 		order by m.parent_id, m.order_num
 	</select>
 	
-	<select id="selectMenuListByRoleId" resultType="Long">
+	<select id="selectMenuListByRoleCode" resultType="Long">
 		select m.menu_id
 		from sys_menu m
-            left join sys_role_menu rm on m.menu_id = rm.menu_id
-        where rm.role_id = #{roleId}
-            <if test="menuCheckStrictly">
-              and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = #{roleId})
-            </if>
+            left join usr_role_menu rm on m.menu_id = rm.menu_id
+        where rm.role_code = #{roleCode}
+              and m.menu_id not in (select m.parent_id from sys_menu m inner join usr_role_menu rm on m.menu_id = rm.menu_id and rm.role_code = #{roleCode})
 		order by m.parent_id, m.order_num
 	</select>
 	
 	<select id="selectMenuPerms" resultType="String">
 		select distinct m.perms
 		from sys_menu m
-			 left join sys_role_menu rm on m.menu_id = rm.menu_id
-			 left join sys_user_role ur on rm.role_id = ur.role_id
+			 left join usr_role_menu rm on m.menu_id = rm.menu_id
+			 left join usr_user_role ur on rm.role_code = ur.role_code
 	</select>
 
 	<select id="selectMenuPermsByUserId" parameterType="Long" resultType="String">
 		select distinct m.perms
 		from sys_menu m
-			 left join sys_role_menu rm on m.menu_id = rm.menu_id
-			 left join sys_user_role ur on rm.role_id = ur.role_id
-			 left join sys_role r on r.role_id = ur.role_id
+			 left join usr_role_menu rm on m.menu_id = rm.menu_id
+			 left join usr_user_role ur on rm.role_code = ur.role_code
+			 left join usr_role r on r.role_code = ur.role_code
 		where m.status = '0' and r.status = '0' and ur.user_id = #{userId}
 	</select>
 	
-	<select id="selectMenuPermsByRoleId" parameterType="Long" resultType="String">
+	<select id="selectMenuPermsByRoleCode" parameterType="Long" resultType="String">
 		select distinct m.perms
 		from sys_menu m
-			 left join sys_role_menu rm on m.menu_id = rm.menu_id
-		where m.status = '0' and rm.role_id = #{roleId}
+			 left join usr_role_menu rm on m.menu_id = rm.menu_id
+		where m.status = '0' and rm.role_code = #{roleCode}
 	</select>
 	
 	<select id="selectMenuById" parameterType="Long" resultMap="SysMenuResult">
@@ -127,12 +125,12 @@
 	    select count(1) from sys_menu where parent_id = #{menuId}  
 	</select>
 	
-	<select id="checkMenuNameUnique" parameterType="SysMenu" resultMap="SysMenuResult">
+	<select id="checkMenuNameUnique" parameterType="UsrFunctionTree" resultMap="SysMenuResult">
 		<include refid="selectMenuVo"/>
 		where menu_name=#{menuName} and parent_id = #{parentId} limit 1
 	</select>
 	
-	<update id="updateMenu" parameterType="SysMenu">
+	<update id="updateMenu" parameterType="UsrFunctionTree">
 		update sys_menu
 		<set>
 			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
@@ -155,7 +153,7 @@
 		where menu_id = #{menuId}
 	</update>
 
-	<insert id="insertMenu" parameterType="SysMenu">
+	<insert id="insertMenu" parameterType="UsrFunctionTree">
 		insert into sys_menu(
 		<if test="menuId != null and menuId != 0">menu_id,</if>
 		<if test="parentId != null and parentId != 0">parent_id,</if>

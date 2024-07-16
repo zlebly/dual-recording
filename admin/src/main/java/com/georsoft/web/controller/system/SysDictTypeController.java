@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.georsoft.common.annotation.Log;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysDictType;
+import com.georsoft.common.core.domain.entity.SysDataDictType;
 import com.georsoft.common.core.page.TableDataInfo;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.poi.ExcelUtil;
-import com.georsoft.system.service.ISysDictTypeService;
+import com.georsoft.system.service.ISysDataDictTypeService;
 
 /**
  * 数据字典信息
@@ -32,24 +32,24 @@ import com.georsoft.system.service.ISysDictTypeService;
 public class SysDictTypeController extends BaseController
 {
     @Autowired
-    private ISysDictTypeService dictTypeService;
+    private ISysDataDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictType dictType)
+    public TableDataInfo list(SysDataDictType dictType)
     {
         startPage();
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
+        List<SysDataDictType> list = dictTypeService.selectDictTypeList(dictType);
         return getDataTable(list);
     }
 
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysDictType dictType)
+    public void export(HttpServletResponse response, SysDataDictType dictType)
     {
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
+        List<SysDataDictType> list = dictTypeService.selectDictTypeList(dictType);
+        ExcelUtil<SysDataDictType> util = new ExcelUtil<SysDataDictType>(SysDataDictType.class);
         util.exportExcel(response, list, "字典类型");
     }
 
@@ -69,7 +69,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
     @Log(title = "字典类型", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysDictType dict)
+    public AjaxResult add(@Validated @RequestBody SysDataDictType dict)
     {
         if (!dictTypeService.checkDictTypeUnique(dict))
         {
@@ -85,7 +85,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
     @Log(title = "字典类型", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysDictType dict)
+    public AjaxResult edit(@Validated @RequestBody SysDataDictType dict)
     {
         if (!dictTypeService.checkDictTypeUnique(dict))
         {
@@ -125,7 +125,7 @@ public class SysDictTypeController extends BaseController
     @GetMapping("/optionselect")
     public AjaxResult optionselect()
     {
-        List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
+        List<SysDataDictType> dictTypes = dictTypeService.selectDictTypeAll();
         return success(dictTypes);
     }
 }

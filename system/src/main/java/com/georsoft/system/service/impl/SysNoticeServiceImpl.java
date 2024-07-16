@@ -21,13 +21,13 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     /**
      * 查询公告信息
      * 
-     * @param noticeId 公告ID
+     * @param id 公告ID
      * @return 公告信息
      */
     @Override
-    public SysNotice selectNoticeById(Long noticeId)
+    public SysNotice selectNoticeById(Long id)
     {
-        return noticeMapper.selectNoticeById(noticeId);
+        return noticeMapper.selectNoticeById(id);
     }
 
     /**
@@ -69,24 +69,24 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     /**
      * 删除公告对象
      * 
-     * @param noticeId 公告ID
+     * @param id 公告ID
      * @return 结果
      */
     @Override
-    public int deleteNoticeById(Long noticeId)
+    public int deleteNoticeById(Long id)
     {
-        return noticeMapper.deleteNoticeById(noticeId);
+        return noticeMapper.deleteNoticeById(id);
     }
 
     /**
      * 批量删除公告信息
      * 
-     * @param noticeIds 需要删除的公告ID
+     * @param ids 需要删除的公告ID
      * @return 结果
      */
     @Override
-    public int deleteNoticeByIds(Long[] noticeIds)
+    public int deleteNoticeByIds(Long[] ids)
     {
-        return noticeMapper.deleteNoticeByIds(noticeIds);
+        return noticeMapper.deleteNoticeByIds(ids);
     }
 }

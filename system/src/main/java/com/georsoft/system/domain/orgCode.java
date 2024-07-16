@@ -11,19 +11,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class orgCode
 {
     /** 角色ID */
-    private Long roleId;
+    private Long roleCode;
     
     /** 机构码 */
     private Long orgCode;
 
-    public Long getRoleId()
+    public Long getRoleCode()
     {
-        return roleId;
+        return roleCode;
     }
 
-    public void setRoleId(Long roleId)
+    public void setRoleCode(Long roleCode)
     {
-        this.roleId = roleId;
+        this.roleCode = roleCode;
     }
 
     public Long getOrgCode()
@@ -39,7 +39,7 @@ public class orgCode
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("roleId", getRoleId())
+            .append("roleId", getRoleCode())
             .append("orgId", getOrgCode())
             .toString();
     }

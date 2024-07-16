@@ -17,8 +17,8 @@ import com.georsoft.common.core.page.TableDataInfo;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.poi.ExcelUtil;
 import com.georsoft.framework.web.service.SysPasswordService;
-import com.georsoft.system.domain.SysLogininfor;
-import com.georsoft.system.service.ISysLogininforService;
+import com.georsoft.system.domain.LoginLog;
+import com.georsoft.system.service.ILoginLogService;
 
 /**
  * 系统访问记录
@@ -30,27 +30,27 @@ import com.georsoft.system.service.ISysLogininforService;
 public class SysLogininforController extends BaseController
 {
     @Autowired
-    private ISysLogininforService logininforService;
+    private ILoginLogService logininforService;
 
     @Autowired
     private SysPasswordService passwordService;
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor logininfor)
+    public TableDataInfo list(LoginLog logininfor)
     {
         startPage();
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
+        List<LoginLog> list = logininforService.selectLogininforList(logininfor);
         return getDataTable(list);
     }
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLogininfor logininfor)
+    public void export(HttpServletResponse response, LoginLog logininfor)
     {
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
-        ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
+        List<LoginLog> list = logininforService.selectLogininforList(logininfor);
+        ExcelUtil<LoginLog> util = new ExcelUtil<LoginLog>(LoginLog.class);
         util.exportExcel(response, list, "登录日志");
     }
 
@@ -59,7 +59,7 @@ public class SysLogininforController extends BaseController
     @DeleteMapping("/{infoIds}")
     public AjaxResult remove(@PathVariable Long[] infoIds)
     {
-        return toAjax(logininforService.deleteLogininforByIds(infoIds));
+        return toAjax(logininforService.deleteLoginLogByIds(infoIds));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
@@ -67,7 +67,7 @@ public class SysLogininforController extends BaseController
     @DeleteMapping("/clean")
     public AjaxResult clean()
     {
-        logininforService.cleanLogininfor();
+        logininforService.cleanLoginLog();
         return success();
     }
 

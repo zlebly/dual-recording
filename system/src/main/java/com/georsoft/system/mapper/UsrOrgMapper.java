@@ -23,10 +23,9 @@ public interface UsrOrgMapper
      * 根据角色ID查询机构树信息
      * 
      * @param roleCode 角色ID
-     * @param orgCheckStrictly 机构树选择项是否关联显示
      * @return 选中机构列表
      */
-    public List<Long> selectOrgListByRoleId(@Param("roleCode") Long roleCode, @Param("orgCheckStrictly") boolean orgCheckStrictly);
+    public List<Long> selectOrgListByRoleId(@Param("roleCode") Long roleCode);
 
     /**
      * 根据机构码查询信息

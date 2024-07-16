@@ -19,8 +19,8 @@ import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.page.TableDataInfo;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.poi.ExcelUtil;
-import com.georsoft.system.domain.SysPost;
-import com.georsoft.system.service.ISysPostService;
+import com.georsoft.system.domain.UsrPost;
+import com.georsoft.system.service.IUsrPostService;
 
 /**
  * 岗位信息操作处理
@@ -32,27 +32,27 @@ import com.georsoft.system.service.ISysPostService;
 public class SysPostController extends BaseController
 {
     @Autowired
-    private ISysPostService postService;
+    private IUsrPostService postService;
 
     /**
      * 获取岗位列表
      */
     @PreAuthorize("@ss.hasPermi('system:post:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysPost post)
+    public TableDataInfo list(UsrPost post)
     {
         startPage();
-        List<SysPost> list = postService.selectPostList(post);
+        List<UsrPost> list = postService.selectPostList(post);
         return getDataTable(list);
     }
     
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysPost post)
+    public void export(HttpServletResponse response, UsrPost post)
     {
-        List<SysPost> list = postService.selectPostList(post);
-        ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
+        List<UsrPost> list = postService.selectPostList(post);
+        ExcelUtil<UsrPost> util = new ExcelUtil<UsrPost>(UsrPost.class);
         util.exportExcel(response, list, "岗位数据");
     }
 
@@ -72,7 +72,7 @@ public class SysPostController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:post:add')")
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysPost post)
+    public AjaxResult add(@Validated @RequestBody UsrPost post)
     {
         if (!postService.checkPostNameUnique(post))
         {
@@ -92,7 +92,7 @@ public class SysPostController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:post:edit')")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysPost post)
+    public AjaxResult edit(@Validated @RequestBody UsrPost post)
     {
         if (!postService.checkPostNameUnique(post))
         {
@@ -123,7 +123,7 @@ public class SysPostController extends BaseController
     @GetMapping("/optionselect")
     public AjaxResult optionselect()
     {
-        List<SysPost> posts = postService.selectPostAll();
+        List<UsrPost> posts = postService.selectPostAll();
         return success(posts);
     }
 }

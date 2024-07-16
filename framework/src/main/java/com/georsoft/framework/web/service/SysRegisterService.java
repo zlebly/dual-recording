@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.constant.UserConstants;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.RegisterBody;
 import com.georsoft.common.exception.user.CaptchaException;
 import com.georsoft.common.exception.user.CaptchaExpireException;
@@ -16,7 +16,7 @@ import com.georsoft.common.utils.StringUtils;
 import com.georsoft.framework.manager.AsyncManager;
 import com.georsoft.framework.manager.factory.AsyncFactory;
 import com.georsoft.system.service.ISysConfigService;
-import com.georsoft.system.service.ISysUserService;
+import com.georsoft.system.service.IUsrUserService;
 
 /**
  * 注册校验方法
@@ -27,7 +27,7 @@ import com.georsoft.system.service.ISysUserService;
 public class SysRegisterService
 {
     @Autowired
-    private ISysUserService userService;
+    private IUsrUserService userService;
 
     @Autowired
     private ISysConfigService configService;
@@ -41,8 +41,8 @@ public class SysRegisterService
     public String register(RegisterBody registerBody)
     {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
-        SysUser sysUser = new SysUser();
-        sysUser.setUserName(username);
+        UsrUsers usrUsers = new UsrUsers();
+        usrUsers.setUserName(username);
 
         // 验证码开关
         boolean captchaEnabled = configService.selectCaptchaEnabled();
@@ -69,15 +69,15 @@ public class SysRegisterService
         {
             msg = "密码长度必须在5到20个字符之间";
         }
-        else if (!userService.checkUserNameUnique(sysUser))
+        else if (!userService.checkUserNameUnique(usrUsers))
         {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
         }
         else
         {
-            sysUser.setNickName(username);
-            sysUser.setPassword(SecurityUtils.encryptPassword(password));
-            boolean regFlag = userService.registerUser(sysUser);
+            usrUsers.setLoginName(username);
+            usrUsers.setPassword(SecurityUtils.encryptPassword(password));
+            boolean regFlag = userService.registerUser(usrUsers);
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";

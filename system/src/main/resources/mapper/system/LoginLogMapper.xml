@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.LoginLogMapper">
+
+	<resultMap type="LoginLog" id="LoginLogResult">
+		<id     property="id"        column="id"           />
+		<result property="operator"      column="operator"         />
+		<result property="loginFlag"        column="login_flag"            />
+		<result property="clientIp"        column="client_ip"            />
+		<result property="clientName" 		column="client_name"    />
+		<result property="remark"           column="remark"               />
+		<result property="operateTime"     column="operate_time"        />
+	</resultMap>
+
+	<insert id="insertLoginLog" parameterType="LoginLog">
+		insert into log_login_log (operator, login_flag, client_ip, client_name, remark, operate_time)
+		values (#{operator}, #{loginFlag}, #{clientIp}, #{loginLocation}, #{remark}, sysdate())
+	</insert>
+	
+	<select id="selectLoginLogList" parameterType="LoginLog" resultMap="LoginLogResult">
+		select id, operator, client_ip, client_name, login_flag, remark, operate_time from log_login_log
+		<where>
+			<if test="clientIp != null and clientIp != ''">
+				AND client_ip like concat('%', #{clientIp}, '%')
+			</if>
+			<if test="loginFlag != null and loginFlag != ''">
+				AND login_flag = #{loginFlag}
+			</if>
+			<if test="operator != null and operator != ''">
+				AND operator like concat('%', #{operator}, '%')
+			</if>
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+				AND operate_time &gt;= #{params.beginTime}
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+				AND operate_time &lt;= #{params.endTime}
+			</if>
+		</where>
+		order by id desc
+	</select>
+	
+	<delete id="deleteLoginLogByIds" parameterType="Long">
+ 		delete from log_login_log where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
+ 			#{id}
+        </foreach> 
+ 	</delete>
+    
+    <update id="cleanLoginLog">
+        truncate table log_login_log
+    </update>
+    
+</mapper> 

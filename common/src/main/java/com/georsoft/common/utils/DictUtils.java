@@ -5,7 +5,7 @@ import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.core.cache.CacheService;
-import com.georsoft.common.core.domain.entity.SysDictData;
+import com.georsoft.common.core.domain.entity.SysDataDict;
 import com.georsoft.common.utils.spring.SpringUtils;
 
 /**
@@ -26,7 +26,7 @@ public class DictUtils
      * @param key 参数键
      * @param dictDatas 字典数据列表
      */
-    public static void setDictCache(String key, List<SysDictData> dictDatas)
+    public static void setDictCache(String key, List<SysDataDict> dictDatas)
     {
         SpringUtils.getBean(CacheService.class).setCacheObject(getCacheKey(key), dictDatas);
     }
@@ -37,7 +37,7 @@ public class DictUtils
      * @param key 参数键
      * @return dictDatas 字典数据列表
      */
-    public static List<SysDictData> getDictCache(String key)
+    public static List<SysDataDict> getDictCache(String key)
     {
         String cacheType = SpringUtils.getRequiredProperty("cache.type");
         if ("redis".equals(cacheType))
@@ -45,10 +45,10 @@ public class DictUtils
             JSONArray arrayCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
             if (StringUtils.isNotNull(arrayCache))
             {
-                return arrayCache.toList(SysDictData.class);
+                return arrayCache.toList(SysDataDict.class);
             }
         } else {
-            List<SysDictData> listCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
+            List<SysDataDict> listCache = SpringUtils.getBean(CacheService.class).getCacheObject(getCacheKey(key));
             if (StringUtils.isNotNull(listCache))
             {
                 return listCache;
@@ -100,20 +100,20 @@ public class DictUtils
     public static String getDictLabel(String dictType, String dictValue, String separator)
     {
         StringBuilder propertyString = new StringBuilder();
-        List<SysDictData> datas = getDictCache(dictType);
+        List<SysDataDict> datas = getDictCache(dictType);
         if (StringUtils.isNull(datas))
         {
             return StringUtils.EMPTY;
         }
         if (StringUtils.containsAny(separator, dictValue))
         {
-            for (SysDictData dict : datas)
+            for (SysDataDict dict : datas)
             {
                 for (String value : dictValue.split(separator))
                 {
-                    if (value.equals(dict.getDictValue()))
+                    if (value.equals(dict.getDictCode()))
                     {
-                        propertyString.append(dict.getDictLabel()).append(separator);
+                        propertyString.append(dict.getDictName()).append(separator);
                         break;
                     }
                 }
@@ -121,11 +121,11 @@ public class DictUtils
         }
         else
         {
-            for (SysDictData dict : datas)
+            for (SysDataDict dict : datas)
             {
-                if (dictValue.equals(dict.getDictValue()))
+                if (dictValue.equals(dict.getDictCode()))
                 {
-                    return dict.getDictLabel();
+                    return dict.getDictName();
                 }
             }
         }
@@ -143,20 +143,20 @@ public class DictUtils
     public static String getDictValue(String dictType, String dictLabel, String separator)
     {
         StringBuilder propertyString = new StringBuilder();
-        List<SysDictData> datas = getDictCache(dictType);
+        List<SysDataDict> datas = getDictCache(dictType);
         if (StringUtils.isNull(datas))
         {
             return StringUtils.EMPTY;
         }
         if (StringUtils.containsAny(separator, dictLabel))
         {
-            for (SysDictData dict : datas)
+            for (SysDataDict dict : datas)
             {
                 for (String label : dictLabel.split(separator))
                 {
-                    if (label.equals(dict.getDictLabel()))
+                    if (label.equals(dict.getDictName()))
                     {
-                        propertyString.append(dict.getDictValue()).append(separator);
+                        propertyString.append(dict.getDictCode()).append(separator);
                         break;
                     }
                 }
@@ -164,11 +164,11 @@ public class DictUtils
         }
         else
         {
-            for (SysDictData dict : datas)
+            for (SysDataDict dict : datas)
             {
-                if (dictLabel.equals(dict.getDictLabel()))
+                if (dictLabel.equals(dict.getDictName()))
                 {
-                    return dict.getDictValue();
+                    return dict.getDictCode();
                 }
             }
         }
@@ -184,14 +184,14 @@ public class DictUtils
     public static String getDictValues(String dictType)
     {
         StringBuilder propertyString = new StringBuilder();
-        List<SysDictData> datas = getDictCache(dictType);
+        List<SysDataDict> datas = getDictCache(dictType);
         if (StringUtils.isNull(datas))
         {
             return StringUtils.EMPTY;
         }
-        for (SysDictData dict : datas)
+        for (SysDataDict dict : datas)
         {
-            propertyString.append(dict.getDictValue()).append(SEPARATOR);
+            propertyString.append(dict.getDictCode()).append(SEPARATOR);
         }
         return StringUtils.stripEnd(propertyString.toString(), SEPARATOR);
     }
@@ -205,14 +205,14 @@ public class DictUtils
     public static String getDictLabels(String dictType)
     {
         StringBuilder propertyString = new StringBuilder();
-        List<SysDictData> datas = getDictCache(dictType);
+        List<SysDataDict> datas = getDictCache(dictType);
         if (StringUtils.isNull(datas))
         {
             return StringUtils.EMPTY;
         }
-        for (SysDictData dict : datas)
+        for (SysDataDict dict : datas)
         {
-            propertyString.append(dict.getDictLabel()).append(SEPARATOR);
+            propertyString.append(dict.getDictName()).append(SEPARATOR);
         }
         return StringUtils.stripEnd(propertyString.toString(), SEPARATOR);
     }

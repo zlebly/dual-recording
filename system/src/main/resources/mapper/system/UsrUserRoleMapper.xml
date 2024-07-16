@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.georsoft.system.mapper.UsrUserRoleMapper">
+
+	<resultMap type="UsrUserRole" id="SysUserRoleResult">
+		<result property="loginName"     column="login_name"      />
+		<result property="roleCode"     column="role_code"      />
+	</resultMap>
+
+	<delete id="deleteUserRoleByUserId" parameterType="Long">
+		delete from usr_user_role where login_name = (select login_name from usr_users where id = #{userId})
+	</delete>
+	
+	<select id="countUserRoleByRoleCode" resultType="Integer">
+	    select count(1) from usr_user_role where role_code=#{roleCode}
+	</select>
+	
+	<delete id="deleteUserRole" parameterType="Long">
+ 		delete from usr_user_role where login_name in
+			(select login_name from usr_users where id in
+ 				<foreach collection="array" item="id" open="(" separator="," close=")">
+					#{id}
+        		</foreach>
+			)
+ 	</delete>
+	
+	<insert id="batchUserRole">
+		insert into usr_user_role(login_name, role_code) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.loginName},#{item.roleCode})
+		</foreach>
+	</insert>
+	
+	<delete id="deleteUserRoleInfo" parameterType="UsrUserRole">
+		delete from usr_user_role where login_name= #{login_name} and role_code=#{roleCode}
+	</delete>
+	
+	<delete id="deleteUserRoleInfos">
+	    delete from usr_user_role where role_code=#{roleCode} and
+			login_name in (select login_name from usr_users where id in
+				<foreach collection="userIds" item="userId" open="(" separator="," close=")">
+					#{userId}
+				</foreach> )
+	</delete>
+</mapper> 

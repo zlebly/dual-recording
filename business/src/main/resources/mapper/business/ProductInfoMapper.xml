@@ -48,7 +48,7 @@
         from
             fcm_product_info f
         left join
-            sys_user s
+            usr_users s
                 on f.create_user_id = s.user_id
         <where>
             <if test="createTimeStart !=null and createTimeStart != ''" >

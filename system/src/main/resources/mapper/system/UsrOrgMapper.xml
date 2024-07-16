@@ -56,11 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOrgListByRoleId" resultType="Long">
 		select d.org_code
 		from usr_org d
-            left join sys_role_Org rd on d.org_code = rd.org_code
-        where rd.role_id = #{roleId}
-            <if test="OrgCheckStrictly">
-              and d.org_code not in (select d.parent_org_code from usr_org d inner join sys_role_Org rd on d.org_code = rd.org_code and rd.role_id = #{roleId})
-            </if>
+            left join usr_role_Org rd on d.org_code = rd.org_code
+        where rd.role_code = #{roleCode}
+              and d.org_code not in (select d.parent_org_code from usr_org d inner join usr_role_Org rd on d.org_code = rd.org_code and rd.role_code = #{roleCode})
 		order by d.parent_org_code, d.view_index
 	</select>
     
@@ -72,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
     
     <select id="checkOrgExistUser" parameterType="Long" resultType="int">
-		select count(1) from sys_user where org_code = #{orgCode} and scan_flag = '0'
+		select count(1) from usr_users where org_code = #{orgCode} and scan_flag = '0'
 	</select>
 	
 	<select id="hasChildByOrgCode" parameterType="Long" resultType="int">

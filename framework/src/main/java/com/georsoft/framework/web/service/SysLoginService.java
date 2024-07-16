@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.georsoft.common.constant.CacheConstants;
 import com.georsoft.common.constant.Constants;
 import com.georsoft.common.constant.UserConstants;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.domain.model.LoginUser;
 import com.georsoft.common.exception.ServiceException;
 import com.georsoft.common.exception.user.BlackListException;
@@ -28,7 +28,7 @@ import com.georsoft.framework.manager.AsyncManager;
 import com.georsoft.framework.manager.factory.AsyncFactory;
 import com.georsoft.framework.security.context.AuthenticationContextHolder;
 import com.georsoft.system.service.ISysConfigService;
-import com.georsoft.system.service.ISysUserService;
+import com.georsoft.system.service.IUsrUserService;
 
 /**
  * 登录校验方法
@@ -48,7 +48,7 @@ public class SysLoginService
     private CacheService cacheService;
     
     @Autowired
-    private ISysUserService userService;
+    private IUsrUserService userService;
 
     @Autowired
     private ISysConfigService configService;
@@ -173,10 +173,10 @@ public class SysLoginService
      */
     public void recordLoginInfo(Long userId)
     {
-        SysUser sysUser = new SysUser();
-        sysUser.setUserId(userId);
-        sysUser.setLoginIp(IpUtils.getIpAddr());
-        sysUser.setLoginDate(DateUtils.getNowDate());
-        userService.updateUserProfile(sysUser);
+        UsrUsers usrUsers = new UsrUsers();
+        usrUsers.setId(userId);
+        usrUsers.setRaComputerIp(IpUtils.getIpAddr());
+        usrUsers.setLoginTime(DateUtils.getNowDate());
+        userService.updateUserProfile(usrUsers);
     }
 }

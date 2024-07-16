@@ -1,7 +1,7 @@
 package com.georsoft.common.core.domain.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.georsoft.common.core.domain.entity.SysUser;
+import com.georsoft.common.core.domain.entity.UsrUsers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -69,19 +69,19 @@ public class LoginUser implements UserDetails
     /**
      * 用户信息
      */
-    private SysUser user;
+    private UsrUsers user;
 
     public LoginUser()
     {
     }
 
-    public LoginUser(SysUser user, Set<String> permissions)
+    public LoginUser(UsrUsers user, Set<String> permissions)
     {
         this.user = user;
         this.permissions = permissions;
     }
 
-    public LoginUser(Long userId, Long orgCode, SysUser user, Set<String> permissions)
+    public LoginUser(Long userId, Long orgCode, UsrUsers user, Set<String> permissions)
     {
         this.userId = userId;
         this.orgCode = orgCode;
@@ -248,12 +248,12 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
-    public SysUser getUser()
+    public UsrUsers getUser()
     {
         return user;
     }
 
-    public void setUser(SysUser user)
+    public void setUser(UsrUsers user)
     {
         this.user = user;
     }

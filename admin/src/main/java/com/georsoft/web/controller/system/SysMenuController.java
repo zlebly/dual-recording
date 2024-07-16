@@ -16,7 +16,7 @@ import com.georsoft.common.annotation.Log;
 import com.georsoft.common.constant.UserConstants;
 import com.georsoft.common.core.controller.BaseController;
 import com.georsoft.common.core.domain.AjaxResult;
-import com.georsoft.common.core.domain.entity.SysMenu;
+import com.georsoft.common.core.domain.entity.UsrFunctionTree;
 import com.georsoft.common.enums.BusinessType;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.system.service.ISysMenuService;
@@ -38,9 +38,9 @@ public class SysMenuController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
     @GetMapping("/list")
-    public AjaxResult list(SysMenu menu)
+    public AjaxResult list(UsrFunctionTree menu)
     {
-        List<SysMenu> menus = menuService.selectMenuList(menu, getUserId());
+        List<UsrFunctionTree> menus = menuService.selectMenuList(menu, getUserId());
         return success(menus);
     }
 
@@ -58,9 +58,9 @@ public class SysMenuController extends BaseController
      * 获取菜单下拉树列表
      */
     @GetMapping("/treeselect")
-    public AjaxResult treeselect(SysMenu menu)
+    public AjaxResult treeselect(UsrFunctionTree menu)
     {
-        List<SysMenu> menus = menuService.selectMenuList(menu, getUserId());
+        List<UsrFunctionTree> menus = menuService.selectMenuList(menu, getUserId());
         return success(menuService.buildMenuTreeSelect(menus));
     }
 
@@ -70,9 +70,9 @@ public class SysMenuController extends BaseController
     @GetMapping(value = "/roleMenuTreeselect/{roleId}")
     public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId)
     {
-        List<SysMenu> menus = menuService.selectMenuList(getUserId());
+        List<UsrFunctionTree> menus = menuService.selectMenuList(getUserId());
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
+        ajax.put("checkedKeys", menuService.selectMenuListByRoleCode(roleId));
         ajax.put("menus", menuService.buildMenuTreeSelect(menus));
         return ajax;
     }
@@ -83,17 +83,16 @@ public class SysMenuController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:menu:add')")
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysMenu menu)
+    public AjaxResult add(@Validated @RequestBody UsrFunctionTree menu)
     {
         if (!menuService.checkMenuNameUnique(menu))
         {
-            return error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
+            return error("新增菜单'" + menu.getFunctionName() + "'失败，菜单名称已存在");
         }
         else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath()))
         {
-            return error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
+            return error("新增菜单'" + menu.getFunctionName() + "'失败，地址必须以http(s)://开头");
         }
-        menu.setCreateBy(getUsername());
         return toAjax(menuService.insertMenu(menu));
     }
 
@@ -103,21 +102,20 @@ public class SysMenuController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:menu:edit')")
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysMenu menu)
+    public AjaxResult edit(@Validated @RequestBody UsrFunctionTree menu)
     {
         if (!menuService.checkMenuNameUnique(menu))
         {
-            return error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
+            return error("修改菜单'" + menu.getFunctionName() + "'失败，菜单名称已存在");
         }
         else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath()))
         {
-            return error("修改菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
+            return error("修改菜单'" + menu.getFunctionName() + "'失败，地址必须以http(s)://开头");
         }
-        else if (menu.getMenuId().equals(menu.getParentId()))
+        else if (menu.getFunctionCode().equals(menu.getParentCode()))
         {
-            return error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
+            return error("修改菜单'" + menu.getFunctionName() + "'失败，上级菜单不能选择自己");
         }
-        menu.setUpdateBy(getUsername());
         return toAjax(menuService.updateMenu(menu));
     }
 

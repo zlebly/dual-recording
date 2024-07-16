@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.georsoft.common.core.domain.BaseEntity;
 import com.georsoft.common.xss.Xss;
 
+import java.util.Date;
+
 /**
  * 通知公告表 sys_notice
  * 
@@ -17,61 +19,68 @@ public class SysNotice extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 公告ID */
-    private Long noticeId;
+    private Long id;
 
     /** 公告标题 */
-    private String noticeTitle;
-
-    /** 公告类型（1通知 2公告） */
-    private String noticeType;
+    private String title;
 
     /** 公告内容 */
-    private String noticeContent;
+    private String content;
 
     /** 公告状态（0正常 1关闭） */
     private String status;
 
-    public Long getNoticeId()
+    private Date createDate;
+
+    private Date createTime;
+
+    private Date publishDate;
+
+    private Date publishTime;
+
+    private Date dueDate;
+
+    private String attachId;
+
+    private String authority;
+
+    private String creator;
+
+    private String browseNumber;
+
+    private String orderId;
+
+    public Long getId()
     {
-        return noticeId;
+        return id;
     }
 
-    public void setNoticeId(Long noticeId)
+    public void setId(Long id)
     {
-        this.noticeId = noticeId;
+        this.id = id;
     }
 
-    public void setNoticeTitle(String noticeTitle)
+    public void setTitle(String title)
     {
-        this.noticeTitle = noticeTitle;
+        this.title = title;
     }
 
     @Xss(message = "公告标题不能包含脚本字符")
     @NotBlank(message = "公告标题不能为空")
     @Size(min = 0, max = 50, message = "公告标题不能超过50个字符")
-    public String getNoticeTitle()
+    public String getTitle()
     {
-        return noticeTitle;
+        return title;
     }
 
-    public void setNoticeType(String noticeType)
+    public void setContent(String content)
     {
-        this.noticeType = noticeType;
+        this.content = content;
     }
 
-    public String getNoticeType()
+    public String getContent()
     {
-        return noticeType;
-    }
-
-    public void setNoticeContent(String noticeContent)
-    {
-        this.noticeContent = noticeContent;
-    }
-
-    public String getNoticeContent()
-    {
-        return noticeContent;
+        return content;
     }
 
     public void setStatus(String status)
@@ -85,18 +94,104 @@ public class SysNotice extends BaseEntity
     }
 
     @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getAttachId() {
+        return attachId;
+    }
+
+    public void setAttachId(String attachId) {
+        this.attachId = attachId;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getBrowseNumber() {
+        return browseNumber;
+    }
+
+    public void setBrowseNumber(String browseNumber) {
+        this.browseNumber = browseNumber;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("noticeId", getNoticeId())
-            .append("noticeTitle", getNoticeTitle())
-            .append("noticeType", getNoticeType())
-            .append("noticeContent", getNoticeContent())
-            .append("status", getStatus())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return "SysNotice{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", status='" + status + '\'' +
+                ", createDate=" + createDate +
+                ", createTime=" + createTime +
+                ", publishDate=" + publishDate +
+                ", publishTime=" + publishTime +
+                ", dueDate=" + dueDate +
+                ", attachId='" + attachId + '\'' +
+                ", authority='" + authority + '\'' +
+                ", creator='" + creator + '\'' +
+                ", browseNumber='" + browseNumber + '\'' +
+                ", orderId='" + orderId + '\'' +
+                '}';
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.georsoft.common.core.domain.entity.UsrOrg;
-import com.georsoft.common.core.domain.entity.SysMenu;
+import com.georsoft.common.core.domain.entity.UsrFunctionTree;
 
 /**
  * Treeselect树结构实体类
@@ -38,10 +38,10 @@ public class TreeSelect implements Serializable
         this.children = org.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public TreeSelect(SysMenu menu)
+    public TreeSelect(UsrFunctionTree menu)
     {
-        this.id = menu.getMenuId();
-        this.label = menu.getMenuName();
+        this.id = menu.getFunctionCode();
+        this.label = menu.getFunctionName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
