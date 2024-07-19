@@ -39,7 +39,7 @@ public class orgCode
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("roleId", getRoleCode())
+            .append("roleCode", getRoleCode())
             .append("orgId", getOrgCode())
             .toString();
     }

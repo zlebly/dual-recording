@@ -46,10 +46,10 @@ public interface IUsrOrgService
     /**
      * 根据角色ID查询机构树信息
      * 
-     * @param roleId 角色ID
+     * @param roleCode 角色ID
      * @return 选中机构列表
      */
-    public List<Long> selectOrgListByRoleId(Long roleId);
+    public List<Long> selectOrgListByRoleCode(Long roleCode);
 
     /**
      * 根据机构码查询信息

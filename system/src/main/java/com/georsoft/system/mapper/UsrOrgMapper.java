@@ -25,7 +25,7 @@ public interface UsrOrgMapper
      * @param roleCode 角色ID
      * @return 选中机构列表
      */
-    public List<Long> selectOrgListByRoleId(@Param("roleCode") Long roleCode);
+    public List<Long> selectOrgListByRoleCode(@Param("roleCode") Long roleCode);
 
     /**
      * 根据机构码查询信息

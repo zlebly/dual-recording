@@ -6,6 +6,7 @@ import com.georsoft.business.mapper.ProductInfoMapper;
 import com.georsoft.business.mapstruct.ProductConvertBasic;
 import com.georsoft.business.service.ProductInfoService;
 import com.georsoft.business.util.GenerateUtils;
+import com.georsoft.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.toProductInfoPO(data);
         productInfoPO.setId(GenerateUtils.IdGenerate());
         productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        // TODO: 暂未添加创建人ID, 默认使用admin的id
-        productInfoPO.setCreateUserId("1");
+        productInfoPO.setCreateUserId(SecurityUtils.getUserId().toString());
         productInfoMapper.addProductInfo(productInfoPO);
     }
 

@@ -18,6 +18,8 @@ import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.core.domain.AjaxResult;
 import com.georsoft.common.core.domain.entity.UsrOrg;
 import com.georsoft.common.core.domain.entity.UsrUsers;
+import com.georsoft.common.core.domain.model.LoginUser;
+import com.georsoft.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -112,10 +114,10 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerPO customerPO = CustomerConvert.convertToCustomerPO(data);
         customerPO.setId(GenerateUtils.IdGenerate());
         customerPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        // TODO: 暂未添加创建人ID, 默认使用admin的id和机构 部门
-        customerPO.setUserId("1");
-        customerPO.setOrgCode("320000000");
-        customerPO.setDepNo("101");
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        customerPO.setUserId(loginUser.getUserId().toString());
+        customerPO.setOrgCode(loginUser.getOrgCode().toString());
+        customerPO.setDepNo(loginUser.getUser().getDeptNo());
         customerPO.setMarketNo("");
         customerPO.setMark("");
         customerPO.setImageNo("");

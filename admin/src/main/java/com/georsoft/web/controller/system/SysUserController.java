@@ -111,7 +111,7 @@ public class SysUserController extends BaseController
             UsrUsers usrUsers = userService.selectUserById(userId);
             ajax.put(AjaxResult.DATA_TAG, usrUsers);
             ajax.put("postIds", postService.selectPostListByUserId(userId));
-            ajax.put("roleIds", usrUsers.getRoles().stream().map(UsrRole::getRoleCode).collect(Collectors.toList()));
+            ajax.put("roleCodes", usrUsers.getRoles().stream().map(UsrRole::getRoleCode).collect(Collectors.toList()));
         }
         return ajax;
     }
@@ -236,11 +236,11 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.GRANT)
     @PutMapping("/authRole")
-    public AjaxResult insertAuthRole(Long userId, Long[] roleIds)
+    public AjaxResult insertAuthRole(Long userId, Long[] roleCodes)
     {
         userService.checkUserDataScope(userId);
-        roleService.checkRoleDataScope(roleIds);
-        userService.insertUserAuth(userId, roleIds);
+        roleService.checkRoleDataScope(roleCodes);
+        userService.insertUserAuth(userId, roleCodes);
         return success();
     }
 

@@ -4,28 +4,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.georsoft.system.mapper.UsrRoleFunctionMapper">
 
-	<resultMap type="UsrRoleFunction" id="SysRoleMenuResult">
+	<resultMap type="UsrRoleFunction" id="SysRoleFunctionResult">
 		<result property="roleCode"     column="role_code"      />
 		<result property="functionCode"     column="function_code"      />
 	</resultMap>
 	
-	<select id="checkMenuExistRole" resultType="Integer">
-	    select count(1) from usr_role_menu where function_code = #{functionCode}
+	<select id="checkFunctionExistRole" resultType="Integer">
+	    select count(1) from usr_role_function where function_code = #{functionCode}
 	</select>
 
-	<delete id="deleteRoleMenuByRoleCode" parameterType="Long">
-		delete from usr_role_menu where role_code=#{roleCode}
+	<delete id="deleteRoleFunctionByRoleCode" parameterType="Long">
+		delete from usr_role_function where role_code=#{roleCode}
 	</delete>
 	
-	<delete id="deleteRoleMenu" parameterType="Long">
- 		delete from usr_role_menu where role_code in
+	<delete id="deleteRoleFunction" parameterType="Long">
+ 		delete from usr_role_function where role_code in
  		<foreach collection="array" item="roleCode" open="(" separator="," close=")">
  			#{roleCode}
         </foreach> 
  	</delete>
 	
-	<insert id="batchRoleMenu">
-		insert into usr_role_menu(role_code, function_code) values
+	<insert id="batchRoleFunction">
+		insert into usr_role_function(role_code, function_code) values
 		<foreach item="item" index="index" collection="list" separator=",">
 			(#{item.roleCode},#{item.functionCode})
 		</foreach>

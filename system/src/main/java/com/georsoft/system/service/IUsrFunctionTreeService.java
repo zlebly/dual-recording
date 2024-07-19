@@ -11,32 +11,32 @@ import com.georsoft.system.domain.vo.RouterVo;
  * 
  * @author douwenjie
  */
-public interface ISysMenuService
+public interface IUsrFunctionTreeService
 {
     /**
      * 根据用户查询系统菜单列表
      * 
-     * @param userId 用户ID
+     * @param id 用户ID
      * @return 菜单列表
      */
-    public List<UsrFunctionTree> selectMenuList(Long userId);
+    public List<UsrFunctionTree> selectFunctionList(Long id);
 
     /**
      * 根据用户查询系统菜单列表
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @param userId 用户ID
      * @return 菜单列表
      */
-    public List<UsrFunctionTree> selectMenuList(UsrFunctionTree menu, Long userId);
+    public List<UsrFunctionTree> selectFunctionList(UsrFunctionTree functionTree, Long userId);
 
     /**
      * 根据用户ID查询权限
      * 
-     * @param userId 用户ID
+     * @param loginName 用户ID
      * @return 权限列表
      */
-    public Set<String> selectMenuPermsByUserId(Long userId);
+    public Set<String> selectFunctionPermsByUserId(String loginName);
 
     /**
      * 根据角色ID查询权限
@@ -44,15 +44,15 @@ public interface ISysMenuService
      * @param roleCode 角色ID
      * @return 权限列表
      */
-    public Set<String> selectMenuPermsByRoleCode(Long roleCode);
+    public Set<String> selectFunctionPermsByRoleCode(Long roleCode);
 
     /**
-     * 根据用户ID查询菜单树信息
+     * 根据用户登陆名查询菜单树信息
      * 
-     * @param userId 用户ID
+     * @param loginName 用户登陆名
      * @return 菜单列表
      */
-    public List<UsrFunctionTree> selectMenuTreeByUserId(Long userId);
+    public List<UsrFunctionTree> selectFunctionTreeByUserId(String loginName);
 
     /**
      * 根据角色ID查询菜单树信息
@@ -60,85 +60,85 @@ public interface ISysMenuService
      * @param roleCode 角色ID
      * @return 选中菜单列表
      */
-    public List<Long> selectMenuListByRoleCode(Long roleCode);
+    public List<Long> selectFunctionListByRoleCode(Long roleCode);
 
     /**
      * 构建前端路由所需要的菜单
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 路由列表
      */
-    public List<RouterVo> buildMenus(List<UsrFunctionTree> menus);
+    public List<RouterVo> buildFunctionTrees(List<UsrFunctionTree> functionTrees);
 
     /**
      * 构建前端所需要树结构
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 树结构列表
      */
-    public List<UsrFunctionTree> buildMenuTree(List<UsrFunctionTree> menus);
+    public List<UsrFunctionTree> buildFunctionTree(List<UsrFunctionTree> functionTrees);
 
     /**
      * 构建前端所需要下拉树结构
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 下拉树结构列表
      */
-    public List<TreeSelect> buildMenuTreeSelect(List<UsrFunctionTree> menus);
+    public List<TreeSelect> buildFunctionTreeSelect(List<UsrFunctionTree> functionTrees);
 
     /**
      * 根据菜单ID查询信息
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 菜单信息
      */
-    public UsrFunctionTree selectMenuById(Long menuId);
+    public UsrFunctionTree selectFunctionById(Long functionCode);
 
     /**
      * 是否存在菜单子节点
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    public boolean hasChildByMenuId(Long menuId);
+    public boolean hasChildByFunctionCode(Long functionCode);
 
     /**
      * 查询菜单是否存在角色
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkMenuExistRole(Long menuId);
+    public boolean checkFunctionExistRole(Long functionCode);
 
     /**
      * 新增保存菜单信息
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
-    public int insertMenu(UsrFunctionTree menu);
+    public int insertFunction(UsrFunctionTree functionTree);
 
     /**
      * 修改保存菜单信息
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
-    public int updateMenu(UsrFunctionTree menu);
+    public int updateFunction(UsrFunctionTree functionTree);
 
     /**
      * 删除菜单管理信息
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果
      */
-    public int deleteMenuById(Long menuId);
+    public int deleteFunctionById(Long functionCode);
 
     /**
      * 校验菜单名称是否唯一
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
-    public boolean checkMenuNameUnique(UsrFunctionTree menu);
+    public boolean checkFunctionNameUnique(UsrFunctionTree functionTree);
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import com.georsoft.common.core.domain.entity.UsrRole;
 import com.georsoft.common.core.domain.entity.UsrUsers;
-import com.georsoft.system.service.ISysMenuService;
+import com.georsoft.system.service.IUsrFunctionTreeService;
 import com.georsoft.system.service.IUsrRoleService;
 
 /**
@@ -23,7 +23,7 @@ public class SysPermissionService
     private IUsrRoleService roleService;
 
     @Autowired
-    private ISysMenuService menuService;
+    private IUsrFunctionTreeService functionService;
 
     /**
      * 获取角色数据权限
@@ -41,7 +41,6 @@ public class SysPermissionService
         }
         else
         {
-            // TODO 获取角色权限
             roles.addAll(roleService.selectRolePermissionByUserId(user.getId()));
         }
         return roles;
@@ -53,7 +52,7 @@ public class SysPermissionService
      * @param user 用户信息
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(UsrUsers user)
+    public Set<String> getFunctionPermission(UsrUsers user)
     {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
@@ -69,14 +68,14 @@ public class SysPermissionService
                 // 多角色设置permissions属性，以便数据权限匹配权限
                 for (UsrRole role : roles)
                 {
-                    Set<String> rolePerms = menuService.selectMenuPermsByRoleCode(role.getRoleCode());
+                    Set<String> rolePerms = functionService.selectFunctionPermsByRoleCode(role.getRoleCode());
                     role.setPermissions(rolePerms);
                     perms.addAll(rolePerms);
                 }
             }
             else
             {
-                perms.addAll(menuService.selectMenuPermsByUserId(user.getId()));
+                perms.addAll(functionService.selectFunctionPermsByUserId(user.getLoginName()));
             }
         }
         return perms;

@@ -1,11 +1,9 @@
 package com.georsoft.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.georsoft.system.mapper.*;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +32,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     private UsrRoleMapper roleMapper;
 
     @Autowired
-    private UsrRoleFunctionMapper roleMenuMapper;
+    private UsrRoleFunctionMapper roleFunctionMapper;
 
     @Autowired
     private UsrUserRoleMapper userRoleMapper;
@@ -86,20 +84,21 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     /**
      * 根据用户ID查询权限
      * 
-     * @param userId 用户ID
+     * @param id 用户ID
      * @return 权限列表
      */
     @Override
-    public Set<String> selectRolePermissionByUserId(Long userId)
+    public Set<String> selectRolePermissionByUserId(Long id)
     {
-        List<UsrRole> perms = roleMapper.selectRolePermissionByUserId(userId);
+        List<UsrRole> perms = roleMapper.selectRolePermissionByUserId(id);
         Set<String> permsSet = new HashSet<>();
         for (UsrRole perm : perms)
         {
-//            if (StringUtils.isNotNull(perm))
-//            {
-//                permsSet.addAll(Arrays.asList(perm.getRoleKey().trim().split(",")));
-//            }
+            if (StringUtils.isNotNull(perm))
+            {
+                // TODO 角色权限可能待调整
+                permsSet.add(Strings.isNotEmpty(perm.getRoleName()) && perm.getRoleName().contains("admin") ? "admin" : "common");
+            }
         }
         return permsSet;
     }
@@ -158,25 +157,6 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     }
 
     /**
-     * 校验角色权限是否唯一
-     * 
-     * @param role 角色信息
-     * @return 结果
-     */
-    @Override
-    public boolean checkRoleKeyUnique(UsrRole role)
-    {
-        Long roleCode = StringUtils.isNull(role.getRoleCode()) ? -1L : role.getRoleCode();
-        // TODO 校验角色权限
-//        UsrRole info = roleMapper.checkRoleKeyUnique(role.getRoleKey());
-//        if (StringUtils.isNotNull(info) && info.getRoleCode().longValue() != roleId.longValue())
-//        {
-//            return UserConstants.NOT_UNIQUE;
-//        }
-        return UserConstants.UNIQUE;
-    }
-
-    /**
      * 校验角色是否允许操作
      * 
      * @param role 角色信息
@@ -200,10 +180,10 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     {
         if (!UsrUsers.isAdmin(SecurityUtils.getUsername()))
         {
-            for (Long roleId : roleCodes)
+            for (Long roleCode : roleCodes)
             {
                 UsrRole role = new UsrRole();
-                role.setRoleCode(roleId);
+                role.setRoleCode(roleCode);
                 List<UsrRole> roles = SpringUtils.getAopProxy(this).selectRoleList(role);
                 if (StringUtils.isEmpty(roles))
                 {
@@ -237,7 +217,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     {
         // 新增角色信息
         roleMapper.insertRole(role);
-        return insertRoleMenu(role);
+        return insertRoleFunction(role);
     }
 
     /**
@@ -253,8 +233,8 @@ public class UsrRoleServiceImpl implements IUsrRoleService
         // 修改角色信息
         roleMapper.updateRole(role);
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenuByRoleCode(role.getRoleCode());
-        return insertRoleMenu(role);
+        roleFunctionMapper.deleteRoleFunctionByRoleCode(role.getRoleCode());
+        return insertRoleFunction(role);
     }
 
     /**
@@ -292,21 +272,21 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * 
      * @param role 角色对象
      */
-    public int insertRoleMenu(UsrRole role)
+    public int insertRoleFunction(UsrRole role)
     {
         int rows = 1;
         // 新增用户与角色管理
         List<UsrRoleFunction> list = new ArrayList<UsrRoleFunction>();
-        for (Long menuId : role.getMenuIds())
+        for (Long functionCode : role.getFunctionCodes())
         {
             UsrRoleFunction rm = new UsrRoleFunction();
             rm.setRoleCode(role.getRoleCode());
-            rm.setFunctionCode(menuId);
+            rm.setFunctionCode(functionCode);
             list.add(rm);
         }
         if (list.size() > 0)
         {
-            rows = roleMenuMapper.batchRoleMenu(list);
+            rows = roleFunctionMapper.batchRoleFunction(list);
         }
         return rows;
     }
@@ -346,7 +326,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     public int deleteRoleById(Long roleCode)
     {
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenuByRoleCode(roleCode);
+        roleFunctionMapper.deleteRoleFunctionByRoleCode(roleCode);
         // 删除角色与部门关联
         roleOrgMapper.deleteRoleOrgByRoleCode(roleCode);
         return roleMapper.deleteRoleById(roleCode);
@@ -362,18 +342,18 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     @Transactional
     public int deleteRoleByIds(Long[] roleCodes)
     {
-        for (Long roleId : roleCodes)
+        for (Long roleCode : roleCodes)
         {
-            checkRoleAllowed(new UsrRole(roleId));
-            checkRoleDataScope(roleId);
-            UsrRole role = selectRoleById(roleId);
-            if (countUserRoleByRoleCode(roleId) > 0)
+            checkRoleAllowed(new UsrRole(roleCode));
+            checkRoleDataScope(roleCode);
+            UsrRole role = selectRoleById(roleCode);
+            if (countUserRoleByRoleCode(roleCode) > 0)
             {
                 throw new ServiceException(String.format("%1$s已分配,不能删除", role.getRoleName()));
             }
         }
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenu(roleCodes);
+        roleFunctionMapper.deleteRoleFunction(roleCodes);
         // 删除角色与部门关联
         roleOrgMapper.deleteRoleOrg(roleCodes);
         return roleMapper.deleteRoleByIds(roleCodes);

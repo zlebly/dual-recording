@@ -15,7 +15,7 @@ import com.georsoft.common.core.domain.model.LoginBody;
 import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.framework.web.service.SysLoginService;
 import com.georsoft.framework.web.service.SysPermissionService;
-import com.georsoft.system.service.ISysMenuService;
+import com.georsoft.system.service.IUsrFunctionTreeService;
 
 /**
  * 登录验证
@@ -29,7 +29,7 @@ public class SysLoginController
     private SysLoginService loginService;
 
     @Autowired
-    private ISysMenuService menuService;
+    private IUsrFunctionTreeService functionService;
 
     @Autowired
     private SysPermissionService permissionService;
@@ -63,7 +63,7 @@ public class SysLoginController
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
-        Set<String> permissions = permissionService.getMenuPermission(user);
+        Set<String> permissions = permissionService.getFunctionPermission(user);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", user);
         ajax.put("roles", roles);
@@ -79,8 +79,8 @@ public class SysLoginController
     @GetMapping("getRouters")
     public AjaxResult getRouters()
     {
-        Long userId = SecurityUtils.getUserId();
-        List<UsrFunctionTree> menus = menuService.selectMenuTreeByUserId(userId);
-        return AjaxResult.success(menuService.buildMenus(menus));
+        String userName = SecurityUtils.getLoginUser().getUser().getLoginName();
+        List<UsrFunctionTree> functionTrees = functionService.selectFunctionTreeByUserId(userName);
+        return AjaxResult.success(functionService.buildFunctionTrees(functionTrees));
     }
 }

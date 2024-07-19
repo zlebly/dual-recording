@@ -7,6 +7,7 @@ import com.georsoft.business.mapstruct.ProductConvertBasic;
 import com.georsoft.business.service.ProductFileService;
 import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.core.domain.AjaxResult;
+import com.georsoft.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -32,8 +33,7 @@ public class ProductFileServiceImpl implements ProductFileService {
             ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.VOToProductInfoPO(productInfoVO);
             productInfoPO.setId(GenerateUtils.IdGenerate());
             productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-            // TODO: 暂未添加创建人ID, 默认使用admin的id
-            productInfoPO.setCreateUserId("1");
+            productInfoPO.setCreateUserId(SecurityUtils.getUserId().toString());
             productInfoPOList.add(productInfoPO);
         }
         productInfoMapper.batchAddProductInfos(productInfoPOList);

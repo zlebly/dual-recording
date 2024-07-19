@@ -132,9 +132,9 @@ public interface IUsrUserService
      * 用户授权角色
      * 
      * @param userId 用户ID
-     * @param roleIds 角色组
+     * @param roleCodes 角色组
      */
-    public void insertUserAuth(Long userId, Long[] roleIds);
+    public void insertUserAuth(Long userId, Long[] roleCodes);
 
     /**
      * 修改用户状态

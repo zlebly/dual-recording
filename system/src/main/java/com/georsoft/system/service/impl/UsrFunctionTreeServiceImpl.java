@@ -19,10 +19,10 @@ import com.georsoft.common.utils.SecurityUtils;
 import com.georsoft.common.utils.StringUtils;
 import com.georsoft.system.domain.vo.MetaVo;
 import com.georsoft.system.domain.vo.RouterVo;
-import com.georsoft.system.mapper.SysMenuMapper;
+import com.georsoft.system.mapper.UsrFunctionTreeMapper;
 import com.georsoft.system.mapper.UsrRoleMapper;
 import com.georsoft.system.mapper.UsrRoleFunctionMapper;
-import com.georsoft.system.service.ISysMenuService;
+import com.georsoft.system.service.IUsrFunctionTreeService;
 
 /**
  * 菜单 业务层处理
@@ -30,64 +30,64 @@ import com.georsoft.system.service.ISysMenuService;
  * @author douwenjie
  */
 @Service
-public class SysMenuServiceImpl implements ISysMenuService
+public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
 {
     public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     @Autowired
-    private SysMenuMapper menuMapper;
+    private UsrFunctionTreeMapper functionMapper;
 
     @Autowired
     private UsrRoleMapper roleMapper;
 
     @Autowired
-    private UsrRoleFunctionMapper roleMenuMapper;
+    private UsrRoleFunctionMapper roleFunctionMapper;
 
     /**
      * 根据用户查询系统菜单列表
      * 
-     * @param userId 用户ID
+     * @param id 用户ID
      * @return 菜单列表
      */
     @Override
-    public List<UsrFunctionTree> selectMenuList(Long userId)
+    public List<UsrFunctionTree> selectFunctionList(Long id)
     {
-        return selectMenuList(new UsrFunctionTree(), userId);
+        return selectFunctionList(new UsrFunctionTree(), id);
     }
 
     /**
      * 查询系统菜单列表
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 菜单列表
      */
     @Override
-    public List<UsrFunctionTree> selectMenuList(UsrFunctionTree menu, Long userId)
+    public List<UsrFunctionTree> selectFunctionList(UsrFunctionTree functionTree, Long id)
     {
-        List<UsrFunctionTree> menuList = null;
+        List<UsrFunctionTree> functionTrees = null;
         // 管理员显示所有菜单信息
         if (UsrUsers.isAdmin(SecurityUtils.getUsername()))
         {
-            menuList = menuMapper.selectMenuList(menu);
+            functionTrees = functionMapper.selectFunctionList(functionTree);
         }
         else
         {
-            menu.getParams().put("userId", userId);
-            menuList = menuMapper.selectMenuListByUserId(menu);
+            functionTree.getParams().put("userId", id);
+            functionTrees = functionMapper.selectFunctionListByUserId(functionTree);
         }
-        return menuList;
+        return functionTrees;
     }
 
     /**
      * 根据用户ID查询权限
      * 
-     * @param userId 用户ID
+     * @param loginName 用户ID
      * @return 权限列表
      */
     @Override
-    public Set<String> selectMenuPermsByUserId(Long userId)
+    public Set<String> selectFunctionPermsByUserId(String loginName)
     {
-        List<String> perms = menuMapper.selectMenuPermsByUserId(userId);
+        List<String> perms = functionMapper.selectFunctionPermsByLoginName(loginName);
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms)
         {
@@ -106,9 +106,9 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 权限列表
      */
     @Override
-    public Set<String> selectMenuPermsByRoleCode(Long roleCode)
+    public Set<String> selectFunctionPermsByRoleCode(Long roleCode)
     {
-        List<String> perms = menuMapper.selectMenuPermsByRoleCode(roleCode);
+        List<String> perms = functionMapper.selectFunctionPermsByRoleCode(roleCode);
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms)
         {
@@ -123,22 +123,22 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 根据用户ID查询菜单
      * 
-     * @param userId 用户名称
+     * @param loginName 用户名称
      * @return 菜单列表
      */
     @Override
-    public List<UsrFunctionTree> selectMenuTreeByUserId(Long userId)
+    public List<UsrFunctionTree> selectFunctionTreeByUserId(String loginName)
     {
-        List<UsrFunctionTree> menus = null;
-        if (SecurityUtils.isAdmin(userId))
+        List<UsrFunctionTree> functionTrees = null;
+        if ("admin".equals(loginName))
         {
-            menus = menuMapper.selectMenuTreeAll();
+            functionTrees = functionMapper.selectFunctionTreeAll();
         }
         else
         {
-            menus = menuMapper.selectMenuTreeByUserId(userId);
+            functionTrees = functionMapper.selectFunctionTreeByLoginName(loginName);
         }
-        return getChildPerms(menus, 0);
+        return getChildPerms(functionTrees, 0);
     }
 
     /**
@@ -148,61 +148,61 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 选中菜单列表
      */
     @Override
-    public List<Long> selectMenuListByRoleCode(Long roleCode)
+    public List<Long> selectFunctionListByRoleCode(Long roleCode)
     {
-        return menuMapper.selectMenuListByRoleCode(roleCode);
+        return functionMapper.selectFunctionListByRoleCode(roleCode);
     }
 
     /**
      * 构建前端路由所需要的菜单
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 路由列表
      */
     @Override
-    public List<RouterVo> buildMenus(List<UsrFunctionTree> menus)
+    public List<RouterVo> buildFunctionTrees(List<UsrFunctionTree> functionTrees)
     {
         List<RouterVo> routers = new LinkedList<RouterVo>();
-        for (UsrFunctionTree menu : menus)
+        for (UsrFunctionTree functionTree : functionTrees)
         {
             RouterVo router = new RouterVo();
-            router.setHidden("1".equals(menu.getViewFlag()));
-            router.setName(getRouteName(menu));
-            router.setPath(getRouterPath(menu));
-            router.setComponent(getComponent(menu));
-            router.setQuery(menu.getQuery());
-            router.setMeta(new MetaVo(menu.getFunctionName(), menu.getIconResource(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
-            List<UsrFunctionTree> cMenus = menu.getChildren();
-            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menu.getFunctionType()))
+            router.setHidden("1".equals(functionTree.getViewFlag()));
+            router.setName(getRouteName(functionTree));
+            router.setPath(getRouterPath(functionTree));
+            router.setComponent(getComponent(functionTree));
+            router.setQuery(functionTree.getQuery());
+            router.setMeta(new MetaVo(functionTree.getFunctionName(), functionTree.getIconResource(), StringUtils.equals("1", functionTree.getIsCache()), functionTree.getPath()));
+            List<UsrFunctionTree> usrFunctionTrees = functionTree.getChildren();
+            if (StringUtils.isNotEmpty(usrFunctionTrees) && UserConstants.TYPE_DIR.equals(functionTree.getFunctionType()))
             {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
-                router.setChildren(buildMenus(cMenus));
+                router.setChildren(buildFunctionTrees(usrFunctionTrees));
             }
-            else if (isMenuFrame(menu))
+            else if (isFunctionFrame(functionTree))
             {
                 router.setMeta(null);
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
-                children.setPath(menu.getPath());
-                children.setComponent(menu.getComponent());
-                children.setName(StringUtils.capitalize(menu.getPath()));
-                children.setMeta(new MetaVo(menu.getFunctionName(), menu.getIconResource(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
-                children.setQuery(menu.getQuery());
+                children.setPath(functionTree.getPath());
+                children.setComponent(functionTree.getComponent());
+                children.setName(StringUtils.capitalize(functionTree.getPath()));
+                children.setMeta(new MetaVo(functionTree.getFunctionName(), functionTree.getIconResource(), StringUtils.equals("1", functionTree.getIsCache()), functionTree.getPath()));
+                children.setQuery(functionTree.getQuery());
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
-            else if (menu.getParentCode().intValue() == 0 && isInnerLink(menu))
+            else if (functionTree.getParentCode().intValue() == 0 && isInnerLink(functionTree))
             {
-                router.setMeta(new MetaVo(menu.getFunctionName(), menu.getIconResource()));
+                router.setMeta(new MetaVo(functionTree.getFunctionName(), functionTree.getIconResource()));
                 router.setPath("/");
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
-                String routerPath = innerLinkReplaceEach(menu.getPath());
+                String routerPath = innerLinkReplaceEach(functionTree.getPath());
                 children.setPath(routerPath);
                 children.setComponent(UserConstants.INNER_LINK);
                 children.setName(StringUtils.capitalize(routerPath));
-                children.setMeta(new MetaVo(menu.getFunctionName(), menu.getIconResource(), menu.getPath()));
+                children.setMeta(new MetaVo(functionTree.getFunctionName(), functionTree.getIconResource(), functionTree.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
@@ -214,27 +214,27 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 构建前端所需要树结构
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 树结构列表
      */
     @Override
-    public List<UsrFunctionTree> buildMenuTree(List<UsrFunctionTree> menus)
+    public List<UsrFunctionTree> buildFunctionTree(List<UsrFunctionTree> functionTrees)
     {
         List<UsrFunctionTree> returnList = new ArrayList<UsrFunctionTree>();
-        List<Long> tempList = menus.stream().map(UsrFunctionTree::getFunctionCode).collect(Collectors.toList());
-        for (Iterator<UsrFunctionTree> iterator = menus.iterator(); iterator.hasNext();)
+        List<Long> tempList = functionTrees.stream().map(UsrFunctionTree::getFunctionCode).collect(Collectors.toList());
+        for (Iterator<UsrFunctionTree> iterator = functionTrees.iterator(); iterator.hasNext();)
         {
-            UsrFunctionTree menu = (UsrFunctionTree) iterator.next();
+            UsrFunctionTree functionTree = (UsrFunctionTree) iterator.next();
             // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(menu.getParentCode()))
+            if (!tempList.contains(functionTree.getParentCode()))
             {
-                recursionFn(menus, menu);
-                returnList.add(menu);
+                recursionFn(functionTrees, functionTree);
+                returnList.add(functionTree);
             }
         }
         if (returnList.isEmpty())
         {
-            returnList = menus;
+            returnList = functionTrees;
         }
         return returnList;
     }
@@ -242,102 +242,102 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 构建前端所需要下拉树结构
      * 
-     * @param menus 菜单列表
+     * @param functionTrees 菜单列表
      * @return 下拉树结构列表
      */
     @Override
-    public List<TreeSelect> buildMenuTreeSelect(List<UsrFunctionTree> menus)
+    public List<TreeSelect> buildFunctionTreeSelect(List<UsrFunctionTree> functionTrees)
     {
-        List<UsrFunctionTree> menuTrees = buildMenuTree(menus);
-        return menuTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
+        List<UsrFunctionTree> usrFunctionTrees = buildFunctionTree(functionTrees);
+        return usrFunctionTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     /**
      * 根据菜单ID查询信息
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 菜单信息
      */
     @Override
-    public UsrFunctionTree selectMenuById(Long menuId)
+    public UsrFunctionTree selectFunctionById(Long functionCode)
     {
-        return menuMapper.selectMenuById(menuId);
+        return functionMapper.selectFunctionById(functionCode);
     }
 
     /**
      * 是否存在菜单子节点
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果
      */
     @Override
-    public boolean hasChildByMenuId(Long menuId)
+    public boolean hasChildByFunctionCode(Long functionCode)
     {
-        int result = menuMapper.hasChildByMenuId(menuId);
+        int result = functionMapper.hasChildByFunctionCode(functionCode);
         return result > 0;
     }
 
     /**
      * 查询菜单使用数量
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果
      */
     @Override
-    public boolean checkMenuExistRole(Long menuId)
+    public boolean checkFunctionExistRole(Long functionCode)
     {
-        int result = roleMenuMapper.checkMenuExistRole(menuId);
+        int result = roleFunctionMapper.checkFunctionExistRole(functionCode);
         return result > 0;
     }
 
     /**
      * 新增保存菜单信息
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
     @Override
-    public int insertMenu(UsrFunctionTree menu)
+    public int insertFunction(UsrFunctionTree functionTree)
     {
-        return menuMapper.insertMenu(menu);
+        return functionMapper.insertFunction(functionTree);
     }
 
     /**
      * 修改保存菜单信息
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
     @Override
-    public int updateMenu(UsrFunctionTree menu)
+    public int updateFunction(UsrFunctionTree functionTree)
     {
-        return menuMapper.updateMenu(menu);
+        return functionMapper.updateFunction(functionTree);
     }
 
     /**
      * 删除菜单管理信息
      * 
-     * @param menuId 菜单ID
+     * @param functionCode 菜单ID
      * @return 结果
      */
     @Override
-    public int deleteMenuById(Long menuId)
+    public int deleteFunctionById(Long functionCode)
     {
-        return menuMapper.deleteMenuById(menuId);
+        return functionMapper.deleteFunctionById(functionCode);
     }
 
     /**
      * 校验菜单名称是否唯一
      * 
-     * @param menu 菜单信息
+     * @param functionTree 菜单信息
      * @return 结果
      */
     @Override
-    public boolean checkMenuNameUnique(UsrFunctionTree menu)
+    public boolean checkFunctionNameUnique(UsrFunctionTree functionTree)
     {
-        Long menuId = StringUtils.isNull(menu.getFunctionCode()) ? -1L : menu.getFunctionCode();
-        UsrFunctionTree info = menuMapper.checkMenuNameUnique(menu.getFunctionName(), menu.getParentCode());
-        if (StringUtils.isNotNull(info) && info.getFunctionCode().longValue() != menuId.longValue())
+        Long functionCode = StringUtils.isNull(functionTree.getFunctionCode()) ? -1L : functionTree.getFunctionCode();
+        UsrFunctionTree info = functionMapper.checkFunctionNameUnique(functionTree.getFunctionName(), functionTree.getParentCode());
+        if (StringUtils.isNotNull(info) && info.getFunctionCode().longValue() != functionCode.longValue())
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -347,14 +347,14 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 获取路由名称
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 路由名称
      */
-    public String getRouteName(UsrFunctionTree menu)
+    public String getRouteName(UsrFunctionTree function)
     {
-        String routerName = StringUtils.capitalize(menu.getPath());
+        String routerName = StringUtils.capitalize(function.getPath());
         // 非外链并且是一级目录（类型为目录）
-        if (isMenuFrame(menu))
+        if (isFunctionFrame(function))
         {
             routerName = StringUtils.EMPTY;
         }
@@ -364,25 +364,25 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 获取路由地址
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 路由地址
      */
-    public String getRouterPath(UsrFunctionTree menu)
+    public String getRouterPath(UsrFunctionTree function)
     {
-        String routerPath = menu.getPath();
+        String routerPath = function.getPath();
         // 内链打开外网方式
-        if (menu.getParentCode().intValue() != 0 && isInnerLink(menu))
+        if (function.getParentCode().intValue() != 0 && isInnerLink(function))
         {
             routerPath = innerLinkReplaceEach(routerPath);
         }
         // 非外链并且是一级目录（类型为目录）
-        if (0 == menu.getParentCode().intValue() && UserConstants.TYPE_DIR.equals(menu.getFunctionType())
-                && UserConstants.NO_FRAME.equals(menu.getIsFrame()))
+        if (0 == function.getParentCode().intValue() && UserConstants.TYPE_DIR.equals(function.getFunctionType())
+                && UserConstants.NO_FRAME.equals(function.getIsFrame()))
         {
-            routerPath = "/" + menu.getPath();
+            routerPath = "/" + function.getPath();
         }
         // 非外链并且是一级目录（类型为菜单）
-        else if (isMenuFrame(menu))
+        else if (isFunctionFrame(function))
         {
             routerPath = "/";
         }
@@ -392,21 +392,21 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 获取组件信息
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 组件信息
      */
-    public String getComponent(UsrFunctionTree menu)
+    public String getComponent(UsrFunctionTree function)
     {
         String component = UserConstants.LAYOUT;
-        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
+        if (StringUtils.isNotEmpty(function.getComponent()) && !isFunctionFrame(function))
         {
-            component = menu.getComponent();
+            component = function.getComponent();
         }
-        else if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentCode().intValue() != 0 && isInnerLink(menu))
+        else if (StringUtils.isEmpty(function.getComponent()) && function.getParentCode().intValue() != 0 && isInnerLink(function))
         {
             component = UserConstants.INNER_LINK;
         }
-        else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu))
+        else if (StringUtils.isEmpty(function.getComponent()) && isParentView(function))
         {
             component = UserConstants.PARENT_VIEW;
         }
@@ -416,52 +416,52 @@ public class SysMenuServiceImpl implements ISysMenuService
     /**
      * 是否为菜单内部跳转
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 结果
      */
-    public boolean isMenuFrame(UsrFunctionTree menu)
+    public boolean isFunctionFrame(UsrFunctionTree function)
     {
-        return menu.getParentCode().intValue() == 0 && UserConstants.TYPE_MENU.equals(menu.getFunctionType())
-                && menu.getIsFrame().equals(UserConstants.NO_FRAME);
+        return function.getParentCode().intValue() == 0 && UserConstants.TYPE_MENU.equals(function.getFunctionType())
+                && function.getIsFrame().equals(UserConstants.NO_FRAME);
     }
 
     /**
      * 是否为内链组件
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 结果
      */
-    public boolean isInnerLink(UsrFunctionTree menu)
+    public boolean isInnerLink(UsrFunctionTree function)
     {
-        return menu.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
+        return function.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(function.getPath());
     }
 
     /**
      * 是否为parent_view组件
      * 
-     * @param menu 菜单信息
+     * @param function 菜单信息
      * @return 结果
      */
-    public boolean isParentView(UsrFunctionTree menu)
+    public boolean isParentView(UsrFunctionTree function)
     {
-        return menu.getParentCode().intValue() != 0 && UserConstants.TYPE_DIR.equals(menu.getFunctionType());
+        return function.getParentCode().intValue() != 0 && UserConstants.TYPE_DIR.equals(function.getFunctionType());
     }
 
     /**
      * 根据父节点的ID获取所有子节点
      * 
      * @param list 分类表
-     * @param parentId 传入的父节点ID
+     * @param parentCode 传入的父节点ID
      * @return String
      */
-    public List<UsrFunctionTree> getChildPerms(List<UsrFunctionTree> list, int parentId)
+    public List<UsrFunctionTree> getChildPerms(List<UsrFunctionTree> list, int parentCode)
     {
         List<UsrFunctionTree> returnList = new ArrayList<UsrFunctionTree>();
         for (Iterator<UsrFunctionTree> iterator = list.iterator(); iterator.hasNext();)
         {
             UsrFunctionTree t = (UsrFunctionTree) iterator.next();
             // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (t.getParentCode() == parentId)
+            if (t.getParentCode() == parentCode)
             {
                 recursionFn(list, t);
                 returnList.add(t);

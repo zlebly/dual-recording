@@ -117,6 +117,9 @@ public class UsrUsers extends BaseEntity
     /** 层级 */
     private String levelNo;
 
+    /** 部门编号 */
+    private String deptNo;
+
     /** 导入标识 */
     private String importFlag;
 
@@ -532,6 +535,14 @@ public class UsrUsers extends BaseEntity
         this.partOrgCode = partOrgCode;
     }
 
+    public String getDeptNo() {
+        return deptNo;
+    }
+
+    public void setDeptNo(String deptNo) {
+        this.deptNo = deptNo;
+    }
+
     @Override
     public String toString() {
         return "UsrUsers{" +
@@ -564,6 +575,7 @@ public class UsrUsers extends BaseEntity
                 ", acceptEmail='" + acceptEmail + '\'' +
                 ", acceptSms='" + acceptSms + '\'' +
                 ", levelNo='" + levelNo + '\'' +
+                ", deptNo='" + deptNo + '\'' +
                 ", importFlag='" + importFlag + '\'' +
                 ", fingerFlag='" + fingerFlag + '\'' +
                 ", fullOrgCode='" + fullOrgCode + '\'' +

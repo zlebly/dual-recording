@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by d.parent_org_code, d.view_index
     </select>
     
-    <select id="selectOrgListByRoleId" resultType="Long">
+    <select id="selectOrgListByRoleCode" resultType="Long">
 		select d.org_code
 		from usr_org d
             left join usr_role_Org rd on d.org_code = rd.org_code

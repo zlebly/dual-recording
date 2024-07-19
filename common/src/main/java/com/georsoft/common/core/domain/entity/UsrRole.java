@@ -5,8 +5,7 @@ import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.georsoft.common.annotation.Excel;
 import com.georsoft.common.annotation.Excel.ColumnType;
 import com.georsoft.common.core.domain.BaseEntity;
@@ -27,11 +26,6 @@ public class UsrRole extends BaseEntity
     /** 角色名称 */
     @Excel(name = "角色名称")
     private String roleName;
-
-    // TODO 角色权限修改 暂不删除
-//    /** 角色权限 */
-//    @Excel(name = "角色权限")
-//    private String roleKey;
 
     /** 角色排序 */
     @Excel(name = "角色排序")
@@ -54,13 +48,12 @@ public class UsrRole extends BaseEntity
     @Excel(name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限,3=本机构数据权限,4=本机构及以下数据权限,5=仅本人数据权限")
     private String dataScope;
 
-    // TODO 待确认
     /** 用户是否存在此角色标识 默认不存在 */
     private boolean flag = false;
 
     // TODO 待确认
     /** 菜单组 */
-    private Long[] menuIds;
+    private Long[] functionCodes;
 
     // TODO 待确认
     /** 机构组（数据权限） */
@@ -143,14 +136,14 @@ public class UsrRole extends BaseEntity
         this.flag = flag;
     }
 
-    public Long[] getMenuIds()
+    public Long[] getFunctionCodes()
     {
-        return menuIds;
+        return functionCodes;
     }
 
-    public void setMenuIds(Long[] menuIds)
+    public void setFunctionCodes(Long[] functionCodes)
     {
-        this.menuIds = menuIds;
+        this.functionCodes = functionCodes;
     }
 
     public Long[] getOrgCodes()
@@ -210,7 +203,7 @@ public class UsrRole extends BaseEntity
                 ", signInFlag=" + signInFlag +
                 ", dataScope='" + dataScope + '\'' +
                 ", flag=" + flag +
-                ", menuIds=" + Arrays.toString(menuIds) +
+                ", functionCodes=" + Arrays.toString(functionCodes) +
                 ", orgCodes=" + Arrays.toString(orgCodes) +
                 ", permissions=" + permissions +
                 '}';

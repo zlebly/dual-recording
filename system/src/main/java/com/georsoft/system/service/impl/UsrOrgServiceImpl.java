@@ -10,7 +10,6 @@ import com.georsoft.common.annotation.DataScope;
 import com.georsoft.common.constant.UserConstants;
 import com.georsoft.common.core.domain.TreeSelect;
 import com.georsoft.common.core.domain.entity.UsrOrg;
-import com.georsoft.common.core.domain.entity.UsrRole;
 import com.georsoft.common.core.domain.entity.UsrUsers;
 import com.georsoft.common.core.text.Convert;
 import com.georsoft.common.exception.ServiceException;
@@ -104,14 +103,14 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     /**
      * 根据角色ID查询机构树信息
      * 
-     * @param roleId 角色ID
+     * @param roleCode 角色ID
      * @return 选中机构列表
      */
     @Override
-    public List<Long> selectOrgListByRoleId(Long roleId)
+    public List<Long> selectOrgListByRoleCode(Long roleCode)
     {
-//        UsrRole role = roleMapper.selectRoleById(roleId);
-        return orgMapper.selectOrgListByRoleId(roleId);
+//        UsrRole role = roleMapper.selectRoleById(roleCode);
+        return orgMapper.selectOrgListByRoleCode(roleCode);
     }
 
     /**

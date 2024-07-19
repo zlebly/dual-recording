@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<sql id="selectRoleVo">
-	    select distinct r.role_code, r.role_name, r.view_index, r.orgClass, r.signin_flag, r.remark
+	    select distinct r.role_code, r.role_name, r.view_index, r.org_class, r.signin_flag, r.remark
         from usr_role r
 	        left join usr_user_role ur on ur.role_code = r.role_code
 	        left join usr_users u on u.login_name = ur.login_name
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
 		<include refid="selectRoleVo"/>
-		WHERE u.id = #{userId}
+		WHERE u.id = #{id}
 	</select>
 	
 	<select id="selectRoleAll" resultMap="SysRoleResult">

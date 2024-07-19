@@ -37,20 +37,35 @@ public class UsrFunctionTree
     /** 菜单备注 */
     private String remark;
 
-    /** 路由参数 */
-    private String query;
-
-    /** 是否为外链（0是 1否） */
-    private String isFrame;
-
     /** 是否面板（0是 1否） */
     private String isPanel;
+
+    /** 菜单图标 */
+    private String iconResource;
 
     /** 类型（M目录 C菜单 F按钮） */
     private String functionType;
 
     /** 显示状态（0显示 1隐藏） */
     private String viewFlag;
+
+    /** 功能类 */
+    private String functionClass;
+
+    /** 完整路径 */
+    private String fullPath;
+
+    /** 功能类别 */
+    private String functionKind;
+
+    /** 快捷方式 */
+    private String quickType;
+
+    /** 路由参数 */
+    private String query;
+
+    /** 是否为外链（0是 1否） */
+    private String isFrame;
 
     /** 是否缓存（0 缓存 1 不缓存） */
     private String isCache;
@@ -63,9 +78,6 @@ public class UsrFunctionTree
 
     /** 权限字符串 */
     private String perms;
-
-    /** 菜单图标 */
-    private String iconResource;
 
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -267,6 +279,38 @@ public class UsrFunctionTree
         this.isPanel = isPanel;
     }
 
+    public String getFunctionClass() {
+        return functionClass;
+    }
+
+    public void setFunctionClass(String functionClass) {
+        this.functionClass = functionClass;
+    }
+
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    public void setFullPath(String fullPath) {
+        this.fullPath = fullPath;
+    }
+
+    public String getFunctionKind() {
+        return functionKind;
+    }
+
+    public void setFunctionKind(String functionKind) {
+        this.functionKind = functionKind;
+    }
+
+    public String getQuickType() {
+        return quickType;
+    }
+
+    public void setQuickType(String quickType) {
+        this.quickType = quickType;
+    }
+
     @Override
     public String toString() {
         return "UsrFunctionTree{" +
@@ -277,16 +321,20 @@ public class UsrFunctionTree
                 ", isLeaf=" + isLeaf +
                 ", functionPath='" + functionPath + '\'' +
                 ", remark='" + remark + '\'' +
-                ", query='" + query + '\'' +
-                ", isFrame='" + isFrame + '\'' +
                 ", isPanel='" + isPanel + '\'' +
+                ", iconResource='" + iconResource + '\'' +
                 ", functionType='" + functionType + '\'' +
                 ", viewFlag='" + viewFlag + '\'' +
+                ", functionClass='" + functionClass + '\'' +
+                ", fullPath='" + fullPath + '\'' +
+                ", functionKind='" + functionKind + '\'' +
+                ", quickType='" + quickType + '\'' +
+                ", query='" + query + '\'' +
+                ", isFrame='" + isFrame + '\'' +
                 ", isCache='" + isCache + '\'' +
                 ", path='" + path + '\'' +
                 ", component='" + component + '\'' +
                 ", perms='" + perms + '\'' +
-                ", iconResource='" + iconResource + '\'' +
                 ", params=" + params +
                 ", children=" + children +
                 '}';

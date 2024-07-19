@@ -38,11 +38,11 @@ public class TreeSelect implements Serializable
         this.children = org.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public TreeSelect(UsrFunctionTree menu)
+    public TreeSelect(UsrFunctionTree functionTree)
     {
-        this.id = menu.getFunctionCode();
-        this.label = menu.getFunctionName();
-        this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+        this.id = functionTree.getFunctionCode();
+        this.label = functionTree.getFunctionName();
+        this.children = functionTree.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId()

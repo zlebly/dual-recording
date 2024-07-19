@@ -307,14 +307,14 @@ public class UsrUserServiceImpl implements IUsrUserService
      * 用户授权角色
      * 
      * @param userId 用户ID
-     * @param roleIds 角色组
+     * @param roleCodes 角色组
      */
     @Override
     @Transactional
-    public void insertUserAuth(Long userId, Long[] roleIds)
+    public void insertUserAuth(Long userId, Long[] roleCodes)
     {
         userRoleMapper.deleteUserRoleByUserId(userId);
-        insertUserRole(userId, roleIds);
+        insertUserRole(userId, roleCodes);
     }
 
     /**
@@ -417,19 +417,19 @@ public class UsrUserServiceImpl implements IUsrUserService
      * 新增用户角色信息
      * 
      * @param UserId 用户ID
-     * @param roleIds 角色组
+     * @param roleCodes 角色组
      */
-    public void insertUserRole(Long UserId, Long[] roleIds)
+    public void insertUserRole(Long UserId, Long[] roleCodes)
     {
-        if (StringUtils.isNotEmpty(roleIds))
+        if (StringUtils.isNotEmpty(roleCodes))
         {
             // 新增用户与角色管理
-            List<UsrUserRole> list = new ArrayList<UsrUserRole>(roleIds.length);
-            for (Long roleId : roleIds)
+            List<UsrUserRole> list = new ArrayList<UsrUserRole>(roleCodes.length);
+            for (Long roleCode : roleCodes)
             {
                 UsrUserRole ur = new UsrUserRole();
                 ur.setLoginName(userMapper.selectLoginNameByUserId(UserId));
-                ur.setRoleCode(roleId);
+                ur.setRoleCode(roleCode);
                 list.add(ur);
             }
             userRoleMapper.batchUserRole(list);

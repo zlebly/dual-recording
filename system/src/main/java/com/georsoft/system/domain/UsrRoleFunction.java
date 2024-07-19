@@ -39,8 +39,8 @@ public class UsrRoleFunction
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("roleId", getRoleCode())
-            .append("menuId", getFunctionCode())
+            .append("roleCode", getRoleCode())
+            .append("functionCode", getFunctionCode())
             .toString();
     }
 }
