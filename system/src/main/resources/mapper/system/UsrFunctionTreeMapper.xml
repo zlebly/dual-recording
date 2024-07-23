@@ -52,7 +52,7 @@
 		select distinct m.function_code, m.parent_code, m.function_name, m.path, m.component, m.`query`, m.view_flag, 
 		                ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.function_type, m.icon_resource, 
 		                m.view_index
-		from usr_function_tree m where m.function_type in ('M', 'C')
+		from usr_function_tree m where m.function_type in ('8974', '8975')
 		order by m.parent_code, m.view_index
 	</select>
 	
@@ -82,7 +82,7 @@
 			 left join usr_user_role ur on rm.role_code = ur.role_code
 			 left join usr_role ro on ur.role_code = ro.role_code
 			 left join usr_users u on ur.login_name = u.login_name
-		where u.login_name = #{loginName} and m.function_type in ('M', 'C')
+		where u.login_name = #{loginName} and m.function_type in ('8974', '8975')
 		order by m.parent_code, m.view_index
 	</select>
 	

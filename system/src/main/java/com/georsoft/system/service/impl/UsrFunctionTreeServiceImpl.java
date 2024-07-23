@@ -461,7 +461,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
         {
             UsrFunctionTree t = (UsrFunctionTree) iterator.next();
             // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (t.getParentCode() == parentCode)
+            if (t.getParentCode().equals(parentCode))
             {
                 recursionFn(list, t);
                 returnList.add(t);

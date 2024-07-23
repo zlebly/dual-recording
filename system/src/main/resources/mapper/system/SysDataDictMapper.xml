@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="selectDictDataByType" parameterType="SysDataDict" resultMap="SysDictDataResult">
 		<include refid="selectDictDataVo"/>
-		where status = '0' and dict_type = #{dictType} order by view_index asc
+		where dict_type = #{dictType} order by view_index asc
 	</select>
 	
 	<select id="selectDictName" resultType="String">

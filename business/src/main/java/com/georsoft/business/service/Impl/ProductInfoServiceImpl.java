@@ -3,7 +3,7 @@ package com.georsoft.business.service.Impl;
 import com.georsoft.business.entity.DTO.QryProductInfoDTO;
 import com.georsoft.business.entity.PO.ProductInfoPO;
 import com.georsoft.business.mapper.ProductInfoMapper;
-import com.georsoft.business.mapstruct.ProductConvertBasic;
+import com.georsoft.business.mapstruct.ProductConvert;
 import com.georsoft.business.service.ProductInfoService;
 import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.utils.SecurityUtils;
@@ -37,10 +37,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      */
     @Override
     public void  addProductInfo(QryProductInfoDTO data) {
-        ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.toProductInfoPO(data);
+        ProductInfoPO productInfoPO = ProductConvert.toProductInfoPO(data);
         productInfoPO.setId(GenerateUtils.IdGenerate());
         productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         productInfoPO.setCreateUserId(SecurityUtils.getUserId().toString());
+        productInfoPO.setCreateUserName(SecurityUtils.getUsername());
         productInfoMapper.addProductInfo(productInfoPO);
     }
 
@@ -51,7 +52,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      */
     @Override
     public void updateProductInfo(QryProductInfoDTO data) {
-        ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.toProductInfoPO(data);
+        ProductInfoPO productInfoPO = ProductConvert.toProductInfoPO(data);
         productInfoMapper.updateProductInfo(productInfoPO);
     }
 
