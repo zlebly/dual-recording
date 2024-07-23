@@ -90,83 +90,83 @@ public class DataScopeAspect
      */
     public static void dataScopeFilter(JoinPoint joinPoint, UsrUsers user, String orgAlias, String userAlias, String permission)
     {
-        StringBuilder sqlString = new StringBuilder();
-        List<String> conditions = new ArrayList<String>();
-        List<String> scopeCustomIds = new ArrayList<String>();
-        user.getRoles().forEach(role -> {
-            if (DATA_SCOPE_CUSTOM.equals(role.getDataScope()) && StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
-            {
-                scopeCustomIds.add(Convert.toStr(role.getRoleCode()));
-            }
-        });
-
-        for (UsrRole role : user.getRoles())
-        {
-            String dataScope = role.getDataScope();
-            if (conditions.contains(dataScope))
-            {
-                continue;
-            }
-            if (!StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
-            {
-                continue;
-            }
-            if (DATA_SCOPE_ALL.equals(dataScope))
-            {
-                sqlString = new StringBuilder();
-                conditions.add(dataScope);
-                break;
-            }
-            else if (DATA_SCOPE_CUSTOM.equals(dataScope))
-            {
-                if (scopeCustomIds.size() > 1)
-                {
-                    // 多个自定数据权限使用in查询，避免多次拼接。
-                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code in ({}) ) ", orgAlias, String.join(",", scopeCustomIds)));
-                }
-                else
-                {
-                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code = {} ) ", orgAlias, role.getRoleCode()));
-                }
-            }
-            else if (DATA_SCOPE_ORG.equals(dataScope))
-            {
-                sqlString.append(StringUtils.format(" OR {}.org_code = {} ", orgAlias, user.getOrgCode()));
-            }
-            else if (DATA_SCOPE_ORG_AND_CHILD.equals(dataScope))
-            {
-                sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_org WHERE org_code = {} or find_in_set( {} , ancestors ) )", orgAlias, user.getOrgCode(), user.getOrgCode()));
-            }
-            else if (DATA_SCOPE_SELF.equals(dataScope))
-            {
-                if (StringUtils.isNotBlank(userAlias))
-                {
-                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getId()));
-                }
-                else
-                {
-                    // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                    sqlString.append(StringUtils.format(" OR {}.org_code = 0 ", orgAlias));
-                }
-            }
-            conditions.add(dataScope);
-        }
-
-        // 多角色情况下，所有角色都不包含传递过来的权限字符，这个时候sqlString也会为空，所以要限制一下,不查询任何数据
-        if (StringUtils.isEmpty(conditions))
-        {
-            sqlString.append(StringUtils.format(" OR {}.org_code = 0 ", orgAlias));
-        }
-
-        if (StringUtils.isNotBlank(sqlString.toString()))
-        {
-            Object params = joinPoint.getArgs()[0];
-            if (StringUtils.isNotNull(params) && params instanceof BaseEntity)
-            {
-                BaseEntity baseEntity = (BaseEntity) params;
-                baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
-            }
-        }
+//        StringBuilder sqlString = new StringBuilder();
+//        List<String> conditions = new ArrayList<String>();
+//        List<String> scopeCustomIds = new ArrayList<String>();
+//        user.getRoles().forEach(role -> {
+//            if (DATA_SCOPE_CUSTOM.equals(role.getDataScope()) && StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
+//            {
+//                scopeCustomIds.add(Convert.toStr(role.getRoleCode()));
+//            }
+//        });
+//
+//        for (UsrRole role : user.getRoles())
+//        {
+//            String dataScope = role.getDataScope();
+//            if (conditions.contains(dataScope))
+//            {
+//                continue;
+//            }
+//            if (!StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
+//            {
+//                continue;
+//            }
+//            if (DATA_SCOPE_ALL.equals(dataScope))
+//            {
+//                sqlString = new StringBuilder();
+//                conditions.add(dataScope);
+//                break;
+//            }
+//            else if (DATA_SCOPE_CUSTOM.equals(dataScope))
+//            {
+//                if (scopeCustomIds.size() > 1)
+//                {
+//                    // 多个自定数据权限使用in查询，避免多次拼接。
+//                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code in ({}) ) ", orgAlias, String.join(",", scopeCustomIds)));
+//                }
+//                else
+//                {
+//                    sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_role_org WHERE role_code = {} ) ", orgAlias, role.getRoleCode()));
+//                }
+//            }
+//            else if (DATA_SCOPE_ORG.equals(dataScope))
+//            {
+//                sqlString.append(StringUtils.format(" OR {}.org_code = {} ", orgAlias, user.getOrgCode()));
+//            }
+//            else if (DATA_SCOPE_ORG_AND_CHILD.equals(dataScope))
+//            {
+//                sqlString.append(StringUtils.format(" OR {}.org_code IN ( SELECT org_code FROM usr_org WHERE org_code = {} or find_in_set( {} , ancestors ) )", orgAlias, user.getOrgCode(), user.getOrgCode()));
+//            }
+//            else if (DATA_SCOPE_SELF.equals(dataScope))
+//            {
+//                if (StringUtils.isNotBlank(userAlias))
+//                {
+//                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getId()));
+//                }
+//                else
+//                {
+//                    // 数据权限为仅本人且没有userAlias别名不查询任何数据
+//                    sqlString.append(StringUtils.format(" OR {}.org_code = 0 ", orgAlias));
+//                }
+//            }
+//            conditions.add(dataScope);
+//        }
+//
+//        // 多角色情况下，所有角色都不包含传递过来的权限字符，这个时候sqlString也会为空，所以要限制一下,不查询任何数据
+//        if (StringUtils.isEmpty(conditions))
+//        {
+//            sqlString.append(StringUtils.format(" OR {}.org_code = 0 ", orgAlias));
+//        }
+//
+//        if (StringUtils.isNotBlank(sqlString.toString()))
+//        {
+//            Object params = joinPoint.getArgs()[0];
+//            if (StringUtils.isNotNull(params) && params instanceof BaseEntity)
+//            {
+//                BaseEntity baseEntity = (BaseEntity) params;
+//                baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
+//            }
+//        }
     }
 
     /**

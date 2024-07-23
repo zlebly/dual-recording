@@ -134,7 +134,7 @@ public interface IUsrUserService
      * @param userId 用户ID
      * @param roleCodes 角色组
      */
-    public void insertUserAuth(Long userId, Long[] roleCodes);
+    public void insertUserAuth(Long userId, String[] roleCodes);
 
     /**
      * 修改用户状态
@@ -155,11 +155,11 @@ public interface IUsrUserService
     /**
      * 修改用户头像
      * 
-     * @param userName 用户名
+     * @param userId 用户名
      * @param avatar 头像地址
      * @return 结果
      */
-    public boolean updateUserAvatar(String userName, String avatar);
+    public boolean updateUserAvatar(Long userId, String avatar);
 
     /**
      * 重置用户密码

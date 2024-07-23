@@ -187,7 +187,7 @@ public class BaseController
     /**
      * 获取登录机构id
      */
-    public Long getOrgCode()
+    public String getOrgCode()
     {
         return getLoginUser().getOrgCode();
     }

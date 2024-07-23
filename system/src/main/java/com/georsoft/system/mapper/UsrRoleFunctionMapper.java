@@ -16,7 +16,7 @@ public interface UsrRoleFunctionMapper
      * @param functionCode 菜单ID
      * @return 结果
      */
-    public int checkFunctionExistRole(Long functionCode);
+    public int checkFunctionExistRole(String functionCode);
 
     /**
      * 通过角色ID删除角色和菜单关联
@@ -24,7 +24,7 @@ public interface UsrRoleFunctionMapper
      * @param roleCode 角色ID
      * @return 结果
      */
-    public int deleteRoleFunctionByRoleCode(Long roleCode);
+    public int deleteRoleFunctionByRoleCode(String roleCode);
 
     /**
      * 批量删除角色菜单关联信息
@@ -32,7 +32,7 @@ public interface UsrRoleFunctionMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteRoleFunction(Long[] ids);
+    public int deleteRoleFunction(String[] ids);
 
     /**
      * 批量新增角色菜单信息

@@ -66,8 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public AjaxResult getCurrentAndSubOrg() {
-        // TODO 暂传江苏省农村信用社联合社（全省汇总）
-        List<UsrOrg> orgList = orgMapper.qryCurrentAndSubOrg("320000000");
+        List<UsrOrg> orgList = orgMapper.qryCurrentAndSubOrg(SecurityUtils.getLoginUser().getOrgCode().toString());
         List<OrgOptionsVO> result = new ArrayList<>();
         for (UsrOrg org : orgList) {
             result.add(OrgConvertBasic.toOrgOptionsVO(org));
@@ -83,8 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public AjaxResult getUserInfoByOrg() {
-        // TODO 暂传江苏省农村信用社联合社（全省汇总）
-        List<UsrUsers> userList = userMapper.qryUserInfoByOrg("320000000");
+        List<UsrUsers> userList = userMapper.qryUserInfoByOrg(SecurityUtils.getLoginUser().getOrgCode().toString());
         List<UserOptionsVO> result = new ArrayList<>();
         for (UsrUsers user : userList) {
             result.add(UserConvertBasic.toUserOptionsVO(user));

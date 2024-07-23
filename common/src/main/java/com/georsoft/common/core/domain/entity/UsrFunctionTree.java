@@ -17,13 +17,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class UsrFunctionTree
 {
     /** 菜单ID */
-    private Long functionCode;
+    private String functionCode;
 
     /** 菜单名称 */
     private String functionName;
 
     /** 父菜单ID */
-    private Long parentCode;
+    private String parentCode;
 
     /** 显示顺序 */
     private Integer viewIndex;
@@ -86,12 +86,12 @@ public class UsrFunctionTree
     /** 子菜单 */
     private List<UsrFunctionTree> children = new ArrayList<UsrFunctionTree>();
 
-    public Long getFunctionCode()
+    public String getFunctionCode()
     {
         return functionCode;
     }
 
-    public void setFunctionCode(Long functionCode)
+    public void setFunctionCode(String functionCode)
     {
         this.functionCode = functionCode;
     }
@@ -108,12 +108,12 @@ public class UsrFunctionTree
         this.functionName = functionName;
     }
 
-    public Long getParentCode()
+    public String getParentCode()
     {
         return parentCode;
     }
 
-    public void setParentCode(Long parentCode)
+    public void setParentCode(String parentCode)
     {
         this.parentCode = parentCode;
     }

@@ -11,27 +11,27 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class orgCode
 {
     /** 角色ID */
-    private Long roleCode;
+    private String roleCode;
     
     /** 机构码 */
-    private Long orgCode;
+    private String orgCode;
 
-    public Long getRoleCode()
+    public String getRoleCode()
     {
         return roleCode;
     }
 
-    public void setRoleCode(Long roleCode)
+    public void setRoleCode(String roleCode)
     {
         this.roleCode = roleCode;
     }
 
-    public Long getOrgCode()
+    public String getOrgCode()
     {
         return orgCode;
     }
 
-    public void setOrgCode(Long orgCode)
+    public void setOrgCode(String orgCode)
     {
         this.orgCode = orgCode;
     }

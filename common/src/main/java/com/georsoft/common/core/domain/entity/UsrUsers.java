@@ -55,9 +55,8 @@ public class UsrUsers extends BaseEntity
 
     /** 机构码 */
     @Excel(name = "机构码", type = Type.IMPORT)
-    private Long orgCode;
+    private String orgCode;
 
-    // TODO 原本是status 涉及到登陆状态的改动
     /** 登陆状态（0正常 1停用） */
     @Excel(name = "登陆状态", readConverterExp = "0=正常,1=停用")
     private String loginStatus;
@@ -150,14 +149,24 @@ public class UsrUsers extends BaseEntity
     private List<UsrRole> roles;
 
     /** 角色组 */
-    private Long[] roleCodes;
+    private String[] roleCodes;
 
     /** 岗位组 */
     private Long[] postIds;
 
+    /** 头像 */
+    private String avatar;
     public UsrUsers()
     {
 
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public UsrUsers(Long id)
@@ -185,12 +194,12 @@ public class UsrUsers extends BaseEntity
         return "admin".equals(loginName);
     }
 
-    public Long getOrgCode()
+    public String getOrgCode()
     {
         return orgCode;
     }
 
-    public void setOrgCode(Long orgCode)
+    public void setOrgCode(String orgCode)
     {
         this.orgCode = orgCode;
     }
@@ -313,12 +322,12 @@ public class UsrUsers extends BaseEntity
         this.roles = roles;
     }
 
-    public Long[] getRoleCodes()
+    public String[] getRoleCodes()
     {
         return roleCodes;
     }
 
-    public void setRoleCodes(Long[] roleCodes)
+    public void setRoleCodes(String[] roleCodes)
     {
         this.roleCodes = roleCodes;
     }

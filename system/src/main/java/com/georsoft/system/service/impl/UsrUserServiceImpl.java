@@ -311,7 +311,7 @@ public class UsrUserServiceImpl implements IUsrUserService
      */
     @Override
     @Transactional
-    public void insertUserAuth(Long userId, Long[] roleCodes)
+    public void insertUserAuth(Long userId, String[] roleCodes)
     {
         userRoleMapper.deleteUserRoleByUserId(userId);
         insertUserRole(userId, roleCodes);
@@ -344,15 +344,14 @@ public class UsrUserServiceImpl implements IUsrUserService
     /**
      * 修改用户头像
      *
-     * @param userName 用户名
+     * @param userId 用户名
      * @param avatar 头像地址
      * @return 结果
      */
     @Override
-    public boolean updateUserAvatar(String userName, String avatar)
+    public boolean updateUserAvatar(Long userId, String avatar)
     {
-        return false;
-//        return userMapper.updateUserAvatar(userName, avatar) > 0;
+        return userMapper.updateUserAvatar(userId, avatar) > 0;
     }
 
     /**
@@ -419,13 +418,13 @@ public class UsrUserServiceImpl implements IUsrUserService
      * @param UserId 用户ID
      * @param roleCodes 角色组
      */
-    public void insertUserRole(Long UserId, Long[] roleCodes)
+    public void insertUserRole(Long UserId, String[] roleCodes)
     {
         if (StringUtils.isNotEmpty(roleCodes))
         {
             // 新增用户与角色管理
             List<UsrUserRole> list = new ArrayList<UsrUserRole>(roleCodes.length);
-            for (Long roleCode : roleCodes)
+            for (String roleCode : roleCodes)
             {
                 UsrUserRole ur = new UsrUserRole();
                 ur.setLoginName(userMapper.selectLoginNameByUserId(UserId));

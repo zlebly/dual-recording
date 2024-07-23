@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OrgOptionsVO {
     /** 机构码 */
-    private Long orgCode;
+    private String orgCode;
 
     /** 机构名称 */
     private String orgName;

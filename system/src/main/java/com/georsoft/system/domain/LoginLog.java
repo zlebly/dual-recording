@@ -17,7 +17,7 @@ public class LoginLog extends BaseEntity
 
     /** ID */
     @Excel(name = "序号", cellType = ColumnType.NUMERIC)
-    private Long id;
+    private String id;
 
     /** 登录状态 0成功 1失败 */
     @Excel(name = "登录状态", readConverterExp = "0=成功,1=失败")
@@ -44,12 +44,12 @@ public class LoginLog extends BaseEntity
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date operateTime;
 
-    public Long getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(Long id)
+    public void setId(String id)
     {
         this.id = id;
     }
@@ -111,4 +111,6 @@ public class LoginLog extends BaseEntity
     public void setClientName(String clientName) {
         this.clientName = clientName;
     }
+
+
 }

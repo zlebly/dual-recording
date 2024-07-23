@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by r.view_index
 	</select>
     
-	<select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
+	<select id="selectRolePermissionByUserId" parameterType="Integer" resultMap="SysRoleResult">
 		<include refid="selectRoleVo"/>
 		WHERE u.id = #{id}
 	</select>
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    where u.id = #{userId}
 	</select>
 	
-	<select id="selectRoleById" parameterType="Long" resultMap="SysRoleResult">
+	<select id="selectRoleById" parameterType="String" resultMap="SysRoleResult">
 		<include refid="selectRoleVo"/>
 		where r.role_code = #{roleCode}
 	</select>
@@ -91,11 +91,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		where role_code = #{roleCode}
 	</update>
 	
-	<delete id="deleteRoleById" parameterType="Long">
+	<delete id="deleteRoleById" parameterType="String">
  		delete from usr_role where role_code = #{roleCode}
  	</delete>
  	
- 	<delete id="deleteRoleByIds" parameterType="Long">
+ 	<delete id="deleteRoleByIds" parameterType="String">
 		delete from usr_role where role_code in
  		<foreach collection="array" item="roleCode" open="(" separator="," close=")">
  			#{roleCode}

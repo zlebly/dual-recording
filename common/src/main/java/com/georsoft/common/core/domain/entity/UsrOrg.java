@@ -19,12 +19,11 @@ public class UsrOrg extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 机构码 */
-    private Long orgCode;
+    private String orgCode;
 
     /** 父机构码 */
-    private Long parentOrgCode;
+    private String parentOrgCode;
 
-    // TODO 待删除
     private String ancestors;
 
     /** 机构名称 */
@@ -72,22 +71,22 @@ public class UsrOrg extends BaseEntity
     /** 子部门 */
     private List<UsrOrg> children = new ArrayList<UsrOrg>();
 
-    public Long getOrgCode()
+    public String getOrgCode()
     {
         return orgCode;
     }
 
-    public void setOrgCode(Long orgCode)
+    public void setOrgCode(String orgCode)
     {
         this.orgCode = orgCode;
     }
 
-    public Long getParentOrgCode()
+    public String getParentOrgCode()
     {
         return parentOrgCode;
     }
 
-    public void setParentOrgCode(Long parentOrgCode)
+    public void setParentOrgCode(String parentOrgCode)
     {
         this.parentOrgCode = parentOrgCode;
     }

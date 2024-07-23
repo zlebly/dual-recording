@@ -29,10 +29,20 @@
 
     <!-- 查询产品列表 -->
     <select id="qryCurrentAndSubOrg" parameterType="String" resultMap="OrgInfoResult">
+        WITH RECURSIVE parent_hierarchy AS (
+            select org_code, parent_org_code
+            from usr_org
+            where org_code = #{orgCode}
+            union all
+            select i.org_code, i.parent_org_code
+            from usr_org i
+                     join parent_hierarchy ph on i.org_code = ph.parent_org_code
+        )
+
         SELECT
             org_code,
             parent_org_code,
-            ancestors,
+            group_concat(distinct ph.parent_org_code order by ph.parent_org_code separator ',') as ancestors,
             org_name,
             view_index,
             abb_name,
@@ -40,7 +50,7 @@
             org_address,
             org_status
         FROM
-            usr_org
+            usr_org d left join parent_hierarchy ph on d.org_code = ph.org_code
         WHERE
             org_code = #{currentOrgCode}
            OR parent_org_code = #{currentOrgCode}

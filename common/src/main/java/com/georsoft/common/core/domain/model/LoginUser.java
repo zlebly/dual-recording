@@ -24,7 +24,7 @@ public class LoginUser implements UserDetails
     /**
      * 机构码
      */
-    private Long orgCode;
+    private String orgCode;
 
     /**
      * 用户唯一标识
@@ -81,7 +81,7 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
-    public LoginUser(Long userId, Long orgCode, UsrUsers user, Set<String> permissions)
+    public LoginUser(Long userId, String orgCode, UsrUsers user, Set<String> permissions)
     {
         this.userId = userId;
         this.orgCode = orgCode;
@@ -99,12 +99,12 @@ public class LoginUser implements UserDetails
         this.userId = userId;
     }
 
-    public Long getOrgCode()
+    public String getOrgCode()
     {
         return orgCode;
     }
 
-    public void setOrgCode(Long orgCode)
+    public void setOrgCode(String orgCode)
     {
         this.orgCode = orgCode;
     }

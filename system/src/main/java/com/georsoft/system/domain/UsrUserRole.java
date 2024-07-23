@@ -14,7 +14,7 @@ public class UsrUserRole
     private String loginName;
     
     /** 角色ID */
-    private Long roleCode;
+    private String roleCode;
 
     public String getLoginName()
     {
@@ -26,12 +26,12 @@ public class UsrUserRole
         this.loginName = loginName;
     }
 
-    public Long getRoleCode()
+    public String getRoleCode()
     {
         return roleCode;
     }
 
-    public void setRoleCode(Long roleCode)
+    public void setRoleCode(String roleCode)
     {
         this.roleCode = roleCode;
     }

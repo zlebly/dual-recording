@@ -122,16 +122,14 @@ public class SysProfileController extends BaseController
         {
             LoginUser loginUser = getLoginUser();
             String avatar = FileUploadUtils.upload(GeorSoftConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
-            // TODO
-//            if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
-//            {
-//                AjaxResult ajax = AjaxResult.success();
-//                ajax.put("imgUrl", avatar);
-//                // TODO 更新缓存用户头像
-////                loginUser.getUser().setAvatar(avatar);
-//                tokenService.setLoginUser(loginUser);
-//                return ajax;
-//            }
+            if (userService.updateUserAvatar(loginUser.getUserId(), avatar))
+            {
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("imgUrl", avatar);
+                loginUser.getUser().setAvatar(avatar);
+                tokenService.setLoginUser(loginUser);
+                return ajax;
+            }
         }
         return error("上传图片异常，请联系管理员");
     }

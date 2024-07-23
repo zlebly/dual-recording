@@ -33,7 +33,7 @@ public interface UsrUserRoleMapper
      * @param roleCode 角色ID
      * @return 结果
      */
-    public int countUserRoleByRoleCode(Long roleCode);
+    public int countUserRoleByRoleCode(String roleCode);
 
     /**
      * 批量新增用户角色信息
@@ -58,5 +58,5 @@ public interface UsrUserRoleMapper
      * @param userIds 需要删除的用户数据ID
      * @return 结果
      */
-    public int deleteUserRoleInfos(@Param("roleCode") Long roleCode, @Param("userIds") Long[] userIds);
+    public int deleteUserRoleInfos(@Param("roleCode") String roleCode, @Param("userIds") Long[] userIds);
 }

@@ -40,7 +40,7 @@ public interface UsrFunctionTreeMapper
      * @param roleCode 角色ID
      * @return 权限列表
      */
-    public List<String> selectFunctionPermsByRoleCode(Long roleCode);
+    public List<String> selectFunctionPermsByRoleCode(String roleCode);
 
     /**
      * 根据用户ID查询权限
@@ -71,7 +71,7 @@ public interface UsrFunctionTreeMapper
      * @param roleCode 角色ID
      * @return 选中菜单列表
      */
-    public List<Long> selectFunctionListByRoleCode(@Param("roleCode") Long roleCode);
+    public List<Long> selectFunctionListByRoleCode(@Param("roleCode") String roleCode);
 
     /**
      * 根据菜单ID查询信息
@@ -79,7 +79,7 @@ public interface UsrFunctionTreeMapper
      * @param functionCode 菜单ID
      * @return 菜单信息
      */
-    public UsrFunctionTree selectFunctionById(Long functionCode);
+    public UsrFunctionTree selectFunctionById(String functionCode);
 
     /**
      * 是否存在菜单子节点
@@ -87,7 +87,7 @@ public interface UsrFunctionTreeMapper
      * @param functionCode 菜单ID
      * @return 结果
      */
-    public int hasChildByFunctionCode(Long functionCode);
+    public int hasChildByFunctionCode(String functionCode);
 
     /**
      * 新增菜单信息
@@ -111,7 +111,7 @@ public interface UsrFunctionTreeMapper
      * @param functionCode 菜单ID
      * @return 结果
      */
-    public int deleteFunctionById(Long functionCode);
+    public int deleteFunctionById(String functionCode);
 
     /**
      * 校验菜单名称是否唯一
@@ -120,5 +120,5 @@ public interface UsrFunctionTreeMapper
      * @param parentCode 父菜单ID
      * @return 结果
      */
-    public UsrFunctionTree checkFunctionNameUnique(@Param("functionName") String functionName, @Param("parentCode") Long parentCode);
+    public UsrFunctionTree checkFunctionNameUnique(@Param("functionName") String functionName, @Param("parentCode") String parentCode);
 }

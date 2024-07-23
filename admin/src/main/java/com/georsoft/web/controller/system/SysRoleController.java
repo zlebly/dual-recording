@@ -79,7 +79,7 @@ public class SysRoleController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:role:query')")
     @GetMapping(value = "/{roleCode}")
-    public AjaxResult getInfo(@PathVariable Long roleCode)
+    public AjaxResult getInfo(@PathVariable String roleCode)
     {
         roleService.checkRoleDataScope(roleCode);
         return success(roleService.selectRoleById(roleCode));
@@ -166,7 +166,7 @@ public class SysRoleController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:role:remove')")
     @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{roleCodes}")
-    public AjaxResult remove(@PathVariable Long[] roleCodes)
+    public AjaxResult remove(@PathVariable String[] roleCodes)
     {
         return toAjax(roleService.deleteRoleByIds(roleCodes));
     }
@@ -222,7 +222,7 @@ public class SysRoleController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/cancelAll")
-    public AjaxResult cancelAuthUserAll(Long roleCode, Long[] userIds)
+    public AjaxResult cancelAuthUserAll(String roleCode, Long[] userIds)
     {
         return toAjax(roleService.deleteAuthUsers(roleCode, userIds));
     }
@@ -233,7 +233,7 @@ public class SysRoleController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/selectAll")
-    public AjaxResult selectAuthUserAll(Long roleCode, Long[] userIds)
+    public AjaxResult selectAuthUserAll(String roleCode, Long[] userIds)
     {
         roleService.checkRoleDataScope(roleCode);
         return toAjax(roleService.insertAuthUsers(roleCode, userIds));
@@ -244,7 +244,7 @@ public class SysRoleController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:role:query')")
     @GetMapping(value = "/orgTree/{roleCode}")
-    public AjaxResult orgTree(@PathVariable("roleCode") Long roleCode)
+    public AjaxResult orgTree(@PathVariable("roleCode") String roleCode)
     {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("checkedKeys", orgService.selectOrgListByRoleCode(roleCode));

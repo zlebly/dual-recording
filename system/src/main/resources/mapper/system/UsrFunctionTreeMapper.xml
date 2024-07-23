@@ -64,7 +64,7 @@
 		left join usr_role_function rm on m.function_code = rm.function_code
 		left join usr_user_role ur on rm.role_code = ur.role_code
 		left join usr_role ro on ur.role_code = ro.role_code
-		where ur.user_id = #{params.userId}
+		where ur.LOGIN_NAME = #{params.loginName}
 		<if test="functionName != null and functionName != ''">
             AND m.function_name like concat('%', #{functionName}, '%')
 		</if>
@@ -74,7 +74,7 @@
 		order by m.parent_code, m.view_index
 	</select>
     
-    <select id="selectFunctionTreeByLoginName" parameterType="Long" resultMap="UsrFunctionResult">
+    <select id="selectFunctionTreeByLoginName" parameterType="String" resultMap="UsrFunctionResult">
 		select distinct m.function_code, m.parent_code, m.function_name, m.path, m.component, m.`query`, m.view_flag,
 		                ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.function_type, m.icon_resource, m.view_index
 		from usr_function_tree m
@@ -86,7 +86,7 @@
 		order by m.parent_code, m.view_index
 	</select>
 	
-	<select id="selectFunctionListByRoleCode" resultType="Long">
+	<select id="selectFunctionListByRoleCode" resultType="String">
 		select m.function_code
 		from usr_function_tree m
             left join usr_role_function rm on m.function_code = rm.function_code
@@ -111,14 +111,14 @@
 		where ur.login_name = #{loginName}
 	</select>
 	
-	<select id="selectFunctionPermsByRoleCode" parameterType="Long" resultType="String">
+	<select id="selectFunctionPermsByRoleCode" parameterType="String" resultType="String">
 		select distinct m.perms
 		from usr_function_tree m
 			 left join usr_role_function rm on m.function_code = rm.function_code
 		where rm.role_code = #{roleCode}
 	</select>
 	
-	<select id="selectFunctionById" parameterType="Long" resultMap="UsrFunctionResult">
+	<select id="selectFunctionById" parameterType="String" resultMap="UsrFunctionResult">
 		<include refid="selectFunctionVo"/>
 		where function_code = #{functionCode}
 	</select>
@@ -207,7 +207,7 @@
 		)
 	</insert>
 	
-	<delete id="deleteFunctionById" parameterType="Long">
+	<delete id="deleteFunctionById" parameterType="String">
 	    delete from usr_function_tree where function_code = #{functionCode}
 	</delete>
 

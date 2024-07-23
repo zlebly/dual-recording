@@ -33,7 +33,7 @@
         FROM
             fcm_customer_info a
                 LEFT JOIN sys_data_dict b ON a.id_type = b.dict_code
-                LEFT JOIN usr_users c ON a.user_id = c.user_id
+                LEFT JOIN usr_users c ON a.USER_ID = c.ID
         <where>
             <if test="createDateStart !=null and createDateStart != ''" >
                 and a.create_date >= #{createDateStart}

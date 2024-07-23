@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="insertLoginLog" parameterType="LoginLog">
 		insert into log_login_log (operator, login_flag, client_ip, client_name, remark, operate_time)
-		values (#{operator}, #{loginFlag}, #{clientIp}, #{loginLocation}, #{remark}, sysdate())
+		values (#{operator}, #{loginFlag}, #{clientIp}, #{clientName}, #{remark}, sysdate())
 	</insert>
 	
 	<select id="selectLoginLogList" parameterType="LoginLog" resultMap="LoginLogResult">

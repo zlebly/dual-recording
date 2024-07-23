@@ -137,13 +137,6 @@
                 <version>${kaptcha.version}</version>
             </dependency>
 
-            <!-- 定时任务-->
-            <dependency>
-                <groupId>com.georsoft</groupId>
-                <artifactId>quartz</artifactId>
-                <version>${georsoft.version}</version>
-            </dependency>
-
             <!-- 核心模块-->
             <dependency>
                 <groupId>com.georsoft</groupId>
@@ -184,7 +177,6 @@
         <module>admin</module>
         <module>framework</module>
         <module>system</module>
-        <module>quartz</module>
         <module>common</module>
         <module>business</module>
     </modules>

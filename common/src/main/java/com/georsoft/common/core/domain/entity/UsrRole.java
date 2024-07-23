@@ -21,7 +21,7 @@ public class UsrRole extends BaseEntity
 
     /** 角色ID */
     @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
-    private Long roleCode;
+    private String roleCode;
 
     /** 角色名称 */
     @Excel(name = "角色名称")
@@ -43,23 +43,20 @@ public class UsrRole extends BaseEntity
     @Excel(name = "登录标志")
     private Boolean signInFlag;
 
-    // TODO 暂不删除
-    /** 数据范围（1：所有数据权限；2：自定义数据权限；3：本机构数据权限；4：本机构及以下数据权限；5：仅本人数据权限） */
-    @Excel(name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限,3=本机构数据权限,4=本机构及以下数据权限,5=仅本人数据权限")
-    private String dataScope;
+    // TODO 数据范围
+//    /** 数据范围（1：所有数据权限；2：自定义数据权限；3：本机构数据权限；4：本机构及以下数据权限；5：仅本人数据权限） */
+//    @Excel(name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限,3=本机构数据权限,4=本机构及以下数据权限,5=仅本人数据权限")
+//    private String dataScope;
 
     /** 用户是否存在此角色标识 默认不存在 */
     private boolean flag = false;
 
-    // TODO 待确认
     /** 菜单组 */
-    private Long[] functionCodes;
+    private String[] functionCodes;
 
-    // TODO 待确认
     /** 机构组（数据权限） */
-    private Long[] orgCodes;
+    private String[] orgCodes;
 
-    // TODO 待确认
     /** 角色菜单权限 */
     private Set<String> permissions;
 
@@ -68,17 +65,17 @@ public class UsrRole extends BaseEntity
 
     }
 
-    public UsrRole(Long roleCode)
+    public UsrRole(String roleCode)
     {
         this.roleCode = roleCode;
     }
 
-    public Long getRoleCode()
+    public String getRoleCode()
     {
         return roleCode;
     }
 
-    public void setRoleCode(Long roleCode)
+    public void setRoleCode(String roleCode)
     {
         this.roleCode = roleCode;
     }
@@ -88,9 +85,9 @@ public class UsrRole extends BaseEntity
         return isAdmin(this.roleCode);
     }
 
-    public static boolean isAdmin(Long roleCode)
+    public static boolean isAdmin(String roleCode)
     {
-        return roleCode != null && 1L == roleCode;
+        return roleCode != null && "1" == roleCode;
     }
 
     @NotBlank(message = "角色名称不能为空")
@@ -116,15 +113,15 @@ public class UsrRole extends BaseEntity
         this.viewIndex = viewIndex;
     }
 
-    public String getDataScope()
-    {
-        return dataScope;
-    }
-
-    public void setDataScope(String dataScope)
-    {
-        this.dataScope = dataScope;
-    }
+//    public String getDataScope()
+//    {
+//        return dataScope;
+//    }
+//
+//    public void setDataScope(String dataScope)
+//    {
+//        this.dataScope = dataScope;
+//    }
 
     public boolean isFlag()
     {
@@ -136,22 +133,22 @@ public class UsrRole extends BaseEntity
         this.flag = flag;
     }
 
-    public Long[] getFunctionCodes()
+    public String[] getFunctionCodes()
     {
         return functionCodes;
     }
 
-    public void setFunctionCodes(Long[] functionCodes)
+    public void setFunctionCodes(String[] functionCodes)
     {
         this.functionCodes = functionCodes;
     }
 
-    public Long[] getOrgCodes()
+    public String[] getOrgCodes()
     {
         return orgCodes;
     }
 
-    public void setOrgCodes(Long[] orgCodes)
+    public void setOrgCodes(String[] orgCodes)
     {
         this.orgCodes = orgCodes;
     }
@@ -201,7 +198,6 @@ public class UsrRole extends BaseEntity
                 ", remark='" + remark + '\'' +
                 ", orgClass='" + orgClass + '\'' +
                 ", signInFlag=" + signInFlag +
-                ", dataScope='" + dataScope + '\'' +
                 ", flag=" + flag +
                 ", functionCodes=" + Arrays.toString(functionCodes) +
                 ", orgCodes=" + Arrays.toString(orgCodes) +

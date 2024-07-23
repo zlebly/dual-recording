@@ -71,7 +71,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
         {
             for (UsrRole userRole : userRoles)
             {
-                if (role.getRoleCode().longValue() == userRole.getRoleCode().longValue())
+                if (role.getRoleCode().equals(userRole.getRoleCode()))
                 {
                     role.setFlag(true);
                     break;
@@ -133,7 +133,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * @return 角色对象信息
      */
     @Override
-    public UsrRole selectRoleById(Long roleCode)
+    public UsrRole selectRoleById(String roleCode)
     {
         return roleMapper.selectRoleById(roleCode);
     }
@@ -147,9 +147,9 @@ public class UsrRoleServiceImpl implements IUsrRoleService
     @Override
     public boolean checkRoleNameUnique(UsrRole role)
     {
-        Long roleCode = StringUtils.isNull(role.getRoleCode()) ? -1L : role.getRoleCode();
+        String roleCode = StringUtils.isNull(role.getRoleCode()) ? "1" : role.getRoleCode();
         UsrRole info = roleMapper.checkRoleNameUnique(role.getRoleName());
-        if (StringUtils.isNotNull(info) && info.getRoleCode().longValue() != roleCode.longValue())
+        if (StringUtils.isNotNull(info) && info.getRoleCode() != roleCode)
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -176,11 +176,11 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * @param roleCodes 角色id
      */
     @Override
-    public void checkRoleDataScope(Long... roleCodes)
+    public void checkRoleDataScope(String... roleCodes)
     {
         if (!UsrUsers.isAdmin(SecurityUtils.getUsername()))
         {
-            for (Long roleCode : roleCodes)
+            for (String roleCode : roleCodes)
             {
                 UsrRole role = new UsrRole();
                 role.setRoleCode(roleCode);
@@ -200,7 +200,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * @return 结果
      */
     @Override
-    public int countUserRoleByRoleCode(Long roleCode)
+    public int countUserRoleByRoleCode(String roleCode)
     {
         return userRoleMapper.countUserRoleByRoleCode(roleCode);
     }
@@ -277,7 +277,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
         int rows = 1;
         // 新增用户与角色管理
         List<UsrRoleFunction> list = new ArrayList<UsrRoleFunction>();
-        for (Long functionCode : role.getFunctionCodes())
+        for (String functionCode : role.getFunctionCodes())
         {
             UsrRoleFunction rm = new UsrRoleFunction();
             rm.setRoleCode(role.getRoleCode());
@@ -301,7 +301,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
         int rows = 1;
         // 新增角色与部门（数据权限）管理
         List<orgCode> list = new ArrayList<orgCode>();
-        for (Long orgId : role.getOrgCodes())
+        for (String orgId : role.getOrgCodes())
         {
             orgCode rd = new orgCode();
             rd.setRoleCode(role.getRoleCode());
@@ -323,7 +323,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      */
     @Override
     @Transactional
-    public int deleteRoleById(Long roleCode)
+    public int deleteRoleById(String roleCode)
     {
         // 删除角色与菜单关联
         roleFunctionMapper.deleteRoleFunctionByRoleCode(roleCode);
@@ -340,9 +340,9 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      */
     @Override
     @Transactional
-    public int deleteRoleByIds(Long[] roleCodes)
+    public int deleteRoleByIds(String[] roleCodes)
     {
-        for (Long roleCode : roleCodes)
+        for (String roleCode : roleCodes)
         {
             checkRoleAllowed(new UsrRole(roleCode));
             checkRoleDataScope(roleCode);
@@ -379,7 +379,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * @return 结果
      */
     @Override
-    public int deleteAuthUsers(Long roleCode, Long[] userIds)
+    public int deleteAuthUsers(String roleCode, Long[] userIds)
     {
         return userRoleMapper.deleteUserRoleInfos(roleCode, userIds);
     }
@@ -392,7 +392,7 @@ public class UsrRoleServiceImpl implements IUsrRoleService
      * @return 结果
      */
     @Override
-    public int insertAuthUsers(Long roleCode, Long[] userIds)
+    public int insertAuthUsers(String roleCode, Long[] userIds)
     {
         // 新增用户与角色管理
         List<UsrUserRole> list = new ArrayList<UsrUserRole>();

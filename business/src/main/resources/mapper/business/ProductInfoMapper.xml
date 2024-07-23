@@ -49,7 +49,7 @@
             fcm_product_info f
         left join
             usr_users s
-                on f.create_user_id = s.user_id
+                on f.create_user_id = s.id
         <where>
             <if test="createTimeStart !=null and createTimeStart != ''" >
                 and f.create_date >= #{createTimeStart}

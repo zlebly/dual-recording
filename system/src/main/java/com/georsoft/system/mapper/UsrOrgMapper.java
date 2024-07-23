@@ -25,7 +25,7 @@ public interface UsrOrgMapper
      * @param roleCode 角色ID
      * @return 选中机构列表
      */
-    public List<Long> selectOrgListByRoleCode(@Param("roleCode") Long roleCode);
+    public List<Long> selectOrgListByRoleCode(@Param("roleCode") String roleCode);
 
     /**
      * 根据机构码查询信息
@@ -33,15 +33,7 @@ public interface UsrOrgMapper
      * @param orgCode 机构码
      * @return 机构信息
      */
-    public UsrOrg selectOrgById(Long orgCode);
-
-    /**
-     * 根据ID查询所有子机构
-     * 
-     * @param orgCode 机构码
-     * @return 机构列表
-     */
-    public List<UsrOrg> selectChildrenOrgById(Long orgCode);
+    public UsrOrg selectOrgById(String orgCode);
 
     /**
      * 根据ID查询所有子机构（正常状态）
@@ -49,7 +41,7 @@ public interface UsrOrgMapper
      * @param orgCode 机构码
      * @return 子机构数
      */
-    public int selectNormalChildrenOrgById(Long orgCode);
+    public int selectNormalChildrenOrgById(String orgCode);
 
     /**
      * 是否存在子节点
@@ -57,7 +49,7 @@ public interface UsrOrgMapper
      * @param orgCode 机构码
      * @return 结果
      */
-    public int hasChildByOrgCode(Long orgCode);
+    public int hasChildByOrgCode(String orgCode);
 
     /**
      * 查询机构是否存在用户
@@ -65,7 +57,7 @@ public interface UsrOrgMapper
      * @param orgCode 机构码
      * @return 结果
      */
-    public int checkOrgExistUser(Long orgCode);
+    public int checkOrgExistUser(String orgCode);
 
     /**
      * 校验机构名称是否唯一
@@ -74,7 +66,7 @@ public interface UsrOrgMapper
      * @param parentOrgCode 父机构码
      * @return 结果
      */
-    public UsrOrg checkOrgNameUnique(@Param("orgName") String orgName, @Param("parentOrgCode") Long parentOrgCode);
+    public UsrOrg checkOrgNameUnique(@Param("orgName") String orgName, @Param("parentOrgCode") String parentOrgCode);
 
     /**
      * 新增机构信息
@@ -97,7 +89,7 @@ public interface UsrOrgMapper
      * 
      * @param orgCodes 机构码组
      */
-    public void updateOrgStatusNormal(Long[] orgCodes);
+    public void updateOrgStatusNormal(String[] orgCodes);
 
     /**
      * 修改子元素关系
@@ -113,5 +105,5 @@ public interface UsrOrgMapper
      * @param orgCode 机构码
      * @return 结果
      */
-    public int deleteOrgById(Long orgCode);
+    public int deleteOrgById(String orgCode);
 }

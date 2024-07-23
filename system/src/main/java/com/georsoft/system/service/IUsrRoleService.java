@@ -57,7 +57,7 @@ public interface IUsrRoleService
      * @param roleCode 角色ID
      * @return 角色对象信息
      */
-    public UsrRole selectRoleById(Long roleCode);
+    public UsrRole selectRoleById(String roleCode);
 
     /**
      * 校验角色名称是否唯一
@@ -79,7 +79,7 @@ public interface IUsrRoleService
      * 
      * @param roleCodes 角色id
      */
-    public void checkRoleDataScope(Long... roleCodes);
+    public void checkRoleDataScope(String... roleCodes);
 
     /**
      * 通过角色ID查询角色使用数量
@@ -87,7 +87,7 @@ public interface IUsrRoleService
      * @param roleCode 角色ID
      * @return 结果
      */
-    public int countUserRoleByRoleCode(Long roleCode);
+    public int countUserRoleByRoleCode(String roleCode);
 
     /**
      * 新增保存角色信息
@@ -127,7 +127,7 @@ public interface IUsrRoleService
      * @param roleCode 角色ID
      * @return 结果
      */
-    public int deleteRoleById(Long roleCode);
+    public int deleteRoleById(String roleCode);
 
     /**
      * 批量删除角色信息
@@ -135,7 +135,7 @@ public interface IUsrRoleService
      * @param roleCodes 需要删除的角色ID
      * @return 结果
      */
-    public int deleteRoleByIds(Long[] roleCodes);
+    public int deleteRoleByIds(String[] roleCodes);
 
     /**
      * 取消授权用户角色
@@ -152,7 +152,7 @@ public interface IUsrRoleService
      * @param userIds 需要取消授权的用户数据ID
      * @return 结果
      */
-    public int deleteAuthUsers(Long roleCode, Long[] userIds);
+    public int deleteAuthUsers(String roleCode, Long[] userIds);
 
     /**
      * 批量选择授权用户角色
@@ -161,5 +161,5 @@ public interface IUsrRoleService
      * @param userIds 需要删除的用户数据ID
      * @return 结果
      */
-    public int insertAuthUsers(Long roleCode, Long[] userIds);
+    public int insertAuthUsers(String roleCode, Long[] userIds);
 }

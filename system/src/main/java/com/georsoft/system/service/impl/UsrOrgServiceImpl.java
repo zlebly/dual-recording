@@ -70,7 +70,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     public List<UsrOrg> buildOrgTree(List<UsrOrg> orgs)
     {
         List<UsrOrg> returnList = new ArrayList<UsrOrg>();
-        List<Long> tempList = orgs.stream().map(UsrOrg::getOrgCode).collect(Collectors.toList());
+        List<String> tempList = orgs.stream().map(UsrOrg::getOrgCode).collect(Collectors.toList());
         for (UsrOrg org : orgs)
         {
             // 如果是顶级节点, 遍历该父节点的所有子节点
@@ -107,7 +107,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 选中机构列表
      */
     @Override
-    public List<Long> selectOrgListByRoleCode(Long roleCode)
+    public List<Long> selectOrgListByRoleCode(String roleCode)
     {
 //        UsrRole role = roleMapper.selectRoleById(roleCode);
         return orgMapper.selectOrgListByRoleCode(roleCode);
@@ -120,7 +120,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 机构信息
      */
     @Override
-    public UsrOrg selectOrgById(Long orgCode)
+    public UsrOrg selectOrgById(String orgCode)
     {
         return orgMapper.selectOrgById(orgCode);
     }
@@ -132,7 +132,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 子机构数
      */
     @Override
-    public int selectNormalChildrenOrgById(Long orgId)
+    public int selectNormalChildrenOrgById(String orgId)
     {
         return orgMapper.selectNormalChildrenOrgById(orgId);
     }
@@ -144,7 +144,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 结果
      */
     @Override
-    public boolean hasChildByOrgCode(Long orgCode)
+    public boolean hasChildByOrgCode(String orgCode)
     {
         int result = orgMapper.hasChildByOrgCode(orgCode);
         return result > 0;
@@ -157,7 +157,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 结果 true 存在 false 不存在
      */
     @Override
-    public boolean checkOrgExistUser(Long orgCode)
+    public boolean checkOrgExistUser(String orgCode)
     {
         int result = orgMapper.checkOrgExistUser(orgCode);
         return result > 0;
@@ -172,9 +172,9 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     @Override
     public boolean checkOrgNameUnique(UsrOrg org)
     {
-        Long orgCode = StringUtils.isNull(org.getOrgCode()) ? -1L : org.getOrgCode();
+        String orgCode = StringUtils.isNull(org.getOrgCode()) ? "-1" : org.getOrgCode();
         UsrOrg info = orgMapper.checkOrgNameUnique(org.getOrgName(), org.getParentOrgCode());
-        if (StringUtils.isNotNull(info) && info.getOrgCode().longValue() != orgCode.longValue())
+        if (StringUtils.isNotNull(info) && !info.getOrgCode().equals(orgCode))
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -187,7 +187,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @param orgCode 机构id
      */
     @Override
-    public void checkOrgDataScope(Long orgCode)
+    public void checkOrgDataScope(String orgCode)
     {
         if (!UsrUsers.isAdmin(SecurityUtils.getUsername()) && StringUtils.isNotNull(orgCode))
         {
@@ -231,13 +231,6 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     {
         UsrOrg newParentOrg = orgMapper.selectOrgById(org.getParentOrgCode());
         UsrOrg oldOrg = orgMapper.selectOrgById(org.getOrgCode());
-        if (StringUtils.isNotNull(newParentOrg) && StringUtils.isNotNull(oldOrg))
-        {
-            String newAncestors = newParentOrg.getAncestors() + "," + newParentOrg.getOrgCode();
-            String oldAncestors = oldOrg.getAncestors();
-            org.setAncestors(newAncestors);
-            updateOrgChildren(org.getOrgCode(), newAncestors, oldAncestors);
-        }
         int result = orgMapper.updateOrg(org);
         if (UserConstants.ORG_NORMAL.equals(org.getOrgStatus()) && StringUtils.isNotEmpty(org.getAncestors())
                 && !StringUtils.equals("0", org.getAncestors()))
@@ -256,28 +249,8 @@ public class UsrOrgServiceImpl implements IUsrOrgService
     private void updateParentOrgStatusNormal(UsrOrg org)
     {
         String ancestors = org.getAncestors();
-        Long[] orgCodes = Convert.toLongArray(ancestors);
+        String[] orgCodes = ancestors.split(",");
         orgMapper.updateOrgStatusNormal(orgCodes);
-    }
-
-    /**
-     * 修改子元素关系
-     * 
-     * @param orgCode 被修改的机构ID
-     * @param newAncestors 新的父ID集合
-     * @param oldAncestors 旧的父ID集合
-     */
-    public void updateOrgChildren(Long orgCode, String newAncestors, String oldAncestors)
-    {
-        List<UsrOrg> children = orgMapper.selectChildrenOrgById(orgCode);
-        for (UsrOrg child : children)
-        {
-            child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
-        }
-        if (children.size() > 0)
-        {
-            orgMapper.updateOrgChildren(children);
-        }
     }
 
     /**
@@ -287,7 +260,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
      * @return 结果
      */
     @Override
-    public int deleteOrgById(Long orgCode)
+    public int deleteOrgById(String orgCode)
     {
         return orgMapper.deleteOrgById(orgCode);
     }
@@ -319,7 +292,7 @@ public class UsrOrgServiceImpl implements IUsrOrgService
         while (it.hasNext())
         {
             UsrOrg n = (UsrOrg) it.next();
-            if (StringUtils.isNotNull(n.getParentOrgCode()) && n.getParentOrgCode().longValue() == t.getOrgCode().longValue())
+            if (StringUtils.isNotNull(n.getParentOrgCode()) && n.getParentOrgCode().equals(t.getOrgCode()))
             {
                 tlist.add(n);
             }

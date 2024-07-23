@@ -27,14 +27,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateBy"   column="update_by"   />
 		<result property="updateTime" column="update_time" />
 	</resultMap>
-	
 	<sql id="selectOrgVo">
-        select d.org_code, d.parent_org_code, d.ancestors, d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status, d.scan_flag, d.create_by, d.create_time 
-        from usr_org d
+		WITH RECURSIVE parent_hierarchy AS (
+			select org_code, parent_org_code
+			from usr_org
+			where org_code = #{orgCode}
+			union all
+			select i.org_code, i.parent_org_code
+			from usr_org i
+					 join parent_hierarchy ph on i.org_code = ph.parent_org_code
+		)
+
+		select d.org_code, d.parent_org_code, group_concat(distinct ph.parent_org_code order by ph.parent_org_code separator ',') as ancestors,
+			   d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status, d.scan_flag
+		from usr_org d
+		left join parent_hierarchy ph on d.org_code = ph.org_code
     </sql>
     
 	<select id="selectOrgList" parameterType="UsrOrg" resultMap="UsrOrgResult">
-        <include refid="selectOrgVo"/>
+		<include refid="selectOrgVo"/>
         where d.scan_flag = '0'
 		<if test="orgCode != null and orgCode != 0">
 			AND org_code = #{orgCode}
@@ -49,41 +60,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND orgStatus = #{orgStatus}
 		</if>
 		<!-- 数据范围过滤 -->
-		${params.dataScope}
+# 		${params.dataScope}
 		order by d.parent_org_code, d.view_index
     </select>
     
-    <select id="selectOrgListByRoleCode" resultType="Long">
+    <select id="selectOrgListByRoleCode" resultType="String">
 		select d.org_code
 		from usr_org d
-            left join usr_role_Org rd on d.org_code = rd.org_code
+            left join usr_role_org rd on d.org_code = rd.org_code
         where rd.role_code = #{roleCode}
-              and d.org_code not in (select d.parent_org_code from usr_org d inner join usr_role_Org rd on d.org_code = rd.org_code and rd.role_code = #{roleCode})
+              and d.org_code not in (select d.parent_org_code from usr_org d inner join usr_role_org rd on d.org_code = rd.org_code and rd.role_code = #{roleCode})
 		order by d.parent_org_code, d.view_index
 	</select>
     
-    <select id="selectOrgById" parameterType="Long" resultMap="UsrOrgResult">
-		select d.org_code, d.parent_org_code, d.ancestors, d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status,
+    <select id="selectOrgById" parameterType="String" resultMap="UsrOrgResult">
+		WITH RECURSIVE parent_hierarchy AS (
+			select org_code, parent_org_code
+			from usr_org
+			where org_code = #{orgCode}
+			union all
+			select i.org_code, i.parent_org_code
+			from usr_org i
+					 join parent_hierarchy ph on i.org_code = ph.parent_org_code
+		)
+
+		select d.org_code, d.parent_org_code, group_concat(distinct ph.parent_org_code order by ph.parent_org_code separator ',') as ancestors,
+		       d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status,
 			(select org_name from usr_org where org_code = d.parent_org_code) parent_name
 		from usr_org d
+		left join parent_hierarchy ph on d.org_code = ph.org_code
 		where d.org_code = #{orgCode}
 	</select>
     
-    <select id="checkOrgExistUser" parameterType="Long" resultType="int">
-		select count(1) from usr_users where org_code = #{orgCode} and scan_flag = '0'
+    <select id="checkOrgExistUser" parameterType="String" resultType="int">
+		select count(1) from usr_users where org_code = #{orgCode} and STOP_FLAG = '0'
 	</select>
 	
-	<select id="hasChildByOrgCode" parameterType="Long" resultType="int">
+	<select id="hasChildByOrgCode" parameterType="String" resultType="int">
 		select count(1) from usr_org
 		where scan_flag = '0' and parent_org_code = #{orgCode} limit 1
 	</select>
 	
-	<select id="selectChildrenOrgById" parameterType="Long" resultMap="UsrOrgResult">
-		select * from usr_org where find_in_set(#{orgCode}, ancestors)
-	</select>
-	
-	<select id="selectNormalChildrenOrgById" parameterType="Long" resultType="int">
-		select count(*) from usr_org where org_status = 0 and scan_flag = '0' and find_in_set(#{orgCode}, ancestors)
+	<select id="selectNormalChildrenOrgById" parameterType="String" resultType="int">
+		WITH RECURSIVE parent_hierarchy AS (
+			select org_code, parent_org_code
+			from usr_org
+			where org_code = #{orgCode}
+			union all
+			select i.org_code, i.parent_org_code
+			from usr_org i
+					 join parent_hierarchy ph on i.org_code = ph.parent_org_code
+		)
+		select count(*) from usr_org d left join parent_hierarchy ph on d.org_code = ph.org_code
+		where d.org_status = 0 and d.scan_flag = '0' and ph.PARENT_ORG_CODE = #{orgCode}
 	</select>
 	
 	<select id="checkOrgNameUnique" resultMap="UsrOrgResult">
@@ -146,14 +175,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    </foreach>
 	</update>
 	 
-	<update id="updateOrgStatusNormal" parameterType="Long">
+	<update id="updateOrgStatusNormal" parameterType="String">
  	    update usr_org set orgStatus = '0' where org_code in 
  	    <foreach collection="array" item="orgCode" open="(" separator="," close=")">
         	#{orgCode}
         </foreach>
 	</update>
 	
-	<delete id="deleteOrgById" parameterType="Long">
+	<delete id="deleteOrgById" parameterType="String">
 		update usr_org set scan_flag = '2' where org_code = #{orgCode}
 	</delete>
 

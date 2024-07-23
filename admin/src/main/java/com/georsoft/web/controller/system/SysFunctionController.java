@@ -49,7 +49,7 @@ public class SysFunctionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:menu:query')")
     @GetMapping(value = "/{functionCode}")
-    public AjaxResult getInfo(@PathVariable Long functionCode)
+    public AjaxResult getInfo(@PathVariable String functionCode)
     {
         return success(usrFunctionTreeService.selectFunctionById(functionCode));
     }
@@ -68,7 +68,7 @@ public class SysFunctionController extends BaseController
      * 加载对应角色菜单列表树
      */
     @GetMapping(value = "/roleFunctionTreeSelect/{roleCode}")
-    public AjaxResult roleFunctionTreeSelect(@PathVariable("roleCode") Long roleCode)
+    public AjaxResult roleFunctionTreeSelect(@PathVariable("roleCode") String roleCode)
     {
         List<UsrFunctionTree> functionTrees = usrFunctionTreeService.selectFunctionList(getUserId());
         AjaxResult ajax = AjaxResult.success();
@@ -125,7 +125,7 @@ public class SysFunctionController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{functionCode}")
-    public AjaxResult remove(@PathVariable("functionCode") Long functionCode)
+    public AjaxResult remove(@PathVariable("functionCode") String functionCode)
     {
         if (usrFunctionTreeService.hasChildByFunctionCode(functionCode))
         {

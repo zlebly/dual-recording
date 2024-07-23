@@ -70,11 +70,11 @@ public interface UsrUserMapper
     /**
      * 修改用户头像
      * 
-     * @param userName 用户名
+     * @param userId 用户名
      * @param avatar 头像地址
      * @return 结果
      */
-    public int updateUserAvatar(@Param("userName") String userName, @Param("avatar") String avatar);
+    public int updateUserAvatar(@Param("userId") Long userId, @Param("avatar") String avatar);
 
     /**
      * 重置用户密码
@@ -112,10 +112,10 @@ public interface UsrUserMapper
     /**
      * 校验手机号码是否唯一
      *
-     * @param phonenumber 手机号码
+     * @param mobileNo 手机号码
      * @return 结果
      */
-    public UsrUsers checkPhoneUnique(String phonenumber);
+    public UsrUsers checkPhoneUnique(String mobileNo);
 
     /**
      * 校验email是否唯一

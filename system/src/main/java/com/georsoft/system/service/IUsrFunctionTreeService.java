@@ -44,7 +44,7 @@ public interface IUsrFunctionTreeService
      * @param roleCode 角色ID
      * @return 权限列表
      */
-    public Set<String> selectFunctionPermsByRoleCode(Long roleCode);
+    public Set<String> selectFunctionPermsByRoleCode(String roleCode);
 
     /**
      * 根据用户登陆名查询菜单树信息
@@ -60,7 +60,7 @@ public interface IUsrFunctionTreeService
      * @param roleCode 角色ID
      * @return 选中菜单列表
      */
-    public List<Long> selectFunctionListByRoleCode(Long roleCode);
+    public List<Long> selectFunctionListByRoleCode(String roleCode);
 
     /**
      * 构建前端路由所需要的菜单
@@ -92,7 +92,7 @@ public interface IUsrFunctionTreeService
      * @param functionCode 菜单ID
      * @return 菜单信息
      */
-    public UsrFunctionTree selectFunctionById(Long functionCode);
+    public UsrFunctionTree selectFunctionById(String functionCode);
 
     /**
      * 是否存在菜单子节点
@@ -100,7 +100,7 @@ public interface IUsrFunctionTreeService
      * @param functionCode 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    public boolean hasChildByFunctionCode(Long functionCode);
+    public boolean hasChildByFunctionCode(String functionCode);
 
     /**
      * 查询菜单是否存在角色
@@ -108,7 +108,7 @@ public interface IUsrFunctionTreeService
      * @param functionCode 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkFunctionExistRole(Long functionCode);
+    public boolean checkFunctionExistRole(String functionCode);
 
     /**
      * 新增保存菜单信息
@@ -132,7 +132,7 @@ public interface IUsrFunctionTreeService
      * @param functionCode 菜单ID
      * @return 结果
      */
-    public int deleteFunctionById(Long functionCode);
+    public int deleteFunctionById(String functionCode);
 
     /**
      * 校验菜单名称是否唯一

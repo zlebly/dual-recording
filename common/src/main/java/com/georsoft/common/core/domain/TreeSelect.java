@@ -17,7 +17,7 @@ public class TreeSelect implements Serializable
     private static final long serialVersionUID = 1L;
 
     /** 节点ID */
-    private Long id;
+    private String id;
 
     /** 节点名称 */
     private String label;
@@ -45,12 +45,12 @@ public class TreeSelect implements Serializable
         this.children = functionTree.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public Long getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(Long id)
+    public void setId(String id)
     {
         this.id = id;
     }

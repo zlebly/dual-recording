@@ -43,13 +43,13 @@ public class UserConstants
     public static final String NO_FRAME = "1";
 
     /** 菜单类型（目录） */
-    public static final String TYPE_DIR = "M";
+    public static final String TYPE_DIR = "8974";
 
     /** 菜单类型（菜单） */
-    public static final String TYPE_MENU = "C";
+    public static final String TYPE_MENU = "8975";
 
     /** 菜单类型（按钮） */
-    public static final String TYPE_BUTTON = "F";
+    public static final String TYPE_BUTTON = "8976";
 
     /** Layout组件标识 */
     public final static String LAYOUT = "Layout";

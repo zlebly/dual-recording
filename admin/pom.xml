@@ -49,12 +49,6 @@
             <artifactId>framework</artifactId>
         </dependency>
 
-        <!-- 定时任务-->
-        <dependency>
-            <groupId>com.georsoft</groupId>
-            <artifactId>quartz</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.georsoft</groupId>
             <artifactId>business</artifactId>

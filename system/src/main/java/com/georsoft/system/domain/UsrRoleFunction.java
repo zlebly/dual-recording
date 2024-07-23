@@ -11,27 +11,27 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class UsrRoleFunction
 {
     /** 角色ID */
-    private Long roleCode;
+    private String roleCode;
     
     /** 菜单ID */
-    private Long functionCode;
+    private String functionCode;
 
-    public Long getRoleCode()
+    public String getRoleCode()
     {
         return roleCode;
     }
 
-    public void setRoleCode(Long roleCode)
+    public void setRoleCode(String roleCode)
     {
         this.roleCode = roleCode;
     }
 
-    public Long getFunctionCode()
+    public String getFunctionCode()
     {
         return functionCode;
     }
 
-    public void setFunctionCode(Long functionCode)
+    public void setFunctionCode(String functionCode)
     {
         this.functionCode = functionCode;
     }

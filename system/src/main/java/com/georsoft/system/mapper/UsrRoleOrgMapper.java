@@ -16,7 +16,7 @@ public interface UsrRoleOrgMapper
      * @param roleCode 角色ID
      * @return 结果
      */
-    public int deleteRoleOrgByRoleCode(Long roleCode);
+    public int deleteRoleOrgByRoleCode(String roleCode);
 
     /**
      * 批量删除角色机构关联信息
@@ -24,7 +24,7 @@ public interface UsrRoleOrgMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteRoleOrg(Long[] ids);
+    public int deleteRoleOrg(String[] ids);
 
     /**
      * 查询机构使用数量
@@ -32,7 +32,7 @@ public interface UsrRoleOrgMapper
      * @param orgCode 机构码
      * @return 结果
      */
-    public int selectCountRoleOrgByOrgCode(Long orgCode);
+    public int selectCountRoleOrgByOrgCode(String orgCode);
 
     /**
      * 批量新增角色机构信息

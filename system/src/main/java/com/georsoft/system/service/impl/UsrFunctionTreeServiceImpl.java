@@ -72,7 +72,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
         }
         else
         {
-            functionTree.getParams().put("userId", id);
+            functionTree.getParams().put("loginName", SecurityUtils.getLoginUser().getUser().getLoginName());
             functionTrees = functionMapper.selectFunctionListByUserId(functionTree);
         }
         return functionTrees;
@@ -106,7 +106,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 权限列表
      */
     @Override
-    public Set<String> selectFunctionPermsByRoleCode(Long roleCode)
+    public Set<String> selectFunctionPermsByRoleCode(String roleCode)
     {
         List<String> perms = functionMapper.selectFunctionPermsByRoleCode(roleCode);
         Set<String> permsSet = new HashSet<>();
@@ -138,7 +138,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
         {
             functionTrees = functionMapper.selectFunctionTreeByLoginName(loginName);
         }
-        return getChildPerms(functionTrees, 0);
+        return getChildPerms(functionTrees,  "0");
     }
 
     /**
@@ -148,7 +148,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 选中菜单列表
      */
     @Override
-    public List<Long> selectFunctionListByRoleCode(Long roleCode)
+    public List<Long> selectFunctionListByRoleCode(String roleCode)
     {
         return functionMapper.selectFunctionListByRoleCode(roleCode);
     }
@@ -192,7 +192,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
-            else if (functionTree.getParentCode().intValue() == 0 && isInnerLink(functionTree))
+            else if (functionTree.getParentCode().equals("0") && isInnerLink(functionTree))
             {
                 router.setMeta(new MetaVo(functionTree.getFunctionName(), functionTree.getIconResource()));
                 router.setPath("/");
@@ -221,7 +221,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
     public List<UsrFunctionTree> buildFunctionTree(List<UsrFunctionTree> functionTrees)
     {
         List<UsrFunctionTree> returnList = new ArrayList<UsrFunctionTree>();
-        List<Long> tempList = functionTrees.stream().map(UsrFunctionTree::getFunctionCode).collect(Collectors.toList());
+        List<String> tempList = functionTrees.stream().map(UsrFunctionTree::getFunctionCode).collect(Collectors.toList());
         for (Iterator<UsrFunctionTree> iterator = functionTrees.iterator(); iterator.hasNext();)
         {
             UsrFunctionTree functionTree = (UsrFunctionTree) iterator.next();
@@ -259,7 +259,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 菜单信息
      */
     @Override
-    public UsrFunctionTree selectFunctionById(Long functionCode)
+    public UsrFunctionTree selectFunctionById(String functionCode)
     {
         return functionMapper.selectFunctionById(functionCode);
     }
@@ -271,7 +271,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 结果
      */
     @Override
-    public boolean hasChildByFunctionCode(Long functionCode)
+    public boolean hasChildByFunctionCode(String functionCode)
     {
         int result = functionMapper.hasChildByFunctionCode(functionCode);
         return result > 0;
@@ -284,7 +284,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 结果
      */
     @Override
-    public boolean checkFunctionExistRole(Long functionCode)
+    public boolean checkFunctionExistRole(String functionCode)
     {
         int result = roleFunctionMapper.checkFunctionExistRole(functionCode);
         return result > 0;
@@ -321,7 +321,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @return 结果
      */
     @Override
-    public int deleteFunctionById(Long functionCode)
+    public int deleteFunctionById(String functionCode)
     {
         return functionMapper.deleteFunctionById(functionCode);
     }
@@ -335,9 +335,9 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
     @Override
     public boolean checkFunctionNameUnique(UsrFunctionTree functionTree)
     {
-        Long functionCode = StringUtils.isNull(functionTree.getFunctionCode()) ? -1L : functionTree.getFunctionCode();
+        String functionCode = StringUtils.isNull(functionTree.getFunctionCode()) ? "1" : functionTree.getFunctionCode();
         UsrFunctionTree info = functionMapper.checkFunctionNameUnique(functionTree.getFunctionName(), functionTree.getParentCode());
-        if (StringUtils.isNotNull(info) && info.getFunctionCode().longValue() != functionCode.longValue())
+        if (StringUtils.isNotNull(info) && !info.getFunctionCode().equals(functionCode))
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -371,12 +371,12 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
     {
         String routerPath = function.getPath();
         // 内链打开外网方式
-        if (function.getParentCode().intValue() != 0 && isInnerLink(function))
+        if (!function.getParentCode().equals("0") && isInnerLink(function))
         {
             routerPath = innerLinkReplaceEach(routerPath);
         }
         // 非外链并且是一级目录（类型为目录）
-        if (0 == function.getParentCode().intValue() && UserConstants.TYPE_DIR.equals(function.getFunctionType())
+        if ("0".equals(function.getParentCode()) && UserConstants.TYPE_DIR.equals(function.getFunctionType())
                 && UserConstants.NO_FRAME.equals(function.getIsFrame()))
         {
             routerPath = "/" + function.getPath();
@@ -402,7 +402,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
         {
             component = function.getComponent();
         }
-        else if (StringUtils.isEmpty(function.getComponent()) && function.getParentCode().intValue() != 0 && isInnerLink(function))
+        else if (StringUtils.isEmpty(function.getComponent()) && !function.getParentCode().equals("0") && isInnerLink(function))
         {
             component = UserConstants.INNER_LINK;
         }
@@ -421,7 +421,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      */
     public boolean isFunctionFrame(UsrFunctionTree function)
     {
-        return function.getParentCode().intValue() == 0 && UserConstants.TYPE_MENU.equals(function.getFunctionType())
+        return function.getParentCode().equals("0") && UserConstants.TYPE_MENU.equals(function.getFunctionType())
                 && function.getIsFrame().equals(UserConstants.NO_FRAME);
     }
 
@@ -444,7 +444,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      */
     public boolean isParentView(UsrFunctionTree function)
     {
-        return function.getParentCode().intValue() != 0 && UserConstants.TYPE_DIR.equals(function.getFunctionType());
+        return !function.getParentCode().equals("0") && UserConstants.TYPE_DIR.equals(function.getFunctionType());
     }
 
     /**
@@ -454,7 +454,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
      * @param parentCode 传入的父节点ID
      * @return String
      */
-    public List<UsrFunctionTree> getChildPerms(List<UsrFunctionTree> list, int parentCode)
+    public List<UsrFunctionTree> getChildPerms(List<UsrFunctionTree> list, String parentCode)
     {
         List<UsrFunctionTree> returnList = new ArrayList<UsrFunctionTree>();
         for (Iterator<UsrFunctionTree> iterator = list.iterator(); iterator.hasNext();)
@@ -500,7 +500,7 @@ public class UsrFunctionTreeServiceImpl implements IUsrFunctionTreeService
         while (it.hasNext())
         {
             UsrFunctionTree n = (UsrFunctionTree) it.next();
-            if (n.getParentCode().longValue() == t.getFunctionCode().longValue())
+            if (n.getParentCode().equals(t.getFunctionCode()))
             {
                 tlist.add(n);
             }

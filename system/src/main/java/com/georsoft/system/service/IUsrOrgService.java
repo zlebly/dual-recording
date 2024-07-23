@@ -49,7 +49,7 @@ public interface IUsrOrgService
      * @param roleCode 角色ID
      * @return 选中机构列表
      */
-    public List<Long> selectOrgListByRoleCode(Long roleCode);
+    public List<Long> selectOrgListByRoleCode(String roleCode);
 
     /**
      * 根据机构码查询信息
@@ -57,7 +57,7 @@ public interface IUsrOrgService
      * @param orgCode 机构码
      * @return 机构信息
      */
-    public UsrOrg selectOrgById(Long orgCode);
+    public UsrOrg selectOrgById(String orgCode);
 
     /**
      * 根据ID查询所有子机构（正常状态）
@@ -65,7 +65,7 @@ public interface IUsrOrgService
      * @param orgCode 机构码
      * @return 子机构数
      */
-    public int selectNormalChildrenOrgById(Long orgCode);
+    public int selectNormalChildrenOrgById(String orgCode);
 
     /**
      * 是否存在机构子节点
@@ -73,7 +73,7 @@ public interface IUsrOrgService
      * @param orgCode 机构码
      * @return 结果
      */
-    public boolean hasChildByOrgCode(Long orgCode);
+    public boolean hasChildByOrgCode(String orgCode);
 
     /**
      * 查询机构是否存在用户
@@ -81,7 +81,7 @@ public interface IUsrOrgService
      * @param orgCode 机构码
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkOrgExistUser(Long orgCode);
+    public boolean checkOrgExistUser(String orgCode);
 
     /**
      * 校验机构名称是否唯一
@@ -96,7 +96,7 @@ public interface IUsrOrgService
      * 
      * @param orgCode 机构码
      */
-    public void checkOrgDataScope(Long orgCode);
+    public void checkOrgDataScope(String orgCode);
 
     /**
      * 新增保存机构信息
@@ -120,5 +120,5 @@ public interface IUsrOrgService
      * @param orgCode 机构码
      * @return 结果
      */
-    public int deleteOrgById(Long orgCode);
+    public int deleteOrgById(String orgCode);
 }
