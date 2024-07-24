@@ -40,20 +40,29 @@
         )
 
         SELECT
-            org_code,
-            parent_org_code,
+            d.org_code,
+            d.parent_org_code,
             group_concat(distinct ph.parent_org_code order by ph.parent_org_code separator ',') as ancestors,
-            org_name,
-            view_index,
-            abb_name,
-            org_phone,
-            org_address,
-            org_status
+            d.org_name,
+            d.view_index,
+            d.abb_name,
+            d.org_phone,
+            d.org_address,
+            d.org_status
         FROM
             usr_org d left join parent_hierarchy ph on d.org_code = ph.org_code
         WHERE
-            org_code = #{currentOrgCode}
-           OR parent_org_code = #{currentOrgCode}
+            d.org_code = #{orgCode}
+           OR d.parent_org_code = #{orgCode}
+        GROUP BY
+            d.org_code,
+            d.parent_org_code,
+            d.org_name,
+            d.view_index,
+            d.abb_name,
+            d.org_phone,
+            d.org_address,
+            d.org_status
     </select>
 
     <!-- 查询用户双录报表 -->

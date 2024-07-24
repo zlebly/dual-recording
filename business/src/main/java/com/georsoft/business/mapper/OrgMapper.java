@@ -11,7 +11,7 @@ public interface OrgMapper {
     /**
      * 查询当前机构及子机构信息
      */
-    List<UsrOrg> qryCurrentAndSubOrg(@Param("currentOrgCode") String currentOrgCode);
+    List<UsrOrg> qryCurrentAndSubOrg(@Param("orgCode") String orgCode);
 
     /**
      * 查询机构或柜员的双录视频数据

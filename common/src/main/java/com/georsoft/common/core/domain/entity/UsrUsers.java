@@ -37,13 +37,13 @@ public class UsrUsers extends BaseEntity
     private String password;
 
     /** 创建时间 */
-    private Date createDate;
+    private String createDate;
 
     /** 可用时间 */
-    private Date enableDate;
+    private String enableDate;
 
     /** 失效时间 */
-    private Date expireDate;
+    private String expireDate;
 
     /** 手机号码 */
     @Excel(name = "手机号码", cellType = ColumnType.TEXT)
@@ -342,27 +342,27 @@ public class UsrUsers extends BaseEntity
         this.postIds = postIds;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
-    public Date getEnableDate() {
+    public String getEnableDate() {
         return enableDate;
     }
 
-    public void setEnableDate(Date enableDate) {
+    public void setEnableDate(String enableDate) {
         this.enableDate = enableDate;
     }
 
-    public Date getExpireDate() {
+    public String getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(Date expireDate) {
+    public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
     }
 

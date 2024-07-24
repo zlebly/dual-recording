@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			   d.org_name, d.view_index, d.org_phone, d.org_address, d.org_status, d.scan_flag
 		from usr_org d
 		left join parent_hierarchy ph on d.org_code = ph.org_code
+
     </sql>
     
 	<select id="selectOrgList" parameterType="UsrOrg" resultMap="UsrOrgResult">
@@ -61,6 +62,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<!-- 数据范围过滤 -->
 # 		${params.dataScope}
+		GROUP BY
+		d.org_code,
+		d.parent_org_code,
+		d.org_name,
+		d.view_index,
+		d.org_phone,
+		d.org_address,
+		d.org_status,
+		d.scan_flag
 		order by d.parent_org_code, d.view_index
     </select>
     
@@ -90,6 +100,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from usr_org d
 		left join parent_hierarchy ph on d.org_code = ph.org_code
 		where d.org_code = #{orgCode}
+		GROUP BY
+			d.org_code,
+			d.parent_org_code,
+			d.org_name,
+			d.view_index,
+			d.org_phone,
+			d.org_address,
+			d.org_status
 	</select>
     
     <select id="checkOrgExistUser" parameterType="String" resultType="int">
@@ -113,11 +131,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 		select count(*) from usr_org d left join parent_hierarchy ph on d.org_code = ph.org_code
 		where d.org_status = 0 and d.scan_flag = '0' and ph.PARENT_ORG_CODE = #{orgCode}
+		GROUP BY
+			d.org_code,
+			d.parent_org_code,
+			d.org_name,
+			d.view_index,
+			d.org_phone,
+			d.org_address,
+			d.org_status
 	</select>
 	
 	<select id="checkOrgNameUnique" resultMap="UsrOrgResult">
 	    <include refid="selectOrgVo"/>
 		where org_name=#{orgName} and parent_org_code = #{parentOrgCode} and scan_flag = '0' limit 1
+		GROUP BY
+		d.org_code,
+		d.parent_org_code,
+		d.org_name,
+		d.view_index,
+		d.org_phone,
+		d.org_address,
+		d.org_status,
+		d.scan_flag
 	</select>
     
     <insert id="insertOrg" parameterType="UsrOrg">

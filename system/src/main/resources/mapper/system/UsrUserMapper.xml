@@ -72,8 +72,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectUserList" parameterType="UsrUsers" resultMap="SysUserResult">
 		select u.id, u.org_code, u.login_name, u.user_name, u.e_mail, a.avatar, u.mobile_no, u.sex,
-		       u.login_status, u.stop_flag, u.ra_computer_ip, u.login_time, u.create_by, u.create_time, u.remark,
-		       d.org_name from usr_users u
+		       u.login_status, u.stop_flag, u.ra_computer_ip, u.login_time, u.create_date, d.org_name
+		from usr_users u
 		left join usr_org d on u.org_code = d.org_code
 		left join usr_avatar a on a.user_id = u.id
 		where u.stop_flag = '0'
@@ -83,17 +83,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="userName != null and userName != ''">
 			AND u.user_name like concat('%', #{userName}, '%')
 		</if>
-		<if test="status != null and status != ''">
+		<if test="loginStatus != null and loginStatus != ''">
 			AND u.login_status = #{loginStatus}
 		</if>
 		<if test="mobileNo != null and mobileNo != ''">
 			AND u.MOBILE_NO like concat('%', #{mobileNo}, '%')
 		</if>
 		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			AND date_format(u.create_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
 		</if>
 		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			AND date_format(u.create_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 		</if>
 		<if test="orgCode != null and orgCode != 0">
 			AND (u.org_code = #{orgCode} OR u.org_code IN ( SELECT t.org_code FROM usr_org t WHERE find_in_set(#{orgCode}, ancestors) ))

@@ -3,7 +3,7 @@ package com.georsoft.business.service.Impl;
 import com.georsoft.business.entity.PO.ProductInfoPO;
 import com.georsoft.business.entity.VO.ProductInfoVO;
 import com.georsoft.business.mapper.ProductInfoMapper;
-import com.georsoft.business.mapstruct.ProductConvertBasic;
+import com.georsoft.business.mapstruct.ProductConvert;
 import com.georsoft.business.service.ProductFileService;
 import com.georsoft.business.util.GenerateUtils;
 import com.georsoft.common.core.domain.AjaxResult;
@@ -30,10 +30,11 @@ public class ProductFileServiceImpl implements ProductFileService {
     public AjaxResult addImportExcel(List<ProductInfoVO> list) {
         List<ProductInfoPO> productInfoPOList = new ArrayList<>();
         for (ProductInfoVO productInfoVO : list) {
-            ProductInfoPO productInfoPO = ProductConvertBasic.INSTANCE.VOToProductInfoPO(productInfoVO);
+            ProductInfoPO productInfoPO = ProductConvert.VOToProductInfoPO(productInfoVO);
             productInfoPO.setId(GenerateUtils.IdGenerate());
             productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
             productInfoPO.setCreateUserId(SecurityUtils.getUserId().toString());
+            productInfoPO.setCreateUserName(SecurityUtils.getUsername());
             productInfoPOList.add(productInfoPO);
         }
         productInfoMapper.batchAddProductInfos(productInfoPOList);
