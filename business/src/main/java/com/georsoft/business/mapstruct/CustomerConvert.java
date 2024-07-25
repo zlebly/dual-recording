@@ -24,6 +24,7 @@ public class CustomerConvert {
         customerVO.setImageCount(customer.getImageCount());
         customerVO.setOrgCode(customer.getOrgCode());
         customerVO.setUserId(customer.getUserId());
+        customerVO.setUserName(customer.getUserName());
         return customerVO;
     }
 }

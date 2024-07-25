@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
 	<select id="selectDictTypeList" parameterType="SysDataDictType" resultMap="SysDictTypeResult">
-		select a.id, a.dict_name, a.dict_code, a.stop_flag, a.dict_type, a.remark, a.view_index, a.sub_dict_code,
+		select distinct a.id, a.dict_name, a.dict_code, a.stop_flag, a.dict_type, a.remark, a.view_index, a.sub_dict_code,
 		       a.sub_dict_table, a.sub_dict_col
 		from sys_data_dict_type a
 		left join sys_data_dict b
@@ -45,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and date_format(b.expire_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 			</if>
 	    </where>
+		order by id
 	</select>
 	
 	<select id="selectDictTypeAll" resultMap="SysDictTypeResult">

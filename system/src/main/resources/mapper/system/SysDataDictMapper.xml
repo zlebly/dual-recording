@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <include refid="selectDictDataVo"/>
 		<where>
 		    <if test="dictType != null and dictType != ''">
-				AND dict_type = #{dictType}
+				AND rel_dict_code = #{dictType}
 			</if>
 			<if test="dictName != null and dictName != ''">
 				AND dict_name like concat('%', #{dictName}, '%')

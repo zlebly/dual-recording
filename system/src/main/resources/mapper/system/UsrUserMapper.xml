@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from usr_users u
 		left join usr_org d on u.org_code = d.org_code
 		left join usr_avatar a on a.user_id = u.id
-		where u.stop_flag = '0'
+		where u.stop_flag in ('1', '0')
 		<if test="id != null and id != 0">
 			AND u.id = #{id}
 		</if>
@@ -250,6 +250,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sex != null and sex != ''">sex = #{sex},</if>
 			<if test="orgCode != null and orgCode != ''">org_code = #{orgCode},</if>
 			<if test="loginStatus != null and loginStatus != ''">login_status = #{loginStatus},</if>
+			<if test="stopFlag != null and stopFlag != ''">stop_flag = #{stopFlag},</if>
 			<if test="email != null and email != ''">e_mail = #{email},</if>
 			<if test="loginTime != null">login_time = #{loginTime},</if>
 			<if test="changePwd != null and changePwd != ''">change_pwd = #{changePwd},</if>

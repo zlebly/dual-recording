@@ -8,5 +8,8 @@ public class UserOptionsVO {
     private Long userId;
 
     /** 用户账号 */
+    private String loginName;
+
+    /** 用户账号 */
     private String userName;
 }

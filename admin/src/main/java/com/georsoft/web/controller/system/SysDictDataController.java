@@ -2,7 +2,11 @@ package com.georsoft.web.controller.system;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.georsoft.system.constant.DictionaryType;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -75,7 +79,10 @@ public class SysDictDataController extends BaseController
     @GetMapping(value = "/type/{dictType}")
     public AjaxResult dictType(@PathVariable String dictType)
     {
-        List<SysDataDict> data = dictTypeService.selectDictDataByType(dictType);
+        DictionaryType instance = DictionaryType.getInstance();
+        Map<String, Integer> types = instance.getDictionaryTypes();
+        String type = types.get(dictType).toString();
+        List<SysDataDict> data = dictTypeService.selectDictDataByType(Strings.isEmpty(type) ? dictType : type);
         if (StringUtils.isNull(data))
         {
             data = new ArrayList<SysDataDict>();

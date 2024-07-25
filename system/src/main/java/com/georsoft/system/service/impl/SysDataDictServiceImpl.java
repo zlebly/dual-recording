@@ -1,6 +1,10 @@
 package com.georsoft.system.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
+import com.georsoft.system.constant.DictionaryType;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.georsoft.common.core.domain.entity.SysDataDict;
@@ -103,7 +107,10 @@ public class SysDataDictServiceImpl implements ISysDataDictService
         int row = dictDataMapper.updateDictData(data);
         if (row > 0)
         {
-            List<SysDataDict> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
+            DictionaryType instance = DictionaryType.getInstance();
+            Map<String, Integer> types = instance.getDictionaryTypes();
+            String type = types.get(data.getDictType()).toString();
+            List<SysDataDict> dictDatas = dictDataMapper.selectDictDataByType(Strings.isEmpty(type) ? data.getDictType() : type);
             DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
         return row;

@@ -267,3 +267,52 @@ INSERT INTO `usr_role_function` (`role_code`, `function_code`) VALUES ('RZ001', 
 INSERT INTO `usr_role_function` (`role_code`, `function_code`) VALUES ('RZ001', 1052);
 INSERT INTO `usr_role_function` (`role_code`, `function_code`) VALUES ('RZ001', 1053);
 INSERT INTO `usr_role_function` (`role_code`, `function_code`) VALUES ('RZ001', 1054);
+
+
+-- ---------------
+-- 字典表新增数据
+-- ---------------
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`,`stop_flag`) VALUES (101, 1, '男', '0', '9001',NULL,'2013-12-25',NULL,'sys_user_sex','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (102, 2, '女', '1', '9001', NULL,'2013-12-25',NULL,'sys_user_sex','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (103, 3, '未知', '2', '9001', NULL,'2013-12-25',NULL,'sys_user_sex','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (104, 1, '显示', '0', '9002', NULL,'2013-12-25',NULL,'sys_show_hide','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (105, 2, '隐藏', '1', '9002', NULL,'2013-12-25',NULL,'sys_show_hide','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (106, 1, '正常', '0', '9003', NULL,'2013-12-25',NULL,'sys_normal_disable','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (107, 2, '停用', '1', '9003', NULL,'2013-12-25',NULL,'sys_normal_disable','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (108, 1, '正常', '0', '9004', NULL,'2013-12-25',NULL,'sys_job_status','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (109, 2, '暂停', '1', '9004', NULL,'2013-12-25',NULL,'sys_job_status','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (110, 1, '默认', 'DEFAULT', '9005', NULL,'2013-12-25',NULL,'sys_job_group','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (111, 2, '系统', 'SYSTEM', '9005', NULL,'2013-12-25',NULL,'sys_job_group','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (112, 1, '是', 'Y', '9006', NULL,'2013-12-25',NULL,'sys_yes_no','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (113, 2, '否', 'N', '9006', NULL,'2013-12-25',NULL,'sys_yes_no','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (114, 1, '通知', '1', '9007', NULL,'2013-12-25',NULL,'sys_notice_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (115, 2, '公告', '2', '9007', NULL,'2013-12-25',NULL,'sys_notice_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (116, 1, '正常', '0', '9008', NULL,'2013-12-25',NULL,'sys_notice_status','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (117, 2, '关闭', '1', '9008', NULL,'2013-12-25',NULL,'sys_notice_status','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (118, 99, '其他', '0', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (119, 1, '新增', '1', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (120, 2, '修改', '2', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (121, 3, '删除', '3', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (122, 4, '授权', '4', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (123, 5, '导出', '5', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (124, 6, '导入', '6', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (125, 7, '强退', '7', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (126, 8, '生成代码', '8', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (127, 9, '清空数据', '9', '9009', NULL,'2013-12-25',NULL,'sys_oper_type','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (128, 1, '成功', '0', '9010', NULL,'2013-12-25',NULL,'sys_common_status','0');
+INSERT INTO `sys_data_dict` (`id`, `view_index`, `dict_name`, `dict_code`, `dict_type`,`remark`,`enable_date`,`expire_date`,`rel_dict_code`, `stop_flag`) VALUES (129, 2, '失败', '1', '9010', NULL,'2013-12-25',NULL,'sys_common_status','0');
+
+
+-- --------------
+-- 字典类型表新增数据
+-- --------------
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (1, '-1','用户性别', 'sys_user_sex', '0', NULL, NULL, NULL, NULL, '用户性别列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (2, '-1','菜单状态', 'sys_show_hide', '0', NULL, NULL, NULL, NULL, '菜单状态列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (3, '-1','系统开关', 'sys_normal_disable', '0', NULL, NULL, NULL, NULL, '系统开关列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (4, '-1','任务状态', 'sys_job_status', '0', NULL, NULL, NULL, NULL, '任务状态列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (5, '-1','任务分组', 'sys_job_group', '0', NULL, NULL, NULL, NULL, '任务分组列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (6, '-1','系统是否', 'sys_yes_no', '0', NULL, NULL, NULL, NULL, '系统是否列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (7, '-1','通知类型', 'sys_notice_type', '0', NULL, NULL, NULL, NULL, '通知类型列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (8, '-1','通知状态', 'sys_notice_status', '0', NULL, NULL, NULL, NULL, '通知状态列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (9, '-1','操作类型', 'sys_oper_type', '0', NULL, NULL, NULL, NULL, '操作类型列表');
+INSERT INTO `sys_data_dict_type` (`id`, `dict_type`,`dict_name`, `dict_code`, `stop_flag`, `sub_dict_col`, `view_index`, `sub_dict_code`, `sub_dict_table`, `remark`) VALUES (10, '-1','系统状态', 'sys_common_status', '0', NULL, NULL, NULL, NULL, '登录状态列表');

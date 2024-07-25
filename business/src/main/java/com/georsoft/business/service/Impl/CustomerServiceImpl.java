@@ -113,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerPO.setId(GenerateUtils.IdGenerate());
         customerPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        customerPO.setUserId(loginUser.getUserId().toString());
+        customerPO.setUserId(loginUser.getUser().getLoginName());
         customerPO.setOrgCode(loginUser.getOrgCode().toString());
         customerPO.setDepNo(loginUser.getUser().getDeptNo());
         customerPO.setMarketNo("");

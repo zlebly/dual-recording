@@ -28,10 +28,10 @@ public interface SysDataDictTypeMapper
     /**
      * 根据字典类型ID查询信息
      * 
-     * @param dictId 字典类型ID
+     * @param id 字典类型ID
      * @return 字典类型
      */
-    public SysDataDictType selectDictTypeById(Long dictId);
+    public SysDataDictType selectDictTypeById(Long id);
 
     /**
      * 根据字典类型查询信息

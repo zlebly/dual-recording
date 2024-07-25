@@ -8,5 +8,7 @@ public class CustomerReportVO {
 
     String userId;
 
+    String userName;
+
     String imageCount;
 }

@@ -8,5 +8,7 @@ public class CustomerReportPO {
 
     String userId;
 
+    String userName;
+
     String imageCount;
 }

@@ -43,8 +43,18 @@
         <result property="partOrgCode" column="part_org_code"/>
     </resultMap>
 
-    <!-- 查询产品列表 -->
+    <!-- 查询机构下所有用户信息 -->
     <select id="qryUserInfoByOrg" parameterType="String" resultMap="UserInfoResult">
+        WITH RECURSIVE child_hierarchy AS (
+            select org_code, parent_org_code
+            from usr_org
+            where org_code = #{currentOrgCode}
+            union all
+            select o.org_code, o.parent_org_code
+            from usr_org o
+                     join child_hierarchy ch on o.parent_org_code = ch.org_code
+        )
+
         SELECT
             id,
             user_name,
@@ -85,6 +95,6 @@
         FROM
             usr_users
         WHERE
-            org_code = #{currentOrgCode}
+            org_code in (select org_code from child_hierarchy)
     </select>
 </mapper>

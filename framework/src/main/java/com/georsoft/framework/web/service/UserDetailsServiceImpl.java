@@ -48,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService
             log.info("登录用户：{} 已被删除.", username);
             throw new ServiceException(MessageUtils.message("user.password.delete"));
         }
-        else if (UserStatus.DISABLE.getCode().equals(user.getLoginStatus()))
+        else if (UserStatus.DISABLE.getCode().equals(user.getStopFlag()))
         {
             log.info("登录用户：{} 已被停用.", username);
             throw new ServiceException(MessageUtils.message("user.blocked"));

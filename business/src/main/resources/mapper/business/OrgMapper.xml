@@ -19,6 +19,7 @@
     <resultMap type="com.georsoft.business.entity.PO.CustomerReportPO" id="CustomerReportResult">
         <id     property="orgCode"      column="org_code"      />
         <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
         <result property="imageCount"     column="image_count"     />
     </resultMap>
 
@@ -68,16 +69,19 @@
     <!-- 查询用户双录报表 -->
     <select id="qryCustomerReport" resultMap="CustomerReportResult">
         SELECT
-        b.org_code,
-        b.user_id,
-        b.image_count
+        c.org_code,
+        c.user_id,
+        c.user_name,
+        c.image_count
         FROM (
             SELECT
             a.org_code,
             a.user_id,
+            b.user_name,
             count(a.image_no) as image_count
             FROM
             fcm_customer_info a
+            left join usr_users b on a.user_id = b.LOGIN_NAME
             <where>
                 <if test="orgCode != null and orgCode != ''">
                     AND a.org_code = #{orgCode}
@@ -88,8 +92,9 @@
             </where>
             GROUP BY
             a.org_code,
-            a.user_id
-        ) b
+            a.user_id,
+            b.user_name
+        ) c
     </select>
 
     <!-- 查询机构双录报表 -->

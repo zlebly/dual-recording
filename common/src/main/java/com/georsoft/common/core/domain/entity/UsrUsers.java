@@ -61,7 +61,7 @@ public class UsrUsers extends BaseEntity
     @Excel(name = "登陆状态", readConverterExp = "0=正常,1=停用")
     private String loginStatus;
 
-    /** 删除标志（0代表存在 2代表删除） */
+    /** 删除标志（0代表存在 1代表停用 2代表删除） */
     private String stopFlag;
 
     /** 用户邮箱 */

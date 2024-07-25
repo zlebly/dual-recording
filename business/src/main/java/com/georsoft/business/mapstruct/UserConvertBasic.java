@@ -15,6 +15,7 @@ public class UserConvertBasic {
         UserOptionsVO userOptionsVO = new UserOptionsVO();
         userOptionsVO.setUserName(data.getUserName());
         userOptionsVO.setUserId(data.getId());
+        userOptionsVO.setLoginName(data.getLoginName());
         return userOptionsVO;
     }
 }

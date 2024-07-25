@@ -40,7 +40,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfoPO productInfoPO = ProductConvert.toProductInfoPO(data);
         productInfoPO.setId(GenerateUtils.IdGenerate());
         productInfoPO.setCreateDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        productInfoPO.setCreateUserId(SecurityUtils.getUserId().toString());
+        productInfoPO.setCreateUserId(SecurityUtils.getLoginUser().getUser().getLoginName());
         productInfoPO.setCreateUserName(SecurityUtils.getUsername());
         productInfoMapper.addProductInfo(productInfoPO);
     }
